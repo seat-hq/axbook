@@ -1,9 +1,8 @@
 /**
  * wagmi / viem configuration for Robinhood Chain.
  *
- * Default chain is testnet 46630. Mainnet writes require a wired 4663 vault
- * (see canWriteOnChain). RPC URLs come from env; placeholder hosts keep
- * the app type-checking when unset.
+ * The desk chain is whichever network has a vault. RPC URLs come from env
+ * and fall back to the public Robinhood Chain endpoints.
  */
 import { http, createConfig } from "wagmi";
 import { defineChain } from "viem";
@@ -11,9 +10,10 @@ import { CHAIN } from "@seat/sdk";
 import { injected } from "@/lib/injected";
 
 const MAINNET_RPC =
-  process.env.NEXT_PUBLIC_RH_RPC_URL ?? "https://rpc.invalid/mainnet";
+  process.env.NEXT_PUBLIC_RH_RPC_URL ?? "https://rpc.mainnet.chain.robinhood.com";
 const TESTNET_RPC =
-  process.env.NEXT_PUBLIC_RH_TESTNET_RPC_URL ?? "https://rpc.invalid/testnet";
+  process.env.NEXT_PUBLIC_RH_TESTNET_RPC_URL ??
+  "https://rpc.testnet.chain.robinhood.com";
 
 export const robinhood = defineChain({
   id: CHAIN.MAINNET_ID,

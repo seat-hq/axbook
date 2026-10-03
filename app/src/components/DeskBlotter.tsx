@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { CHAIN } from "@seat/sdk";
+import { CHAIN, isTradeEligible, listSymbols } from "@seat/sdk";
 import { decodeEventLog, formatUnits, parseUnits } from "viem";
 import {
   useAccount,
@@ -11,18 +11,45 @@ import {
   useWriteContract,
 } from "wagmi";
 import { deskFactoryAbi, deskVaultAbi, erc20Abi, stakingPoolAbi } from "@/abis";
-import { Badge } from "@/components/Badge";
 import { WalletBar } from "@/components/WalletBar";
 import { canWriteOnChain, getAddresses } from "@/lib/addresses";
-import { PAPER_DESK, formatNav } from "@/lib/desks";
+import { formatNav } from "@/lib/desks";
 import { parseUsdgField, type RecordedFill } from "@/lib/fills";
 
-function sessionTone(
-  session: string,
-): "green" | "warn" | "muted" {
-  if (session === "regular") return "green";
-  if (session === "after_hours" || session === "pre_market") return "warn";
-  return "muted";
+const BOOK = listSymbols().filter((symbol) =>
+  isTradeEligible(symbol, CHAIN.MAINNET_ID),
+);
+
+function sessionLabel(session: string): string {
+  if (session === "regular") return "Regular";
+  if (session === "after_hours") return "After hours";
+  if (session === "pre_market") return "Pre-market";
+  if (session === "closed") return "Closed";
+  return session.replaceAll("_", " ");
+}
+
+function sideClass(side: string): string {
+  const value = side.toLowerCase();
+  if (value === "buy") return "side side-buy";
+  if (value === "sell") return "side side-sell";
+  return "side";
+}
+
+function shortError(err: unknown, fallback: string): string {
+  if (
+    err &&
+    typeof err === "object" &&
+    "shortMessage" in err &&
+    typeof err.shortMessage === "string" &&
+    err.shortMessage.length > 0
+  ) {
+    return err.shortMessage;
+  }
+  if (err instanceof Error) {
+    const line = err.message.split("\n")[0] ?? fallback;
+    return line.length > 160 ? `${line.slice(0, 157)}…` : line;
+  }
+  return fallback;
 }
 
 function shortAddr(addr: string): string {
@@ -30,17 +57,14 @@ function shortAddr(addr: string): string {
   return `${addr.slice(0, 6)}…${addr.slice(-4)}`;
 }
 
-function sourceTone(source: RecordedFill["source"]): "green" | "muted" {
-  return source === "chain" ? "green" : "muted";
-}
-
 export function DeskBlotter() {
   const { address, isConnected } = useAccount();
   const walletChain = useChainId();
-  const connectedRh =
-    isConnected &&
-    (walletChain === CHAIN.MAINNET_ID || walletChain === CHAIN.TESTNET_ID);
-  const activeChain = connectedRh ? walletChain : CHAIN.TESTNET_ID;
+  const activeChain =
+    getAddresses(CHAIN.MAINNET_ID).deskVault !== null
+      ? CHAIN.MAINNET_ID
+      : CHAIN.TESTNET_ID;
+  const onDeskChain = isConnected && walletChain === activeChain;
   const addrs = getAddresses(activeChain);
   const factory = addrs.deskFactory;
   const [queryDesk, setQueryDesk] = useState<`0x${string}` | null>(null);
@@ -92,8 +116,7 @@ export function DeskBlotter() {
   const onChain = vault !== null;
 
   const canWrite =
-    isConnected && canWriteOnChain(activeChain, addrs) && Boolean(address);
-  const isMainnetDesk = activeChain === CHAIN.MAINNET_ID && onChain;
+    onDeskChain && canWriteOnChain(activeChain, addrs) && Boolean(address);
 
   const readEnabled = onChain;
   const userEnabled = onChain && Boolean(address);
@@ -198,6 +221,8 @@ export function DeskBlotter() {
 
   useEffect(() => {
     void loadFills();
+    const id = window.setInterval(() => void loadFills(), 12_000);
+    return () => window.clearInterval(id);
   }, [loadFills]);
 
   const refreshVault = useCallback(async () => {
@@ -223,15 +248,15 @@ export function DeskBlotter() {
   const asBig = (value: unknown): bigint | null =>
     typeof value === "bigint" ? value : null;
 
-  const navUsdg = onChain ? asBig(totalAssets) : PAPER_DESK.navUsdg;
-  const navPer = onChain ? asBig(navShare) : PAPER_DESK.navPerShareUsdg;
+  const navUsdg = onChain ? asBig(totalAssets) : null;
+  const navPer = onChain ? asBig(navShare) : null;
   const cashUsdg = onChain ? asBig(cash) : null;
   const shares = onChain ? asBig(totalShares) : null;
   const mine = onChain ? asBig(userShares) : null;
   const queued = onChain ? asBig(queueLen) : null;
 
   const leaderLabel = useMemo(() => {
-    if (!onChain) return PAPER_DESK.leaderLabel;
+    if (!onChain) return "—";
     if (typeof leader === "string") return shortAddr(leader);
     return "…";
   }, [leader, onChain]);
@@ -284,7 +309,7 @@ export function DeskBlotter() {
       setDepositAmt("");
       await refreshVault();
     } catch (err) {
-      setNote(err instanceof Error ? err.message : "Deposit failed.");
+      setNote(shortError(err, "Deposit failed."));
     } finally {
       setBusy("idle");
     }
@@ -334,7 +359,7 @@ export function DeskBlotter() {
       setRedeemAmt("");
       await refreshVault();
     } catch (err) {
-      setNote(err instanceof Error ? err.message : "Redeem failed.");
+      setNote(shortError(err, "Redeem failed."));
     } finally {
       setBusy("idle");
     }
@@ -375,7 +400,7 @@ export function DeskBlotter() {
       setNote("Stake confirmed.");
       setStakeAmt("");
     } catch (err) {
-      setNote(err instanceof Error ? err.message : "Stake failed.");
+      setNote(shortError(err, "Stake failed."));
     } finally {
       setBusy("idle");
     }
@@ -431,65 +456,58 @@ export function DeskBlotter() {
       }
       setFactoryDesks(rows);
     } catch (err) {
-      setNote(err instanceof Error ? err.message : "List desk failed.");
+      setNote(shortError(err, "List desk failed."));
     } finally {
       setBusy("idle");
     }
   }
 
-  const paperFills = !onChain;
-  const tape = paperFills
-    ? []
-    : vault
-      ? fills.filter(
-          (f) => !f.desk || f.desk.toLowerCase() === vault.toLowerCase(),
-        )
-      : fills;
+  const tape = vault
+    ? fills.filter(
+        (f) =>
+          f.source !== "fixture" &&
+          (!f.desk || f.desk.toLowerCase() === vault.toLowerCase()),
+      )
+    : fills.filter((f) => f.source !== "fixture");
 
   return (
     <main className="container">
-      <div className="header">
-        <div>
-          <div className="brand">SEAT</div>
-          <div className="tagline">Copy desks for official Stock Tokens</div>
+      <header className="topbar">
+        <div className="brand-lockup">
+          <div>
+            <div className="brand">SEAT</div>
+            <p className="tagline">Copy desk for official Stock Tokens</p>
+          </div>
+          {onChain ? (
+            <span className="live-pill">
+              <span className="live-dot" />
+              Mainnet
+            </span>
+          ) : null}
         </div>
-        <div className="header-right">
-          {addrs.seatToken ? (
-            <Badge tone="green">Phase 2 · $SEAT</Badge>
-          ) : isMainnetDesk ? (
-            <Badge tone="green">Phase 1 · Mainnet $50k cap</Badge>
-          ) : onChain ? (
-            <Badge tone="green">Phase 1 · Testnet</Badge>
-          ) : (
-            <Badge tone="warn">Phase 0 · PAPER</Badge>
-          )}
-          <WalletBar />
-        </div>
-      </div>
+        <WalletBar deskChain={activeChain} />
+      </header>
 
-      {walletChain === CHAIN.MAINNET_ID && !onChain ? (
-        <div className="banner">
-          Connected to mainnet 4663. Capped desk is not wired yet. Switch to
-          testnet 46630 for the cash vault, or deploy with CONFIRM_MAINNET.
+      <section className="desk-head">
+        <div>
+          <div className="kicker">Leader</div>
+          <div className="desk-title">{leaderLabel}</div>
+          {onChain && vault ? (
+            <div className="desk-meta">
+              Vault <span className="mono">{shortAddr(vault)}</span>
+            </div>
+          ) : (
+            <div className="desk-meta">Desk unavailable</div>
+          )}
         </div>
-      ) : walletChain === CHAIN.MAINNET_ID && onChain ? (
-        <div className="banner">
-          Mainnet 4663. Deposit cap $50k USDG
-          {addrs.seatToken
-            ? ". $SEAT live — stake-to-list is open."
-            : ". No $SEAT until Phase 2 deploy."}
-        </div>
-      ) : null}
+      </section>
 
       {factoryDesks.length > 1 ? (
-        <p className="tagline">
-          Desks:{" "}
+        <div className="chips">
           {factoryDesks.map((d) => (
             <button
               className={
-                d.toLowerCase() === vault?.toLowerCase()
-                  ? "chip chip-on"
-                  : "chip"
+                d.toLowerCase() === vault?.toLowerCase() ? "chip chip-on" : "chip"
               }
               key={d}
               onClick={() => {
@@ -503,310 +521,272 @@ export function DeskBlotter() {
               {shortAddr(d)}
             </button>
           ))}
-        </p>
+        </div>
       ) : null}
 
-      <p className="tagline">
-        {onChain ? "Desk" : PAPER_DESK.name} · leader{" "}
-        <strong>{leaderLabel}</strong>
-        {onChain && vault ? (
-          <>
-            {" "}
-            · vault <span className="mono">{shortAddr(vault)}</span>
-          </>
-        ) : null}
-      </p>
-
-      <div className="grid">
+      <section className="metrics" aria-label="Desk figures">
         <div className="card">
           <div className="label">NAV</div>
           <div className="value">
-            {navUsdg !== null ? `${formatNav(navUsdg)} USDG` : "—"}
+            {navUsdg !== null ? formatNav(navUsdg) : "—"}
+            {navUsdg !== null ? <span className="unit">USDG</span> : null}
           </div>
         </div>
         <div className="card">
           <div className="label">NAV / seat</div>
           <div className="value">
-            {navPer !== null ? `${formatNav(navPer)} USDG` : "—"}
+            {navPer !== null ? formatNav(navPer) : "—"}
+            {navPer !== null ? <span className="unit">USDG</span> : null}
           </div>
         </div>
-        {onChain ? (
-          <>
-            <div className="card">
-              <div className="label">Cash</div>
-              <div className="value">
-                {cashUsdg !== null ? `${formatNav(cashUsdg)} USDG` : "—"}
-              </div>
-            </div>
-            <div className="card">
-              <div className="label">Shares</div>
-              <div className="value">
-                {shares !== null ? formatNav(shares) : "—"}
-              </div>
-            </div>
-            <div className="card">
-              <div className="label">Your seats</div>
-              <div className="value">{mine !== null ? formatNav(mine) : "—"}</div>
-            </div>
-            {typeof depositCap === "bigint" && depositCap > 0n ? (
-              <div className="card">
-                <div className="label">Deposit cap</div>
-                <div className="value">{formatNav(depositCap)} USDG</div>
-              </div>
-            ) : null}
-          </>
-        ) : null}
         <div className="card">
-          <div className="label">Mode</div>
+          <div className="label">Cash</div>
           <div className="value">
-            {onChain ? (
-              <Badge tone="green">{isMainnetDesk ? "MAINNET" : "TESTNET"}</Badge>
+            {cashUsdg !== null ? formatNav(cashUsdg) : "—"}
+            {cashUsdg !== null ? <span className="unit">USDG</span> : null}
+          </div>
+        </div>
+        <div className="card">
+          <div className="label">Shares</div>
+          <div className="value">{shares !== null ? formatNav(shares) : "—"}</div>
+        </div>
+        <div className="card">
+          <div className="label">Your seats</div>
+          <div className="value">{mine !== null ? formatNav(mine) : "—"}</div>
+        </div>
+        <div className="card">
+          <div className="label">
+            {typeof depositCap === "bigint" && depositCap > 0n
+              ? "Deposit cap"
+              : "Queue"}
+          </div>
+          <div className="value">
+            {typeof depositCap === "bigint" && depositCap > 0n ? (
+              <>
+                {formatNav(depositCap)}
+                <span className="unit">USDG</span>
+              </>
+            ) : queued !== null ? (
+              queued.toString()
             ) : (
-              <Badge tone="warn">PAPER</Badge>
+              "—"
             )}
           </div>
         </div>
-      </div>
+      </section>
+      <p className="caption">
+        NAV marks cash plus open positions. Cash is USDG still in the vault.
+      </p>
 
-      {onChain && queued !== null ? (
-        <p className="tagline">
-          Withdraw queue length: <strong>{queued.toString()}</strong>
-          {queued > 0n ? " (queued — not instant)" : " (none pending)"}
-        </p>
-      ) : null}
-      {onChain && navUsdg !== null && cashUsdg !== null && navUsdg !== cashUsdg ? (
-        <p className="tagline">
-          NAV and cash differ — positions are valued at the oracle. Cash is
-          USDG still sitting in the vault.
-        </p>
-      ) : null}
+      <section className="section">
+        <div className="section-head">
+          <h2 className="section-title">Book</h2>
+        </div>
+        <div className="symbols">
+          {BOOK.map((symbol) => (
+            <span className="symbol" key={symbol}>
+              {symbol}
+            </span>
+          ))}
+        </div>
+      </section>
 
-      <div className="section-title">Supported assets</div>
-      <div className="symbols">
-        {PAPER_DESK.supportedSymbols.map((s) => (
-          <Badge key={s} tone="muted">
-            {s}
-          </Badge>
-        ))}
-      </div>
-
-      <div className="section-title">
-        {paperFills ? "Fill tape (TEST DATA)" : "Fill tape"}
-      </div>
-      <table>
-        <thead>
-          <tr>
-            <th>Fill</th>
-            <th>Symbol</th>
-            <th>Side</th>
-            <th>Leader</th>
-            <th>Vault</th>
-            <th>Slippage</th>
-            <th>Source</th>
-            <th>Session</th>
-            <th>Time</th>
-          </tr>
-        </thead>
-        <tbody>
-          {paperFills
-            ? PAPER_DESK.fills.map((f) => (
-                <tr key={f.id}>
-                  <td>{f.id}</td>
-                  <td>{f.symbol}</td>
-                  <td>{f.side}</td>
-                  <td>{formatNav(f.notionalUsdg)} USDG</td>
-                  <td>—</td>
-                  <td>—</td>
-                  <td>
-                    <Badge tone="muted">TEST DATA</Badge>
-                  </td>
-                  <td>
-                    <Badge tone={sessionTone(f.session)}>{f.session}</Badge>
-                  </td>
-                  <td>{f.timestamp}</td>
-                </tr>
-              ))
-            : tape.length === 0 ? (
+      <section className="section">
+        <div className="section-head">
+          <h2 className="section-title">Copies</h2>
+        </div>
+        <div className="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>Symbol</th>
+                <th>Side</th>
+                <th>Leader</th>
+                <th>Copied</th>
+                <th>Slippage</th>
+                <th>Session</th>
+              </tr>
+            </thead>
+            <tbody>
+              {tape.length === 0 ? (
                 <tr>
-                  <td colSpan={9} className="tagline">
-                    No fills yet. Run <code>make paper</code> or{" "}
-                    <code>make keeper-testnet</code> to write fixture outcomes.
+                  <td className="empty" colSpan={7}>
+                    No copies yet.
                   </td>
                 </tr>
               ) : (
                 tape.map((f) => {
                   const intended = parseUsdgField(f.intendedUsdg);
                   const executed = parseUsdgField(f.executedUsdg);
-                  const vaultLabel =
-                    f.action === "skip" || f.action === "reject" || executed === 0n
-                      ? `skip · ${f.reason}`
-                      : `${formatNav(executed)} USDG`;
+                  const skipped =
+                    f.action === "skip" || f.action === "reject" || executed === 0n;
                   return (
                     <tr key={`${f.source}-${f.fillId}`}>
-                      <td>{f.fillId}</td>
+                      <td className="mono">{formatTime(f.timestamp)}</td>
                       <td>{f.symbol}</td>
-                      <td>{f.side}</td>
-                      <td>{formatNav(intended)} USDG</td>
-                      <td>{vaultLabel}</td>
-                      <td>{f.slippageBps} bps</td>
-                      <td>
-                        <Badge tone={sourceTone(f.source)}>{f.source}</Badge>
+                      <td className={sideClass(f.side)}>{f.side}</td>
+                      <td className="mono">{formatNav(intended)}</td>
+                      <td className="mono" title={skipped ? f.reason : undefined}>
+                        {skipped ? "Skipped" : formatNav(executed)}
                       </td>
-                      <td>
-                        <Badge tone={sessionTone(f.session)}>{f.session}</Badge>
-                      </td>
-                      <td>{f.timestamp}</td>
+                      <td className="mono">{f.slippageBps} bps</td>
+                      <td className="session">{sessionLabel(f.session)}</td>
                     </tr>
                   );
                 })
               )}
-        </tbody>
-      </table>
+            </tbody>
+          </table>
+        </div>
+      </section>
 
-      <div className="section-title">Seat</div>
-      <div className="actions">
-        <div className="field">
-          <input
-            className="input"
-            disabled={depositDisabled}
-            inputMode="decimal"
-            onChange={(e) => setDepositAmt(e.target.value)}
-            placeholder="USDG amount"
-            value={depositAmt}
-          />
-          <button
-            className={depositDisabled ? "btn" : "btn btn-on"}
-            disabled={depositDisabled}
-            onClick={() => void onDeposit()}
-            type="button"
+      <section className="section">
+        <div className="tickets">
+          <form
+            className="ticket"
+            onSubmit={(event) => {
+              event.preventDefault();
+              void onDeposit();
+            }}
           >
-            {busy === "approve"
-              ? "Approving…"
-              : busy === "deposit"
-                ? "Depositing…"
-                : "Deposit USDG"}
-          </button>
-        </div>
-        <div className="field">
-          <input
-            className="input"
-            disabled={redeemDisabled}
-            inputMode="decimal"
-            onChange={(e) => setRedeemAmt(e.target.value)}
-            placeholder="Share amount"
-            value={redeemAmt}
-          />
-          <button
-            className={redeemDisabled ? "btn" : "btn btn-on"}
-            disabled={redeemDisabled}
-            onClick={() => void onRedeem()}
-            type="button"
-          >
-            {busy === "redeem" ? "Redeeming…" : "Redeem"}
-          </button>
-        </div>
-      </div>
-      {addrs.seatToken && addrs.stakingPool ? (
-        <>
-          <div className="section-title">Stake $SEAT</div>
-          <div className="actions">
+            <h2>Deposit</h2>
             <div className="field">
+              <label className="field-label" htmlFor="deposit-usdg">
+                USDG
+              </label>
+              <input
+                className="input"
+                disabled={depositDisabled}
+                id="deposit-usdg"
+                inputMode="decimal"
+                onChange={(e) => setDepositAmt(e.target.value)}
+                placeholder="0.00"
+                value={depositAmt}
+              />
+            </div>
+            <button className="btn btn-on" disabled={depositDisabled} type="submit">
+              {busy === "approve"
+                ? "Approving…"
+                : busy === "deposit"
+                  ? "Depositing…"
+                  : "Deposit"}
+            </button>
+          </form>
+          <form
+            className="ticket"
+            onSubmit={(event) => {
+              event.preventDefault();
+              void onRedeem();
+            }}
+          >
+            <h2>Redeem</h2>
+            <div className="field">
+              <label className="field-label" htmlFor="redeem-shares">
+                Shares
+              </label>
+              <input
+                className="input"
+                disabled={redeemDisabled}
+                id="redeem-shares"
+                inputMode="decimal"
+                onChange={(e) => setRedeemAmt(e.target.value)}
+                placeholder="0.00"
+                value={redeemAmt}
+              />
+            </div>
+            <button className="btn btn-on" disabled={redeemDisabled} type="submit">
+              {busy === "redeem" ? "Redeeming…" : "Redeem"}
+            </button>
+          </form>
+        </div>
+        {addrs.seatToken && addrs.stakingPool ? (
+          <form
+            className="ticket"
+            onSubmit={(event) => {
+              event.preventDefault();
+              void onStake();
+            }}
+            style={{ marginTop: 12 }}
+          >
+            <h2>Stake</h2>
+            <div className="field">
+              <label className="field-label" htmlFor="stake-seat">
+                SEAT
+              </label>
               <input
                 className="input"
                 disabled={stakeDisabled}
+                id="stake-seat"
                 inputMode="decimal"
                 onChange={(e) => setStakeAmt(e.target.value)}
-                placeholder="$SEAT amount"
+                placeholder="0.00"
                 value={stakeAmt}
               />
-              <button
-                className={stakeDisabled ? "btn" : "btn btn-on"}
-                disabled={stakeDisabled}
-                onClick={() => void onStake()}
-                type="button"
-              >
-                {busy === "stake" ? "Staking…" : "Stake $SEAT"}
-              </button>
             </div>
-          </div>
-          <p className="tagline">
-            Stakers earn 10% of desk fees in USDG. Unstake on the pool contract
-            if you need the tokens back.
-          </p>
-        </>
-      ) : null}
-      {addrs.seatToken && factory ? (
-        <>
-          <div className="section-title">List a desk</div>
-          <div className="actions">
+            <button className="btn btn-on" disabled={stakeDisabled} type="submit">
+              {busy === "stake" ? "Staking…" : "Stake"}
+            </button>
+          </form>
+        ) : null}
+        {addrs.seatToken && factory ? (
+          <form
+            className="ticket"
+            onSubmit={(event) => {
+              event.preventDefault();
+              void onListDesk();
+            }}
+            style={{ marginTop: 12 }}
+          >
+            <h2>List a desk</h2>
             <div className="field">
+              <label className="field-label" htmlFor="list-leader">
+                Leader
+              </label>
               <input
                 className="input"
                 disabled={listDisabled}
+                id="list-leader"
                 onChange={(e) => setListLeader(e.target.value)}
-                placeholder="Leader address"
+                placeholder="0x"
                 value={listLeader}
               />
-              <button
-                className={listDisabled ? "btn" : "btn btn-on"}
-                disabled={listDisabled}
-                onClick={() => void onListDesk()}
-                type="button"
-              >
-                {busy === "list"
-                  ? "Listing…"
-                  : `Bond ${
-                      typeof listingBond === "bigint"
-                        ? formatUnits(listingBond, 18)
-                        : "…"
-                    } $SEAT`}
-              </button>
             </div>
-          </div>
-          <p className="tagline">
-            Posts the listing bond into the factory. One vault per leader. Owner
-            can return the bond if the desk is sunset — no auto-slash.
-          </p>
-        </>
-      ) : null}
-      {!onChain ? (
-        <p className="tagline">
-          Deposit / redeem stay disabled until a vault address is wired from a
-          real deploy on this chain.
-        </p>
-      ) : !canWrite ? (
-        <p className="tagline">
-          Connect a wallet on Robinhood {activeChain === CHAIN.MAINNET_ID ? "mainnet 4663" : "testnet 46630"} to deposit or redeem.
-        </p>
-      ) : null}
-      {note ? <p className="note">{note}</p> : null}
+            <button className="btn btn-on" disabled={listDisabled} type="submit">
+              {busy === "list"
+                ? "Listing…"
+                : `List · ${
+                    typeof listingBond === "bigint"
+                      ? formatUnits(listingBond, 18)
+                      : "…"
+                  } SEAT`}
+            </button>
+          </form>
+        ) : null}
+        {!canWrite ? (
+          <p className="hint">Connect a wallet on Robinhood Chain to deposit or redeem.</p>
+        ) : null}
+        {note ? <p className="note">{note}</p> : null}
+      </section>
 
-      <div className="disclaimer">
-        {onChain ? (
-          <>
-            <strong>
-              {isMainnetDesk ? "Capped mainnet desk." : "Phase 1 testnet."}
-            </strong>{" "}
-            NAV / shares / cash above are read from chain {activeChain}. When
-            they differ, NAV includes oracle-valued positions. Fill-tape rows
-            labeled <code>fixture</code> are not live.{" "}
-            {isMainnetDesk
-              ? "SwapAdapter wraps cited Uniswap SwapRouter02. Deposit cap $50k USDG per desk. MAG7 only."
-              : "No cited 46630 router — copies stay closed."}{" "}
-            {addrs.seatToken
-              ? "Fees split 70% leader / 20% protocol / 10% stakers. $SEAT is fixed-supply (1B, no mint)."
-              : "No $SEAT token until Phase 2 deploy."}
-          </>
-        ) : (
-          <>
-            <strong>Phase 0 paper fallback.</strong> All figures on this page
-            are TEST DATA. Vault addresses for this chain are unset.
-          </>
-        )}{" "}
-        SEAT is not affiliated with Robinhood Markets. Stock Tokens are not
-        shares. This is not investment advice
-        {isMainnetDesk ? "." : ". Do not deposit mainnet funds until a capped desk is wired."}
-      </div>
+      <footer className="legal">
+        <strong>Mainnet.</strong> Figures are read from the desk. NAV includes
+        open positions. SEAT is not affiliated with Robinhood Markets. Stock
+        Tokens are not shares. This is not investment advice.
+      </footer>
     </main>
   );
+}
+
+function formatTime(iso: string): string {
+  const date = new Date(iso);
+  if (Number.isNaN(date.getTime())) return iso;
+  return new Intl.DateTimeFormat("en-GB", {
+    day: "2-digit",
+    hour: "2-digit",
+    hourCycle: "h23",
+    minute: "2-digit",
+    month: "short",
+    timeZone: "UTC",
+  }).format(date);
 }

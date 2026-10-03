@@ -1,14 +1,12 @@
 "use client";
 
-import { CHAIN } from "@seat/sdk";
 import { useAccount, useChainId, useConnect, useDisconnect, useSwitchChain } from "wagmi";
-import { getAddresses } from "@/lib/addresses";
 
 function shortAddr(addr: string): string {
   return `${addr.slice(0, 6)}…${addr.slice(-4)}`;
 }
 
-export function WalletBar() {
+export function WalletBar({ deskChain }: { deskChain: number }) {
   const { address, isConnected } = useAccount();
   const chainId = useChainId();
   const { connect, connectors, isPending } = useConnect();
@@ -16,6 +14,7 @@ export function WalletBar() {
   const { switchChain, isPending: isSwitching } = useSwitchChain();
 
   const injected = connectors[0];
+  const onDesk = isConnected && chainId === deskChain;
 
   if (!isConnected) {
     return (
@@ -32,26 +31,20 @@ export function WalletBar() {
 
   return (
     <div className="wallet-bar">
-      <span className="mono">{shortAddr(address ?? "")}</span>
-      {chainId === CHAIN.MAINNET_ID ? (
-        getAddresses(CHAIN.MAINNET_ID).deskVault ? (
-          <span className="ok-text">mainnet 4663 — $50k cap</span>
-        ) : (
-          <span className="warn-text">mainnet 4663 — desk not wired</span>
-        )
-      ) : chainId !== CHAIN.TESTNET_ID ? (
+      <span className="wallet-addr">{shortAddr(address ?? "")}</span>
+      {onDesk ? (
+        <span className="net-live">Mainnet</span>
+      ) : (
         <button
           className="btn btn-on"
           disabled={isSwitching}
-          onClick={() => switchChain({ chainId: CHAIN.TESTNET_ID })}
+          onClick={() => switchChain({ chainId: deskChain })}
           type="button"
         >
-          Switch to 46630
+          {isSwitching ? "Switching…" : "Switch network"}
         </button>
-      ) : (
-        <span className="ok-text">testnet 46630</span>
       )}
-      <button className="btn btn-on" onClick={() => disconnect()} type="button">
+      <button className="btn" onClick={() => disconnect()} type="button">
         Disconnect
       </button>
     </div>
