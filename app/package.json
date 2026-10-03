@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "pnpm --dir .. --filter @seat/sdk build && next build",
     "start": "next start",
     "typecheck": "tsc --noEmit",
     "test": "echo \"(app) no unit tests in phase 0\" && exit 0"
