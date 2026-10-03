@@ -74,7 +74,7 @@ All variables are documented in `.env.example`. Copy it to a **gitignored** `.en
 
 | Variable | Purpose |
 |---|---|
-| `NEXT_PUBLIC_SEAT_PRODUCT_URL` | "Product" link target (renders disabled "Launching soon" when unset) |
+| `NEXT_PUBLIC_SEAT_PRODUCT_URL` | "Product" link target (defaults to `https://app.seatdesks.xyz`) |
 | `NEXT_PUBLIC_SEAT_X_URL` | X/Twitter link (defaults to `https://x.com/seatdesks`) |
 | `NEXT_PUBLIC_SEAT_SITE_URL` | Canonical site URL for metadata/sitemap |
 

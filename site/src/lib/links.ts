@@ -18,7 +18,7 @@ const env = (value: string | undefined): string | null =>
 export const links = {
   product: {
     label: "Product",
-    href: env(process.env.NEXT_PUBLIC_SEAT_PRODUCT_URL),
+    href: env(process.env.NEXT_PUBLIC_SEAT_PRODUCT_URL) ?? "https://app.seatdesks.xyz",
     description: "The desk blotter: deposit, seats, fill tape.",
     external: true,
   },
