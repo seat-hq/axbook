@@ -1,14 +1,13 @@
 "use client";
 
-import { useAccount, useChainId, useConnect, useDisconnect, useSwitchChain } from "wagmi";
+import { useAccount, useConnect, useDisconnect, useSwitchChain } from "wagmi";
 
 function shortAddr(addr: string): string {
   return `${addr.slice(0, 6)}…${addr.slice(-4)}`;
 }
 
 export function WalletBar({ deskChain }: { deskChain: number }) {
-  const { address, isConnected } = useAccount();
-  const chainId = useChainId();
+  const { address, chainId, isConnected } = useAccount();
   const { connect, connectors, isPending } = useConnect();
   const { disconnect } = useDisconnect();
   const { switchChain, isPending: isSwitching } = useSwitchChain();

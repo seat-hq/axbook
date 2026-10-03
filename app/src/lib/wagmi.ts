@@ -24,7 +24,7 @@ export const robinhood = defineChain({
 
 export const robinhoodTestnet = defineChain({
   id: CHAIN.TESTNET_ID,
-  name: "Robinhood Chain Testnet",
+  name: "Robinhood Chain",
   nativeCurrency: { name: "Ether", symbol: CHAIN.GAS_ASSET, decimals: 18 },
   rpcUrls: { default: { http: [TESTNET_RPC] } },
   testnet: true,

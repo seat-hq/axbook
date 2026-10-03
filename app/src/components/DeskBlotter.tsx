@@ -5,9 +5,9 @@ import { CHAIN, isTradeEligible, listSymbols } from "@seat/sdk";
 import { decodeEventLog, formatUnits, parseUnits } from "viem";
 import {
   useAccount,
-  useChainId,
   usePublicClient,
   useReadContract,
+  useSwitchChain,
   useWriteContract,
 } from "wagmi";
 import { deskFactoryAbi, deskVaultAbi, erc20Abi, stakingPoolAbi } from "@/abis";
@@ -46,6 +46,9 @@ function shortError(err: unknown, fallback: string): string {
     return err.shortMessage;
   }
   if (err instanceof Error) {
+    if (err.message.includes("does not match the target chain")) {
+      return "Approve the Robinhood Chain network in your wallet, then try again.";
+    }
     const line = err.message.split("\n")[0] ?? fallback;
     return line.length > 160 ? `${line.slice(0, 157)}…` : line;
   }
@@ -58,19 +61,18 @@ function shortAddr(addr: string): string {
 }
 
 export function DeskBlotter() {
-  const { address, isConnected } = useAccount();
-  const walletChain = useChainId();
+  const { address, chainId: walletChain, connector, isConnected } = useAccount();
   const activeChain =
     getAddresses(CHAIN.MAINNET_ID).deskVault !== null
       ? CHAIN.MAINNET_ID
       : CHAIN.TESTNET_ID;
-  const onDeskChain = isConnected && walletChain === activeChain;
   const addrs = getAddresses(activeChain);
   const factory = addrs.deskFactory;
   const [queryDesk, setQueryDesk] = useState<`0x${string}` | null>(null);
   const [factoryDesks, setFactoryDesks] = useState<`0x${string}`[]>([]);
   const publicClient = usePublicClient({ chainId: activeChain });
   const { writeContractAsync } = useWriteContract();
+  const { switchChainAsync } = useSwitchChain();
 
   useEffect(() => {
     const q = new URLSearchParams(window.location.search).get("desk");
@@ -116,7 +118,13 @@ export function DeskBlotter() {
   const onChain = vault !== null;
 
   const canWrite =
-    onDeskChain && canWriteOnChain(activeChain, addrs) && Boolean(address);
+    isConnected && canWriteOnChain(activeChain, addrs) && Boolean(address);
+
+  async function ensureDeskChain() {
+    const current = connector ? await connector.getChainId() : walletChain;
+    if (current === activeChain) return;
+    await switchChainAsync({ chainId: activeChain });
+  }
 
   const readEnabled = onChain;
   const userEnabled = onChain && Boolean(address);
@@ -288,6 +296,7 @@ export function DeskBlotter() {
     }
     try {
       setBusy("approve");
+      await ensureDeskChain();
       const approveHash = await writeContractAsync({
         address: usdg,
         abi: erc20Abi,
@@ -331,6 +340,7 @@ export function DeskBlotter() {
     }
     try {
       setBusy("redeem");
+      await ensureDeskChain();
       const hash = await writeContractAsync({
         address: vault,
         abi: deskVaultAbi,
@@ -381,6 +391,7 @@ export function DeskBlotter() {
     }
     try {
       setBusy("stake");
+      await ensureDeskChain();
       const approveHash = await writeContractAsync({
         address: addrs.seatToken,
         abi: erc20Abi,
@@ -421,6 +432,7 @@ export function DeskBlotter() {
     }
     try {
       setBusy("list");
+      await ensureDeskChain();
       const approveHash = await writeContractAsync({
         address: addrs.seatToken,
         abi: erc20Abi,
