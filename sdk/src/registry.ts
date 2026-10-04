@@ -10,6 +10,7 @@
  * docs/allowlist.md and docs/phase-1-live.md. Do not copy 4663 addresses
  * onto 46630.
  */
+import { LEADER_EQUITIES } from "./leader-equities.js";
 
 /** Verification state of a registry entry. See docs/allowlist.md. */
 export type VerificationState = "verified" | "unverified" | "placeholder";
@@ -216,6 +217,7 @@ export const OFFICIAL_STOCK_TOKENS: readonly OfficialStockToken[] = [
     enabled: false,
     note: TESTNET_NOTE,
   },
+  ...LEADER_EQUITIES,
 ];
 
 /** Case-insensitive lookup by symbol, optionally scoped to a chain. */

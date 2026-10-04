@@ -3,9 +3,11 @@
  *
  * Binds to DESK_ADDRESSES, DESK_ADDRESS, or factory.allDesks.
  * Does not pick a leader.
- * PAPER + fixture by default. LIVE + LiveFillSource when
- * EXECUTION_MODE=LIVE and SWAP_ROUTER_CONFIGURED=1.
+ * PAPER + fixture by default. LIVE watches this leader's cited stock
+ * tokens on chain 4663. A copy is submitted only when the desk chain can
+ * settle that symbol and SWAP_ROUTER_CONFIGURED=1.
  */
+import { CHAIN, isTradeEligible } from "@seat/sdk";
 import { loadChainConfig, redactChainConfig } from "./chain.js";
 import {
   LiveExecutor,
@@ -56,27 +58,29 @@ async function main(): Promise<void> {
   const routerOn = process.env.SWAP_ROUTER_CONFIGURED === "1";
   const recorded: RecordedFill[] = [];
 
-  if (liveWanted && routerOn) {
+  if (liveWanted) {
+    const tapeRpc =
+      process.env.RH_RPC_URL?.trim() || "https://rpc.mainnet.chain.robinhood.com";
     for (const binding of bindings) {
       if (binding.leader === "unbound") continue;
       const env = { ...process.env, DESK_ADDRESS: binding.desk ?? "" };
-      let live: LiveExecutor;
-      try {
-        live = new LiveExecutor(
-          { chainId: cfg.chainId, routerConfigured: true },
-          env,
-        );
-      } catch (err) {
-        // eslint-disable-next-line no-console
-        console.warn("[keeper] LIVE refused for desk, paper fallback:", err);
-        await runPaper(binding, market, copy, risk, recorded);
-        continue;
+      let live: LiveExecutor | null = null;
+      if (routerOn) {
+        try {
+          live = new LiveExecutor(
+            { chainId: cfg.chainId, routerConfigured: true },
+            env,
+          );
+        } catch (err) {
+          // eslint-disable-next-line no-console
+          console.warn("[keeper] LIVE submit refused:", err);
+        }
       }
 
       const source = new LiveFillSource({
-        rpcUrl: cfg.rpcUrl,
+        rpcUrl: tapeRpc,
         leader: binding.leader,
-        chainId: cfg.chainId,
+        chainId: CHAIN.MAINNET_ID,
       });
       const fills = [...(await source.fetchFills())];
       const state = createRiskState(usdg(10_000), usdg(10_000));
@@ -110,10 +114,25 @@ async function main(): Promise<void> {
           );
           continue;
         }
-        const decision = evaluateRisk(norm.signal, session, state, copy, risk, market);
+        const priced = buildStaticMarket(
+          {
+            [norm.signal.symbol]: {
+              value: norm.signal.price,
+              decimals: norm.signal.priceDecimals,
+              tokenDecimals: 18,
+            },
+          },
+          market.slippageBps,
+        );
+        const decision = evaluateRisk(norm.signal, session, state, copy, risk, priced);
         let executed = 0n;
         let reason = decision.reason;
-        if (decision.action !== "skip" && decision.sizeUsdg > 0n) {
+        const deskCanSettle = isTradeEligible(norm.signal.symbol, cfg.chainId);
+        if (decision.action !== "skip" && decision.sizeUsdg > 0n && !deskCanSettle) {
+          reason = "desk chain cannot settle this 4663 stock token";
+        } else if (decision.action !== "skip" && decision.sizeUsdg > 0n && !live) {
+          reason = "router not configured; fill priced and not submitted";
+        } else if (decision.action !== "skip" && decision.sizeUsdg > 0n && live) {
           try {
             await live.submitCopy(norm.signal, decision, session.session);
             executed = decision.sizeUsdg;

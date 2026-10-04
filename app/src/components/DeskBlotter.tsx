@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { CHAIN, isTradeEligible, listSymbols } from "@seat/sdk";
+import { CHAIN } from "@seat/sdk";
 import { decodeEventLog, formatUnits, parseUnits } from "viem";
 import {
   useAccount,
@@ -11,29 +11,10 @@ import {
   useWriteContract,
 } from "wagmi";
 import { deskFactoryAbi, deskVaultAbi, erc20Abi, stakingPoolAbi } from "@/abis";
+import { SeatTerminal } from "@/components/SeatTerminal";
 import { WalletBar } from "@/components/WalletBar";
 import { canWriteOnChain, getAddresses } from "@/lib/addresses";
 import { formatNav } from "@/lib/desks";
-import { parseUsdgField, type RecordedFill } from "@/lib/fills";
-
-const BOOK = listSymbols().filter((symbol) =>
-  isTradeEligible(symbol, CHAIN.MAINNET_ID),
-);
-
-function sessionLabel(session: string): string {
-  if (session === "regular") return "Regular";
-  if (session === "after_hours") return "After hours";
-  if (session === "pre_market") return "Pre-market";
-  if (session === "closed") return "Closed";
-  return session.replaceAll("_", " ");
-}
-
-function sideClass(side: string): string {
-  const value = side.toLowerCase();
-  if (value === "buy") return "side side-buy";
-  if (value === "sell") return "side side-sell";
-  return "side";
-}
 
 function shortError(err: unknown, fallback: string): string {
   if (
@@ -75,7 +56,8 @@ export function DeskBlotter() {
   const { switchChainAsync } = useSwitchChain();
 
   useEffect(() => {
-    const q = new URLSearchParams(window.location.search).get("desk");
+    const params = new URLSearchParams(window.location.search);
+    const q = params.get("desk");
     if (q && /^0x[0-9a-fA-F]{40}$/.test(q)) {
       setQueryDesk(q.toLowerCase() as `0x${string}`);
     }
@@ -204,7 +186,6 @@ export function DeskBlotter() {
     "idle" | "approve" | "deposit" | "redeem" | "stake" | "list"
   >("idle");
   const [note, setNote] = useState<string | null>(null);
-  const [fills, setFills] = useState<RecordedFill[]>([]);
   const [stakeAmt, setStakeAmt] = useState("");
   const [listLeader, setListLeader] = useState("");
 
@@ -216,23 +197,6 @@ export function DeskBlotter() {
     query: { enabled: factory !== null && addrs.seatToken !== null },
   });
 
-  const loadFills = useCallback(async () => {
-    try {
-      const res = await fetch("/api/fills", { cache: "no-store" });
-      if (!res.ok) return;
-      const json = (await res.json()) as { fills?: RecordedFill[] };
-      setFills(Array.isArray(json.fills) ? json.fills : []);
-    } catch {
-      setFills([]);
-    }
-  }, []);
-
-  useEffect(() => {
-    void loadFills();
-    const id = window.setInterval(() => void loadFills(), 12_000);
-    return () => window.clearInterval(id);
-  }, [loadFills]);
-
   const refreshVault = useCallback(async () => {
     await Promise.all([
       refetchAssets(),
@@ -242,9 +206,7 @@ export function DeskBlotter() {
       refetchUser(),
       refetchQueue(),
     ]);
-    await loadFills();
   }, [
-    loadFills,
     refetchAssets,
     refetchCash,
     refetchNav,
@@ -474,46 +436,12 @@ export function DeskBlotter() {
     }
   }
 
-  const tape = vault
-    ? fills.filter(
-        (f) =>
-          f.source !== "fixture" &&
-          (!f.desk || f.desk.toLowerCase() === vault.toLowerCase()),
-      )
-    : fills.filter((f) => f.source !== "fixture");
-
   return (
-    <main className="container">
-      <header className="topbar">
-        <div className="brand-lockup">
-          <div>
-            <div className="brand">SEAT</div>
-            <p className="tagline">Copy desk for official Stock Tokens</p>
-          </div>
-          {onChain ? (
-            <span className="live-pill">
-              <span className="live-dot" />
-              Mainnet
-            </span>
-          ) : null}
-        </div>
-        <WalletBar deskChain={activeChain} />
-      </header>
-
-      <section className="desk-head">
-        <div>
-          <div className="kicker">Leader</div>
-          <div className="desk-title">{leaderLabel}</div>
-          {onChain && vault ? (
-            <div className="desk-meta">
-              Vault <span className="mono">{shortAddr(vault)}</span>
-            </div>
-          ) : (
-            <div className="desk-meta">Desk unavailable</div>
-          )}
-        </div>
-      </section>
-
+    <SeatTerminal
+      cash={cashUsdg !== null ? formatNav(cashUsdg) : "—"}
+      deskChain={activeChain}
+      forms={
+        <>
       {factoryDesks.length > 1 ? (
         <div className="chips">
           {factoryDesks.map((d) => (
@@ -535,125 +463,6 @@ export function DeskBlotter() {
           ))}
         </div>
       ) : null}
-
-      <section className="metrics" aria-label="Desk figures">
-        <div className="card">
-          <div className="label">NAV</div>
-          <div className="value">
-            {navUsdg !== null ? formatNav(navUsdg) : "—"}
-            {navUsdg !== null ? <span className="unit">USDG</span> : null}
-          </div>
-        </div>
-        <div className="card">
-          <div className="label">NAV / seat</div>
-          <div className="value">
-            {navPer !== null ? formatNav(navPer) : "—"}
-            {navPer !== null ? <span className="unit">USDG</span> : null}
-          </div>
-        </div>
-        <div className="card">
-          <div className="label">Cash</div>
-          <div className="value">
-            {cashUsdg !== null ? formatNav(cashUsdg) : "—"}
-            {cashUsdg !== null ? <span className="unit">USDG</span> : null}
-          </div>
-        </div>
-        <div className="card">
-          <div className="label">Shares</div>
-          <div className="value">{shares !== null ? formatNav(shares) : "—"}</div>
-        </div>
-        <div className="card">
-          <div className="label">Your seats</div>
-          <div className="value">{mine !== null ? formatNav(mine) : "—"}</div>
-        </div>
-        <div className="card">
-          <div className="label">
-            {typeof depositCap === "bigint" && depositCap > 0n
-              ? "Deposit cap"
-              : "Queue"}
-          </div>
-          <div className="value">
-            {typeof depositCap === "bigint" && depositCap > 0n ? (
-              <>
-                {formatNav(depositCap)}
-                <span className="unit">USDG</span>
-              </>
-            ) : queued !== null ? (
-              queued.toString()
-            ) : (
-              "—"
-            )}
-          </div>
-        </div>
-      </section>
-      <p className="caption">
-        NAV marks cash plus open positions. Cash is USDG still in the vault.
-      </p>
-
-      <section className="section">
-        <div className="section-head">
-          <h2 className="section-title">Book</h2>
-        </div>
-        <div className="symbols">
-          {BOOK.map((symbol) => (
-            <span className="symbol" key={symbol}>
-              {symbol}
-            </span>
-          ))}
-        </div>
-      </section>
-
-      <section className="section">
-        <div className="section-head">
-          <h2 className="section-title">Copies</h2>
-        </div>
-        <div className="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Time</th>
-                <th>Symbol</th>
-                <th>Side</th>
-                <th>Leader</th>
-                <th>Copied</th>
-                <th>Slippage</th>
-                <th>Session</th>
-              </tr>
-            </thead>
-            <tbody>
-              {tape.length === 0 ? (
-                <tr>
-                  <td className="empty" colSpan={7}>
-                    No copies yet.
-                  </td>
-                </tr>
-              ) : (
-                tape.map((f) => {
-                  const intended = parseUsdgField(f.intendedUsdg);
-                  const executed = parseUsdgField(f.executedUsdg);
-                  const skipped =
-                    f.action === "skip" || f.action === "reject" || executed === 0n;
-                  return (
-                    <tr key={`${f.source}-${f.fillId}`}>
-                      <td className="mono">{formatTime(f.timestamp)}</td>
-                      <td>{f.symbol}</td>
-                      <td className={sideClass(f.side)}>{f.side}</td>
-                      <td className="mono">{formatNav(intended)}</td>
-                      <td className="mono" title={skipped ? f.reason : undefined}>
-                        {skipped ? "Skipped" : formatNav(executed)}
-                      </td>
-                      <td className="mono">{f.slippageBps} bps</td>
-                      <td className="session">{sessionLabel(f.session)}</td>
-                    </tr>
-                  );
-                })
-              )}
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      <section className="section">
         <div className="tickets">
           <form
             className="ticket"
@@ -778,27 +587,19 @@ export function DeskBlotter() {
         {!canWrite ? (
           <p className="hint">Connect a wallet on Robinhood Chain to deposit or redeem.</p>
         ) : null}
-        {note ? <p className="note">{note}</p> : null}
-      </section>
-
-      <footer className="legal">
-        <strong>Mainnet.</strong> Figures are read from the desk. NAV includes
-        open positions. SEAT is not affiliated with Robinhood Markets. Stock
-        Tokens are not shares. This is not investment advice.
-      </footer>
-    </main>
+          <p className="legal">
+            <strong>Mainnet.</strong> NAV includes open positions. SEAT is not affiliated
+            with Robinhood Markets. Stock Tokens are not shares. This is not investment advice.
+          </p>
+        </>
+      }
+      leader={typeof leader === "string" ? (leader as `0x${string}`) : null}
+      nav={navUsdg !== null ? formatNav(navUsdg) : "—"}
+      note={note}
+      seats={shares !== null ? formatNav(shares) : "—"}
+      title={leaderLabel}
+      vault={vault ? shortAddr(vault) : "—"}
+      wallet={<WalletBar deskChain={activeChain} />}
+    />
   );
-}
-
-function formatTime(iso: string): string {
-  const date = new Date(iso);
-  if (Number.isNaN(date.getTime())) return iso;
-  return new Intl.DateTimeFormat("en-GB", {
-    day: "2-digit",
-    hour: "2-digit",
-    hourCycle: "h23",
-    minute: "2-digit",
-    month: "short",
-    timeZone: "UTC",
-  }).format(date);
 }

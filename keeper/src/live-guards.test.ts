@@ -14,7 +14,7 @@ assert.equal(false, isTradeEligible("NVDA", 46630));
 assert.equal(true, isTradeEligible("NVDA", 4663));
 assert.equal(true, isTradeEligible("AAPL", 4663));
 assert.equal(true, isTradeEligible("SPY", 4663));
-assert.equal(false, isTradeEligible("TSLA", 4663));
+assert.equal(true, isTradeEligible("TSLA", 4663));
 assert.equal(false, isTradeEligible("TSLA", 46630));
 
 assert.doesNotThrow(
@@ -129,6 +129,30 @@ assert.equal(decoded.length, 1);
 assert.equal(decoded[0]?.symbol, "TSLA");
 assert.equal(decoded[0]?.side, "buy");
 assert.equal(decoded[0]?.notionalUsdg, 0n);
+
+const mainnetTsla = "0x322F0929c4625eD5bAd873c95208D54E1c003b2d";
+const priced = src.decode(
+  [
+    {
+      address: mainnetTsla,
+      topics: [
+        "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+        `0x000000000000000000000000${"11".repeat(20)}`,
+        `0x000000000000000000000000${leader.slice(2)}`,
+      ],
+      data: `0x${(10n ** 18n).toString(16).padStart(64, "0")}`,
+      transactionHash: "0xdef",
+      logIndex: "0x2",
+      blockNumber: "0x10",
+    },
+  ],
+  leader,
+  new Map([[mainnetTsla.toLowerCase(), 100_00000000n]]),
+  new Map([["0x10", 1_700_000_000_000]]),
+);
+assert.equal(priced[0]?.symbol, "TSLA");
+assert.equal(priced[0]?.notionalUsdg, 100_000000n);
+assert.equal(priced[0]?.timestampMs, 1_700_000_000_000);
 
 assert.deepEqual(parseDeskList({ DESK_ADDRESS: "0x8ff6ef04312679a0112b5229c6911cbc026e73ff" }), [
   "0x8ff6ef04312679a0112b5229c6911cbc026e73ff",

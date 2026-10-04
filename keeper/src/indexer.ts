@@ -7,6 +7,7 @@
  */
 import {
   CHAIN,
+  getOfficialStockToken,
   getOfficialStockTokenByAddress,
   listedTokenAddresses,
 } from "@seat/sdk";
@@ -72,9 +73,8 @@ export class LiveFillSource implements FillSource {
       console.warn("[indexer] LiveFillSource: missing rpc/leader; empty tape");
       return [];
     }
-    const tokens = listedTokenAddresses(
-      this.opts.chainId ?? CHAIN.TESTNET_ID,
-    );
+    const chainId = this.opts.chainId ?? CHAIN.TESTNET_ID;
+    const tokens = listedTokenAddresses(chainId);
     if (tokens.length === 0) {
       // eslint-disable-next-line no-console
       console.warn("[indexer] LiveFillSource: no cited token addresses; empty tape");
@@ -90,15 +90,23 @@ export class LiveFillSource implements FillSource {
         const lookback = 2_000n;
         fromBlock = n > lookback ? n - lookback : 0n;
       }
-      const logs = await this.rpc<RpcLog[]>("eth_getLogs", [
-        {
-          fromBlock: `0x${fromBlock.toString(16)}`,
-          toBlock: toBlock === "latest" ? "latest" : `0x${toBlock.toString(16)}`,
-          address: tokens,
-          topics: [TRANSFER_TOPIC],
-        },
-      ]);
-      return this.decode(logs, leader);
+      const toHex = toBlock === "latest" ? "latest" : `0x${toBlock.toString(16)}`;
+      const fromHex = `0x${fromBlock.toString(16)}`;
+      const logs: RpcLog[] = [];
+      for (let i = 0; i < tokens.length; i += 15) {
+        const batch = await this.rpc<RpcLog[]>("eth_getLogs", [
+          {
+            fromBlock: fromHex,
+            toBlock: toHex,
+            address: tokens.slice(i, i + 15),
+            topics: [TRANSFER_TOPIC],
+          },
+        ]);
+        logs.push(...batch);
+      }
+      const prices = await this.pricesFor(logs, chainId);
+      const times = await this.blockTimes(logs);
+      return this.decode(logs, leader, prices, times);
     } catch (err) {
       // eslint-disable-next-line no-console
       console.warn(
@@ -109,7 +117,12 @@ export class LiveFillSource implements FillSource {
     }
   }
 
-  decode(logs: readonly RpcLog[], leader: string): LeaderFill[] {
+  decode(
+    logs: readonly RpcLog[],
+    leader: string,
+    prices: ReadonlyMap<string, bigint> = new Map(),
+    times: ReadonlyMap<string, number> = new Map(),
+  ): LeaderFill[] {
     const want = leader.toLowerCase();
     const out: LeaderFill[] = [];
     for (const log of logs) {
@@ -126,21 +139,77 @@ export class LiveFillSource implements FillSource {
       else if (from === want && to !== want) side = "sell";
       else continue;
       const raw = hexToBigInt(log.data ?? "0x");
-      const dec = entry.decimals ?? 18;
-      // Notional stays 0 unless a cited feed/price is attached later.
+      const price = prices.get(tokenAddr) ?? 0n;
+      const dec = BigInt(entry.decimals ?? 18);
+      // USDG has 6 decimals. Feed prices are 8 decimals per whole token.
+      const notionalUsdg =
+        price > 0n ? (raw * price) / 10n ** (dec + 8n - 6n) : 0n;
+      const block = (log.blockNumber ?? "").toLowerCase();
       const id = `${log.transactionHash ?? "0x"}-${log.logIndex ?? "0"}`;
       out.push({
         id,
         leader: want,
         symbol: entry.symbol,
         side,
-        notionalUsdg: 0n,
-        price: 0n,
+        notionalUsdg,
+        price,
         priceDecimals: 8,
-        timestampMs: 0,
+        timestampMs: times.get(block) ?? 0,
       });
-      void raw;
-      void dec;
+    }
+    return out;
+  }
+
+  private async pricesFor(
+    logs: readonly RpcLog[],
+    chainId: number,
+  ): Promise<Map<string, bigint>> {
+    const out = new Map<string, bigint>();
+    const seen = new Set<string>();
+    for (const log of logs) {
+      const tokenAddr = (log.address ?? "").toLowerCase();
+      if (!tokenAddr || seen.has(tokenAddr)) continue;
+      seen.add(tokenAddr);
+      const entry = getOfficialStockTokenByAddress(tokenAddr);
+      if (!entry?.feed || entry.chainId !== chainId) continue;
+      const priced = getOfficialStockToken(entry.symbol, chainId);
+      if (!priced?.feed) continue;
+      try {
+        const data = await this.rpc<string>("eth_call", [
+          { to: priced.feed, data: "0xfeaf968c" },
+          "latest",
+        ]);
+        const body = data.startsWith("0x") ? data.slice(2) : data;
+        if (body.length < 256) continue;
+        let answer = BigInt(`0x${body.slice(64, 128)}`);
+        if (answer >= 1n << 255n) answer -= 1n << 256n;
+        const updatedAt = BigInt(`0x${body.slice(192, 256)}`);
+        const age = BigInt(Math.floor(Date.now() / 1000)) - updatedAt;
+        // Equity feeds heartbeat once a day and only move during the session.
+        if (answer <= 0n || updatedAt <= 0n || age > 86_400n) continue;
+        out.set(tokenAddr, answer);
+      } catch {
+        // No cited price for this log. The fill stays zero-notional.
+      }
+    }
+    return out;
+  }
+
+  private async blockTimes(logs: readonly RpcLog[]): Promise<Map<string, number>> {
+    const out = new Map<string, number>();
+    for (const log of logs) {
+      const block = (log.blockNumber ?? "").toLowerCase();
+      if (!block || out.has(block)) continue;
+      try {
+        const header = await this.rpc<{ timestamp?: string }>("eth_getBlockByNumber", [
+          block,
+          false,
+        ]);
+        const ts = hexToBigInt(header.timestamp ?? "0x");
+        if (ts > 0n) out.set(block, Number(ts) * 1000);
+      } catch {
+        out.set(block, 0);
+      }
     }
     return out;
   }
