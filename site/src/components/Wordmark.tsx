@@ -1,17 +1,28 @@
 type Tone = "inherit" | "dark" | "light" | "badge";
 
 /**
- * Official SEAT mark: a seat (lid over a rounded body) inside a gold ring.
+ * Official SEAT mark: a chair inside a gold ring.
+ * The ring is the desk. The chair is the seat you take.
  * `inherit` follows the surrounding ink (cream on the dark site, forest on paper).
  */
+function Chair({ fill }: { fill: string }) {
+  return (
+    <g fill={fill}>
+      <rect x="39" y="22" width="22" height="26" rx="5" />
+      <rect x="25" y="44" width="50" height="13" rx="3.5" />
+      <rect x="32" y="54" width="10" height="20" rx="3" />
+      <rect x="58" y="54" width="10" height="20" rx="3" />
+    </g>
+  );
+}
+
 export function Mark({ size = 26, tone = "inherit" }: { size?: number; tone?: Tone }) {
   if (tone === "badge") {
     return (
       <svg width={size} height={size} viewBox="0 0 100 100" aria-hidden="true" focusable="false">
         <circle cx="50" cy="50" r="48.6" fill="none" stroke="var(--brand-gold)" strokeWidth="1.4" />
         <circle cx="50" cy="50" r="45.5" fill="var(--brand-green)" />
-        <rect x="31.5" y="27" width="37" height="8.6" rx="4.3" fill="none" stroke="var(--brand-cream)" strokeWidth="4.2" />
-        <rect x="31.5" y="41.5" width="37" height="32" rx="6.5" fill="none" stroke="var(--brand-cream)" strokeWidth="4.2" />
+        <Chair fill="var(--brand-cream)" />
       </svg>
     );
   }
@@ -20,8 +31,7 @@ export function Mark({ size = 26, tone = "inherit" }: { size?: number; tone?: To
   return (
     <svg width={size} height={size} viewBox="0 0 100 100" aria-hidden="true" focusable="false">
       <circle cx="50" cy="50" r="46" fill="none" stroke="var(--brand-gold)" strokeWidth="3.2" />
-      <rect x="29.2" y="24.2" width="41.6" height="6.9" rx="1.6" fill={glyph} />
-      <rect x="27.2" y="33.3" width="45.6" height="43.6" rx="7.3" fill={glyph} />
+      <Chair fill={glyph} />
     </svg>
   );
 }
