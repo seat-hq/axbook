@@ -1,0 +1,84 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,560&family=Inter:wght@500;600;700&display=swap" />
+<style>
+  html, body { margin: 0; width: 2000px; height: 800px; background: #07140e; color: #fcf6ea; }
+  body {
+    display: flex;
+    align-items: center;
+    gap: 88px;
+    padding: 0 108px 0 96px;
+    box-sizing: border-box;
+    background-image:
+      linear-gradient(rgba(53, 208, 127, 0.055) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(53, 208, 127, 0.055) 1px, transparent 1px);
+    background-size: 80px 80px;
+    font-family: Inter, system-ui, sans-serif;
+  }
+  .mark { width: 300px; height: 300px; flex: none; }
+  .copy { flex: 1; }
+  .eyebrow {
+    margin: 0 0 20px;
+    color: #35d07f;
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+  }
+  h1 {
+    margin: 0;
+    font-family: Fraunces, Georgia, serif;
+    font-weight: 560;
+    font-size: 92px;
+    line-height: 0.96;
+    letter-spacing: -0.035em;
+  }
+  p {
+    margin: 28px 0 0;
+    max-width: 1180px;
+    color: #d5e6da;
+    font-size: 32px;
+    line-height: 1.4;
+  }
+  .meta {
+    display: flex;
+    gap: 18px;
+    margin-top: 40px;
+  }
+  .meta span {
+    border: 1px solid #2a5540;
+    background: #0f2a1e;
+    color: #bb9757;
+    border-radius: 999px;
+    padding: 12px 22px;
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+</style>
+</head>
+<body>
+  <svg class="mark" viewBox="0 0 100 100" aria-hidden="true">
+    <circle cx="50" cy="50" r="49" fill="#1c3b2e"/>
+    <circle cx="50" cy="50" r="44" fill="none" stroke="#bb9757" stroke-width="3.2"/>
+    <g fill="#fcf6ea">
+      <rect x="39" y="22" width="22" height="26" rx="5"/>
+      <rect x="25" y="44" width="50" height="13" rx="3.5"/>
+      <rect x="32" y="54" width="10" height="20" rx="3"/>
+      <rect x="58" y="54" width="10" height="20" rx="3"/>
+    </g>
+  </svg>
+  <div class="copy">
+    <p class="eyebrow">Seat desks</p>
+    <h1>Copy desks for<br>Stock Tokens.</h1>
+    <p>A leader trades from their own wallet. Depositors hold a separate USDG vault. The fill is what crosses.</p>
+    <div class="meta">
+      <span>Robinhood Chain</span>
+      <span>USDG</span>
+      <span>seatdesks.xyz</span>
+    </div>
+  </div>
+</body>
+</html>
