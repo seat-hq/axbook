@@ -61,9 +61,6 @@ export function Risk() {
             </li>
           ))}
         </ul>
-        <p className={styles.note}>
-          These controls limit losses. They do not prevent them. Contracts are unaudited.
-        </p>
       </div>
     </section>
   );

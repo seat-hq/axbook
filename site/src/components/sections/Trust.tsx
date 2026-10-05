@@ -80,14 +80,6 @@ const actors: readonly Actor[] = [
   },
 ];
 
-const notYet = [
-  "Contracts are unaudited.",
-  "The keeper is a single operator and can fail or lag.",
-  "Mainnet desks are capped at 50,000 USDG, and mainnet broadcast is gated behind explicit confirmation.",
-  "Session hours don't model market holidays yet.",
-  "SEAT is not affiliated with Robinhood Markets.",
-];
-
 export function Trust() {
   return (
     <section id="trust" className={`sec ${styles.sec}`} aria-labelledby="trust-title">
@@ -125,17 +117,6 @@ export function Trust() {
             </li>
           ))}
         </ul>
-
-        <aside className={styles.notYet} aria-labelledby="not-yet-title">
-          <h3 id="not-yet-title" className={`mono ${styles.notYetTitle}`}>
-            What is not true yet
-          </h3>
-          <ul>
-            {notYet.map((n) => (
-              <li key={n}>{n}</li>
-            ))}
-          </ul>
-        </aside>
       </div>
     </section>
   );

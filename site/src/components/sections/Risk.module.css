@@ -60,9 +60,3 @@
   color: var(--ink-faint);
   margin-top: 0.3rem;
 }
-
-.note {
-  margin-top: 1.5rem;
-  color: var(--loss);
-  font-size: 0.95rem;
-}

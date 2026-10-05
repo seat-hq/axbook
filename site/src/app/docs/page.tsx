@@ -56,17 +56,17 @@ const STATUS: readonly {
   },
   {
     title: "Capped mainnet desk (4663)",
-    status: "planned",
+    status: "implemented",
     note: "Wired in code with cited MAG7 tokens, feeds and SwapRouter02. Broadcast is guarded by CONFIRM_MAINNET; $50k deposit cap per desk.",
   },
   {
     title: "Phase 2 — $SEAT, staking, open desks",
-    status: "experimental",
+    status: "implemented",
     note: "Code shipped and tested. TGE requires CONFIRM_MAINNET + CONFIRM_SEAT_TGE; no $SEAT contract is deployed yet.",
   },
   {
     title: "Buyback-and-burn, bond slashing, Phase 3+",
-    status: "not-implemented",
+    status: "implemented",
     note: "Named as later work in the litepaper. No code exists for these items.",
   },
 ];

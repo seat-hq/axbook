@@ -105,28 +105,3 @@
   text-transform: uppercase;
   color: var(--ink-faint);
 }
-
-.notYet {
-  margin-top: 2rem;
-  padding: 1.4rem 1.6rem;
-  border: 1px dashed var(--loss);
-  border-radius: var(--radius);
-  background: var(--loss-soft);
-}
-
-.notYetTitle {
-  font-size: 0.78rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--loss);
-  font-weight: 500;
-}
-
-.notYet ul {
-  margin: 0.8rem 0 0;
-  padding-left: 1.1rem;
-  display: grid;
-  gap: 0.35rem;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  column-gap: 2rem;
-}
