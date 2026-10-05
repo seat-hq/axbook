@@ -208,6 +208,8 @@ body:has(.fx) {
   min-height: 0;
   overflow: auto;
   font-variant-numeric: tabular-nums;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(94, 168, 220, 0.35) transparent;
 }
 
 .fx-log-line {
