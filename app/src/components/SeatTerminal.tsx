@@ -371,7 +371,7 @@ export function SeatTerminal({
         {wallet}
       </header>
 
-      <div className="fx-feed">
+      <div className="fx-feed" data-guide="feed">
         <span className="fx-live">FEED</span>
         <div className="fx-ticker">
           <div className="fx-ticker-track">
@@ -386,7 +386,7 @@ export function SeatTerminal({
         </div>
       </div>
 
-      <section className="fx-metrics">
+      <section className="fx-metrics" data-guide="metrics">
         <Metric label="REALIZED" value={sim ? signed(sim.realized) : "—"} delta={sim ? signed(sim.realized * 0.01) : ""} up={(sim?.realized ?? 0) >= 0} series={sim?.path ?? []} />
         <Metric label="UNREALIZED" value={sim ? signed(sim.unrealized) : "—"} delta="open" up={(sim?.unrealized ?? 0) >= 0} series={sim?.path.map((n) => -n * 0.15) ?? []} />
         <Metric label="WIN RATE" value={winRate == null ? "—" : `${winRate.toFixed(1)}%`} delta={sim ? `${sim.wins}/${sim.closed}` : ""} up series={sim ? sim.prints.map((_, i) => i).reverse() : []} />
@@ -396,7 +396,7 @@ export function SeatTerminal({
       </section>
 
       <section className="fx-mid">
-        <article className="fx-panel fx-rails">
+        <article className="fx-panel fx-rails" data-guide="rails">
           <Rail label="REALIZED" value={sim ? signed(sim.realized) : "—"} values={sim?.path ?? []} color="#3dff7a" />
           <Rail label="VOLUME" value={sim ? money(sim.volume) : "—"} values={sim?.prints.map((row) => row.notional).reverse() ?? []} color="#5ec8ff" />
           <Rail label="WIN" value={winRate == null ? "—" : `${winRate.toFixed(0)}%`} values={sim?.prints.map((_, index) => index + 1) ?? []} color="#f0c14a" />
@@ -404,14 +404,14 @@ export function SeatTerminal({
           <Rail label="SOLD" value={sim ? money(sim.sold) : "—"} values={sim?.prints.filter((row) => row.side === "sell").map((row) => row.notional) ?? []} color="#d5e4ee" />
           <Rail label="BOOK" value={String(NAMES.length)} values={sim?.prints.map((row) => (row.side === "sell" ? -1 : 1)) ?? []} color="#3dff7a" />
         </article>
-          <article className="fx-panel fx-shell">
+          <article className="fx-panel fx-shell" data-guide="shell">
           <div className="fx-h">
             <span>Neural shell</span>
             <span>{sim?.focus ?? "Priced names"}</span>
           </div>
           <NeuralShell pulse={sim?.trades ?? 0} />
         </article>
-        <article className="fx-panel fx-fills">
+        <article className="fx-panel fx-fills" data-guide="fills">
           <div className="fx-h">
             <span>Late fills</span>
             <span>{sim?.prints.length ?? 0}</span>
@@ -429,7 +429,7 @@ export function SeatTerminal({
       </section>
 
       <section className="fx-lower">
-        <article className="fx-panel">
+        <article className="fx-panel" data-guide="tape">
           <div className="fx-h">
             <span>Copy tape</span>
             <span>{sim?.logs.length ?? 0}</span>
@@ -448,7 +448,7 @@ export function SeatTerminal({
             ))}
           </div>
         </article>
-        <article className="fx-panel">
+        <article className="fx-panel" data-guide="prints">
           <div className="fx-h">
             <span>Prints</span>
             <span>{sim?.prints.length ?? 0}</span>
@@ -478,7 +478,7 @@ export function SeatTerminal({
             </table>
           </div>
         </article>
-        <article className="fx-panel fx-desk">
+        <article className="fx-panel fx-desk" data-guide="desk">
           <div className="fx-h">
             <span>Desk</span>
             <span>
@@ -490,7 +490,7 @@ export function SeatTerminal({
         </article>
       </section>
 
-      <footer className="fx-foot">
+      <footer className="fx-foot" data-guide="foot">
         <span key={latest ? `${latest.id}` : "last"}>
           LAST <b>{latest ? `${latest.symbol} ${latest.side.toUpperCase()}` : "—"}</b>
         </span>
@@ -514,6 +514,7 @@ export function SeatTerminal({
         </span>
       </footer>
 
+      <Guide />
       <div className="fx-toasts" aria-live="polite">
         {toasts.map((toast) => (
           <div className={`fx-toast ${toast.side}`} key={toast.id} style={{ animationDuration: `${toast.holdMs}ms` }}>
@@ -522,6 +523,132 @@ export function SeatTerminal({
           </div>
         ))}
       </div>
+    </div>
+  );
+}
+
+const GUIDE: readonly {
+  id: string;
+  title: string;
+  body: string;
+  place: "below" | "above" | "right" | "inset";
+}[] = [
+  {
+    id: "feed",
+    title: "Feed",
+    body: "The latest simulated prints scroll across the top. This tape is marked SIM, so it is not the leader’s live book.",
+    place: "below",
+  },
+  {
+    id: "metrics",
+    title: "Session figures",
+    body: "Realized and open P&L, win rate, volume, sold, and gas for the sim tape.",
+    place: "below",
+  },
+  {
+    id: "rails",
+    title: "Shell rails",
+    body: "Six live readings from the sim tape. The strands run from here into the ring.",
+    place: "right",
+  },
+  {
+    id: "shell",
+    title: "Neural shell",
+    body: "The book drawn as a ring. Packets travel in from the rails and out toward the late fills.",
+    place: "inset",
+  },
+  {
+    id: "fills",
+    title: "Late fills",
+    body: "The newest simulated prints, stacked as they land, with side and notional.",
+    place: "inset",
+  },
+  {
+    id: "tape",
+    title: "Copy tape",
+    body: "Each line is a copy or a skip: symbol, side, price, and why the size changed.",
+    place: "inset",
+  },
+  {
+    id: "prints",
+    title: "Prints",
+    body: "The print log: time, symbol, side, last price, and notional.",
+    place: "inset",
+  },
+  {
+    id: "desk",
+    title: "Desk",
+    body: "Deposit USDG to buy seat shares, or redeem shares to leave. This form writes to the desk vault.",
+    place: "above",
+  },
+  {
+    id: "foot",
+    title: "Status",
+    body: "Last print, realized P&L, and win rate are from the sim tape. NAV, cash, and seats are the desk.",
+    place: "above",
+  },
+];
+
+function placeGuide(rect: DOMRect, place: (typeof GUIDE)[number]["place"]): { top: number; left: number } {
+  const width = 268;
+  const height = 108;
+  const margin = 8;
+  let top = rect.top + 28;
+  let left = rect.left + 10;
+  if (place === "below") {
+    top = rect.bottom + margin;
+    left = rect.left;
+  } else if (place === "above") {
+    top = rect.top - height - margin;
+    left = rect.right - width;
+  } else if (place === "right") {
+    top = rect.top + 8;
+    left = rect.right + margin;
+  }
+  left = Math.max(margin, Math.min(left, window.innerWidth - width - margin));
+  top = Math.max(margin, Math.min(top, window.innerHeight - height - margin));
+  return { top, left };
+}
+
+function Guide() {
+  const [step, setStep] = useState(0);
+  const [box, setBox] = useState<{ top: number; left: number } | null>(null);
+  const current = GUIDE[step];
+
+  useEffect(() => {
+    if (!current) return;
+    const target = document.querySelector<HTMLElement>(`[data-guide="${current.id}"]`);
+    if (!target) {
+      setStep((value) => value + 1);
+      return;
+    }
+    target.classList.add("fx-guide-on");
+    const measure = (): void => setBox(placeGuide(target.getBoundingClientRect(), current.place));
+    measure();
+    const timer = window.setTimeout(() => setStep((value) => value + 1), 10_000);
+    window.addEventListener("resize", measure);
+    window.addEventListener("scroll", measure, true);
+    return () => {
+      target.classList.remove("fx-guide-on");
+      window.clearTimeout(timer);
+      window.removeEventListener("resize", measure);
+      window.removeEventListener("scroll", measure, true);
+    };
+  }, [current]);
+
+  if (!current || !box) return null;
+  return (
+    <div className="fx-guide" style={{ top: box.top, left: box.left }} role="dialog" aria-label={current.title}>
+      <button type="button" aria-label="Close" onClick={() => setStep((value) => value + 1)}>
+        ×
+      </button>
+      <b>
+        {current.title}
+        <span>
+          {step + 1}/{GUIDE.length}
+        </span>
+      </b>
+      <p>{current.body}</p>
     </div>
   );
 }

@@ -1,6 +1,6 @@
 body:has(.fx) {
   overflow: hidden;
-  background: #060910;
+  background: #07140e;
 }
 
 .fx {
@@ -8,8 +8,8 @@ body:has(.fx) {
   --dn: #ff5a6a;
   --cy: #5ec8ff;
   --am: #f0c14a;
-  --line: rgba(94, 168, 220, 0.22);
-  --panel: rgba(8, 14, 22, 0.94);
+  --line: rgba(148, 163, 184, 0.22);
+  --panel: #0f2a1e;
   width: 100%;
   max-width: 100vw;
   min-width: 0;
@@ -20,9 +20,7 @@ body:has(.fx) {
   gap: 6px;
   padding: 6px;
   overflow: hidden;
-  background:
-    radial-gradient(900px 420px at 50% 55%, rgba(40, 90, 160, 0.16), transparent 60%),
-    #060910;
+  background: #07140e;
   color: #d5e4ee;
   font-family: var(--font-mono);
   font-size: 11px;
@@ -38,7 +36,7 @@ body:has(.fx) {
   overflow: hidden;
   padding: 0 8px;
   border: 1px solid var(--line);
-  background: rgba(6, 10, 16, 0.92);
+  background: #0b1f16;
 }
 
 .fx-brand {
@@ -229,6 +227,69 @@ body:has(.fx) {
   font-weight: 650;
 }
 
+.fx-guide {
+  position: fixed;
+  z-index: 30;
+  width: 268px;
+  padding: 10px 28px 12px 12px;
+  border: 1px solid rgba(240, 193, 74, 0.75);
+  background: rgba(7, 20, 14, 0.96);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
+  color: #d5e4ee;
+  pointer-events: auto;
+}
+
+.fx-guide b {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 4px;
+  padding-right: 8px;
+  color: #f0c14a;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.fx-guide b span {
+  color: #8ea4b5;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+}
+
+.fx-guide p {
+  margin: 0;
+  color: #d5e4ee;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.fx-guide button {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #d5e4ee;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.fx-guide button:hover,
+.fx-guide button:focus-visible {
+  color: #f0c14a;
+}
+
+.fx-guide-on {
+  outline: 1px solid rgba(240, 193, 74, 0.9);
+  outline-offset: 1px;
+}
+
 .fx-toasts {
   position: absolute;
   top: 40px;
@@ -244,7 +305,7 @@ body:has(.fx) {
 .fx-toast {
   padding: 8px 10px;
   border: 1px solid rgba(61, 255, 122, 0.4);
-  background: rgba(7, 16, 14, 0.96);
+  background: #0f2a1e;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
   animation: fx-toast 3.4s cubic-bezier(0.22, 0.61, 0.36, 1) both;
 }
@@ -457,7 +518,7 @@ body:has(.fx) {
 .fx-table th {
   position: sticky;
   top: 0;
-  background: #0c1420;
+  background: #0f2a1e;
   color: #7f96a8;
   font-size: 9px;
   letter-spacing: 0.08em;
@@ -650,7 +711,7 @@ body:has(.fx) {
   min-width: 0;
   padding: 2px 8px;
   border: 1px solid var(--line);
-  background: rgba(8, 16, 26, 0.8);
+  background: #0b1f16;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
