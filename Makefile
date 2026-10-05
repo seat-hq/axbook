@@ -1,4 +1,4 @@
-.PHONY: install build test paper deploy-testnet deploy-mainnet deploy-phase2 app-dev site-dev site-build keeper-testnet keeper-mainnet write-addresses
+.PHONY: install build test paper deploy-testnet deploy-mainnet deploy-phase2 app-dev site-dev site-build keeper-testnet keeper-mainnet write-addresses burn-launch
 
 # Foundry is installed to ~/.foundry/bin; make does not inherit an interactive PATH.
 export PATH := $(HOME)/.foundry/bin:$(PATH)
@@ -52,3 +52,13 @@ keeper-testnet:
 # LIVE on 4663 still dry-runs unless SEAT_SUBMIT_TX=1 after a real vault.
 keeper-mainnet:
 	EXECUTION_MODE=$${EXECUTION_MODE:-LIVE} CHAIN_ID=4663 SWAP_ROUTER_CONFIGURED=$${SWAP_ROUTER_CONFIGURED:-1} pnpm --filter keeper exec tsx src/index.ts
+
+# Burns the launch wallet's own pons.family token balance on 4663 by sending
+# it to the dead address. Locked pool liquidity is untouched.
+# LAUNCH_TOKEN is required. Omit BURN_AMOUNT to burn the full balance.
+# BURN_AMOUNT is a whole-token count (18 decimals). BURN_WEI is exact base units.
+burn-launch:
+	set -a && [ -f .env ] && . ./.env && set +a; \
+	test "$$CONFIRM_BURN" = "I_UNDERSTAND" || { echo "set CONFIRM_BURN=I_UNDERSTAND"; exit 1; }; \
+	test -n "$$LAUNCH_TOKEN" || { echo "set LAUNCH_TOKEN"; exit 1; }; \
+	forge script contracts/script/BurnLaunchToken.s.sol --rpc-url robinhood --broadcast --private-key "$$PRIVATE_KEY"
