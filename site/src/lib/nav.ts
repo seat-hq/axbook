@@ -18,6 +18,5 @@ export const primaryNav: readonly NavItem[] = [
 export const secondaryNav: readonly NavItem[] = [
   { label: "Product", href: links.product.href, external: true },
   { label: "X", href: links.x.href, external: true },
-  { label: "GitHub", href: links.github.href, external: true },
   { label: "Roadmap", href: "/#status" },
 ];

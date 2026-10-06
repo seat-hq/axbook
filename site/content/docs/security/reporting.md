@@ -8,8 +8,8 @@ The repository contains **no `SECURITY.md`, no bug-bounty program, and no dedica
 
 ## What to do today
 
-- **Non-security bugs:** open an issue on [github.com/seat-hq/seat](https://github.com/seat-hq/seat) with reproduction steps, chain ID, and relevant addresses/tx hashes.
-- **Suspected security issues:** there is no published private channel. Do **not** post exploit details publicly. Until the project publishes a security policy, the most responsible available path is to contact the maintainers through the GitHub repository (e.g., a minimal issue asking for a private contact) rather than disclosing details.
+- **Non-security bugs:** contact [@bosonax](https://x.com/bosonax) with reproduction steps, chain ID, and relevant addresses/tx hashes.
+- **Suspected security issues:** there is no published private channel. Do **not** post exploit details publicly. Until the project publishes a security policy, the most responsible available path is a private message to [@bosonax](https://x.com/bosonax) asking for a contact, rather than disclosing details.
 
 ## What not to do
 

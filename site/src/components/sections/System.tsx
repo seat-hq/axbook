@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useState } from "react";
 import { Icon, type IconName } from "@/components/Icons";
-import { links } from "@/lib/links";
 import styles from "./System.module.css";
 
 interface Layer {
@@ -167,9 +166,9 @@ export function System() {
                 <ul>
                   {layer.files.map((f) => (
                     <li key={f}>
-                      <a href={`${links.github.href}/tree/main/${f}`} target="_blank" rel="noopener noreferrer" className="mono">
+                      <span className="mono">
                         <Icon name="code" size={14} /> {f}
-                      </a>
+                      </span>
                     </li>
                   ))}
                 </ul>

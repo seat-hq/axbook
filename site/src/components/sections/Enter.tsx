@@ -7,9 +7,7 @@ import styles from "./Enter.module.css";
 const eco: readonly { key: LinkKey; icon: IconName; kicker: string }[] = [
   { key: "docs", icon: "code", kicker: "Read" },
   { key: "product", icon: "front", kicker: "Use" },
-  { key: "github", icon: "code", kicker: "Build" },
   { key: "x", icon: "eye", kicker: "Follow" },
-  { key: "discussions", icon: "gate", kicker: "Discuss" },
 ];
 
 export function Enter() {

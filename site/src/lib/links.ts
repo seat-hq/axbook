@@ -24,20 +24,20 @@ export const links = {
   },
   github: {
     label: "GitHub",
-    href: "https://github.com/seat-hq/seat",
-    description: "Contracts, keeper, SDK and docs. MIT licensed.",
+    href: null,
+    description: "Source is not published as a public link.",
     external: true,
   },
   x: {
     label: "X",
-    href: env(process.env.NEXT_PUBLIC_SEAT_X_URL) ?? "https://x.com/seatdesks_xyz",
+    href: env(process.env.NEXT_PUBLIC_SEAT_X_URL) ?? "https://x.com/bosonax",
     description: "Announcements and release notes.",
     external: true,
   },
   discussions: {
     label: "Technical discussions",
-    href: "https://github.com/seat-hq/seat/issues",
-    description: "Open issues and design questions in the repo.",
+    href: null,
+    description: "Discussions are not published as a public link.",
     external: true,
   },
   docs: {

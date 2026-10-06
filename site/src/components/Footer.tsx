@@ -4,7 +4,7 @@ import { primaryNav } from "@/lib/nav";
 import { Wordmark } from "./Wordmark";
 import styles from "./Footer.module.css";
 
-const ext = [links.product, links.github, links.x, links.discussions];
+const ext = [links.product, links.x];
 
 export function Footer() {
   return (

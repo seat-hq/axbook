@@ -55,6 +55,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
+    site: "@bosonax",
+    creator: "@bosonax",
     title: "Axbook — Follow the book. Hold the shares.",
     description,
   },
@@ -73,7 +75,7 @@ const jsonLd = {
   url: siteUrl,
   description,
   logo: `${siteUrl}/brand/axbook-mark-light.svg`,
-  sameAs: [links.github.href, links.x.href].filter(Boolean),
+  sameAs: [links.x.href].filter(Boolean),
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {

@@ -4,7 +4,6 @@ import { DocsSearch } from "@/components/docs/DocsSearch";
 import { MermaidDiagram } from "@/components/docs/MermaidDiagram";
 import { StatusBadge } from "@/components/docs/Callout";
 import { getDocsTree } from "@/lib/docs/content";
-import { links } from "@/lib/links";
 import styles from "@/components/docs/docs.module.css";
 
 export const metadata: Metadata = {
@@ -152,16 +151,6 @@ export default function DocsIndex() {
           the code wins — and the disagreement is called out, not hidden. The canonical runbooks
           are rendered directly from the repository&apos;s <code>docs/</code> folder.
         </p>
-        {links.github.href ? (
-          <a
-            className={styles.ctaSecondary}
-            href={links.github.href}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            github.com/seat-hq/seat<span className="sr-only"> (opens in a new tab)</span>
-          </a>
-        ) : null}
       </section>
     </div>
   );
