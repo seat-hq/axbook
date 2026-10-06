@@ -1,26 +1,28 @@
-# seat
+# Axbook
 
-Monorepo for **Axbook**: USDG copy desks for official Stock Tokens on Robinhood Chain.
+Follow the book. Hold the shares.
+
+Monorepo for **Axbook**: USDG copy desks for official Stock Tokens on Robinhood Chain. You deposit USDG into a separate vault and receive **book shares** — a claim on desk NAV. A keeper may copy a leader’s fills, smaller, filtered, and capped.
 
 ![cover](docs/cover.png)
-
-Public name is Axbook. The git remote and package names are still `seat`.
 
 | | |
 |---|---|
 | Site | https://axbook.xyz |
 | App | https://app.axbook.xyz |
 | Docs | https://axbook.xyz/docs |
-| GitHub | https://github.com/seat-hq/seat |
+| X | https://x.com/bosonax |
 | Testnet | Robinhood `46630` — Phase 1 vault shipped |
 | Mainnet | Robinhood `4663` — **no Axbook vault yet** |
 | Token | `$AXBOOK` code exists. **Nothing is deployed.** Ignore any ticker using this name today. |
 
 Independent of Robinhood Markets. Stock Tokens are not equity. Not investment advice. [MIT](LICENSE).
 
+Git package names in this repo are still `seat`. The public product is Axbook.
+
 ## What to check
 
-A desk is not a wallet-copy bot. The leader trades from their own wallet. You deposit **USDG** into a **separate vault** and receive **book shares** — a claim on that vault's NAV (cash plus positions the desk actually holds). A keeper may copy a fill only after risk checks. Copies are delayed, scaled, and capped. The desk can lose money.
+A desk is not a wallet-copy bot. The leader trades from their own wallet. You deposit **USDG** into a **separate vault** and receive **book shares**. NAV is cash plus the positions the desk actually holds. Copies are delayed, scaled, and capped. Uncertain means skip. The desk can lose money.
 
 **Before you send USDG:**
 
@@ -28,7 +30,7 @@ A desk is not a wallet-copy bot. The leader trades from their own wallet. You de
 2. The wallet network is **Robinhood Chain**. Gas is **ETH**. Accounting is **USDG** (6 decimals).
 3. **Mainnet `4663`:** this repo's Axbook vault, factory, and `$AXBOOK` addresses are `null`. Official USDG on 4663 is `0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168`. Do not deposit expecting an Axbook desk there until a `CONFIRM_MAINNET` deploy is recorded here.
 4. **Testnet `46630`:** the app talks to the vault below. Confirm the same addresses in [`app/src/lib/addresses.ts`](app/src/lib/addresses.ts).
-5. Anything branded `$AXBOOK` / `$SEAT` on a DEX today is **not** this repository.
+5. Anything branded `$AXBOOK` on a DEX today is **not** this repository.
 6. Read [`docs/risk.md`](docs/risk.md) and [`docs/not-affiliated.md`](docs/not-affiliated.md).
 
 ## Using the desk
@@ -39,7 +41,7 @@ Local: `make app-dev` → http://localhost:3000/ (dashboard + deposit/redeem). T
 |---|---|
 | Connect wallet | Must be on 46630 (testnet) or 4663 once a vault exists. |
 | Deposit USDG | Approve the vault, then mint book shares. |
-| Redeem shares | Pays USDG if the vault has cash; otherwise the claim queues. |
+| Redeem book shares | Pays USDG if the vault has cash; otherwise the claim queues. |
 | NAV / cash / shares | Read from the vault. NAV uses `balanceOfUI()`, not raw balances. |
 | Fill tape | Rows are `source=fixture` or `source=chain`. Fixtures are never labeled live. |
 
@@ -76,7 +78,7 @@ Books: only registry rows that are `verified` **and** `enabled` on **that chain*
 ## Layout
 
 ```text
-contracts/   Foundry. Factory, vault, risk, swap, fees, SeatToken ($AXBOOK).
+contracts/   Foundry. Factory, vault, risk, swap, fees, $AXBOOK (SeatToken.sol).
 keeper/      Indexer + signaler. Paper executor unless live guards pass.
 app/         Next.js desk. Deposit / redeem USDG. Defaults to 46630.
 site/        Next.js marketing + /docs.
@@ -102,7 +104,7 @@ make write-addresses  # contracts → app/site address files
 Broadcasts stay closed without env confirms:
 
 ```bash
-CONFIRM_MAINNET=I_UNDERSTAND make deploy-mainnet          # no SeatToken
+CONFIRM_MAINNET=I_UNDERSTAND make deploy-mainnet          # no $AXBOOK
 CONFIRM_MAINNET=I_UNDERSTAND CONFIRM_SEAT_TGE=I_UNDERSTAND make deploy-phase2
 CONFIRM_BURN=I_UNDERSTAND LAUNCH_TOKEN=0x… make burn-launch
 ```
@@ -113,7 +115,7 @@ Copy [`.env.example`](.env.example) to `.env`. Leave keys out of git.
 
 - NAV from `balanceOfUI()`, never raw `balanceOf()`.
 - No fee on volume. Performance is high-water on NAV/share; AUM is separate.
-- `$AXBOOK` (in `SeatToken.sol`) has no mint after the constructor. 1B, once.
+- `$AXBOOK` has no mint after the constructor. 1B, once. (`SeatToken.sol`)
 - After-hours copy size < cash-session size.
 - Uncertain session/price/asset/size → skip.
 - Mainnet deposits are capped at 50,000 USDG.
@@ -142,9 +144,3 @@ Full list: [`docs/risk.md`](docs/risk.md).
 | [`docs/allowlist.md`](docs/allowlist.md) | How a name becomes trade-eligible |
 | [`docs/risk.md`](docs/risk.md) | What can go wrong |
 | [`docs/not-affiliated.md`](docs/not-affiliated.md) | Robinhood / Stock Tokens |
-
-```bash
-git clone git@github.com:seat-hq/seat.git
-cd seat
-make install && make test
-```
