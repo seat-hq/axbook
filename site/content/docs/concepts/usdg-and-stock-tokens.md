@@ -26,7 +26,7 @@ order: 4
 
 **Technically.**
 
-- Stock Tokens are ERC-20s with **18 decimals** that additionally expose `balanceOfUI(address)` — the ERC-8056 "supported balance" interface. SEAT's NAV uses `balanceOfUI()`, never raw `balanceOf()`. (The vault falls back to `balanceOf` only if the UI call is unavailable, and treats a total failure as a zero value.)
+- Stock Tokens are ERC-20s with **18 decimals** that additionally expose `balanceOfUI(address)` — the ERC-8056 "supported balance" interface. Axbook's NAV uses `balanceOfUI()`, never raw `balanceOf()`. (The vault falls back to `balanceOf` only if the UI call is unavailable, and treats a total failure as a zero value.)
 - Prices come from Chainlink `AggregatorV3` feeds (8 decimals on the cited 4663 feeds) through the vault's `ChainlinkOracle`.
 - A desk may only hold tokens that are `verified` **and** `enabled` in the [official registry](/docs/networks/token-registry) for that chain, and allowlisted in both `RiskModule` and `SwapAdapter`.
 

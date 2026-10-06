@@ -88,7 +88,7 @@ export const beats: readonly Beat[] = [
     stage: 1,
     title: `You deposit ${usd(d.you)} USDG.`,
     body: [
-      `The vault mints ${usd(d.youShares)} seat shares to you at 1.00 USDG per share.`,
+      `The vault mints ${usd(d.youShares)} book shares to you at 1.00 USDG per share.`,
       "Your USDG now sits in the desk — not in Alex's wallet.",
     ],
     alex: { status: "Not involved", tone: "idle" },

@@ -4,13 +4,13 @@ description: The contract inventory, deployment status, inheritance, and the acc
 order: 1
 ---
 
-SEAT's contracts are Solidity `0.8.28`, built with Foundry (`via_ir`, optimizer at 200 runs, `cancun` EVM), using OpenZeppelin contracts. Source: `contracts/src/`.
+Axbook's contracts are Solidity `0.8.28`, built with Foundry (`via_ir`, optimizer at 200 runs, `cancun` EVM), using OpenZeppelin contracts. Source: `contracts/src/`.
 
 ## Inventory
 
 | Contract | Responsibility | Status |
 |---|---|---|
-| `DeskVault` | Custody, seat shares, NAV, fees, copies | 🟢 Deployed on 46630 |
+| `DeskVault` | Custody, book shares, NAV, fees, copies | 🟢 Deployed on 46630 |
 | `DeskFactory` | One vault per leader; listing bonds | 🟢 Deployed on 46630 |
 | `RiskModule` | Deterministic copy decisions | 🟢 Deployed on 46630 |
 | `SwapAdapter` | Restricted swap surface | 🟢 Deployed on 46630 (router `0`) |
@@ -18,8 +18,8 @@ SEAT's contracts are Solidity `0.8.28`, built with Foundry (`via_ir`, optimizer 
 | `NavLib` | Fixed-point NAV library | 🟢 (library; used by the vault) |
 | `ChainlinkOracle` | Token → AggregatorV3 prices | 🟡 Tested; not deployed on 46630 |
 | `ExactInputRouter02` | Uniswap SwapRouter02 wrapper | 🟡 Tested; deploys with guarded mainnet scripts |
-| `SeatToken` | Fixed-supply $SEAT | 🟡 Tested; not deployed anywhere |
-| `StakingPool` | Stake $SEAT, earn USDG fees | 🟡 Tested; not deployed |
+| `SeatToken` | Fixed-supply $AXBOOK | 🟡 Tested; not deployed anywhere |
+| `StakingPool` | Stake $AXBOOK, earn USDG fees | 🟡 Tested; not deployed |
 | `LpLocker` | ≥365-day Uni v3 NFT lock | 🟡 Tested; not deployed |
 
 Interfaces live in `contracts/src/interfaces/`: `IDeskVault`, `IRiskModule`, `ISwapAdapter`, `IExactInputRouter`, `ISwapRouter02`, `IPriceOracle` (in `NavLib`), `IScaledUIAmount`, `IStakingPool`, `AggregatorV3Interface`.
@@ -36,7 +36,7 @@ Interfaces live in `contracts/src/interfaces/`: `IDeskVault`, `IRiskModule`, `IS
 | `FeeModule.setParams` | Owner |
 | `ChainlinkOracle.setFeed` | Owner |
 | `DeskFactory.createDesk / setListingParams / returnBond` | Owner |
-| `DeskFactory.listDesk` | Anyone with the `$SEAT` bond |
+| `DeskFactory.listDesk` | Anyone with the `$AXBOOK` bond |
 | `StakingPool.stake / unstake / claim` | Anyone (stakers) |
 | `StakingPool.notifyReward` | Anyone — desks call it; it pulls USDG from the caller |
 | `LpLocker.lock / withdraw` | Owner (withdraw only after unlock, to beneficiary) |

@@ -6,7 +6,7 @@ order: 9
 
 ## Plain English
 
-Stock Tokens track US equities, and US equities have market hours. Liquidity and price quality are very different at 11 a.m. on a Tuesday than at 7 p.m. or on a Saturday. SEAT encodes that reality directly: **the session scales the copy size**.
+Stock Tokens track US equities, and US equities have market hours. Liquidity and price quality are very different at 11 a.m. on a Tuesday than at 7 p.m. or on a Saturday. Axbook encodes that reality directly: **the session scales the copy size**.
 
 - **Regular hours:** copies at full size.
 - **Pre-market and after-hours:** copies at 30% size.

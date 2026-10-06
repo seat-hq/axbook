@@ -4,13 +4,13 @@ description: Direct answers to the questions everyone asks first — all verifie
 order: 1
 ---
 
-## What is SEAT?
+## What is Axbook?
 
-A copy-desk protocol on Robinhood Chain: opted-in **leader** trading activity is observed by a **keeper**, risk-checked on-chain, resized, and executed for capital deposited in that leader's **desk vault**. It is a system of contracts + keeper + app + SDK — not a trading bot. See [What is SEAT?](/docs/introduction/what-is-seat).
+A copy-desk protocol on Robinhood Chain: opted-in **leader** trading activity is observed by a **keeper**, risk-checked on-chain, resized, and executed for capital deposited in that leader's **desk vault**. It is a system of contracts + keeper + app + SDK — not a trading bot. See [What is Axbook?](/docs/introduction/what-is-seat).
 
 ## What is a copy desk?
 
-A smart-contract vault bound to one leader address. Depositors hold **seat shares**; the desk replicates the leader's eligible trades within on-chain risk limits. See [Copy desk](/docs/concepts/copy-desk).
+A smart-contract vault bound to one leader address. Depositors hold **book shares**; the desk replicates the leader's eligible trades within on-chain risk limits. See [Copy desk](/docs/concepts/copy-desk).
 
 ## What is a leader?
 
@@ -48,17 +48,17 @@ When NAV/share falls 20% (default) below the high-water mark, the **drawdown hal
 
 Robinhood Chain **testnet 46630** (Phase 1 contracts live, cash-only) and **mainnet 4663** (nothing deployed). No other chain is supported; the keeper refuses other chain IDs. See [Networks](/docs/networks/overview).
 
-## Is SEAT affiliated with Robinhood?
+## Is Axbook affiliated with Robinhood?
 
-**No.** The repository states this explicitly — see the [not-affiliated notice](/docs/runbooks/not-affiliated). SEAT builds on Robinhood Chain infrastructure and instruments; it is an independent project.
+**No.** The repository states this explicitly — see the [not-affiliated notice](/docs/runbooks/not-affiliated). Axbook builds on Robinhood Chain infrastructure and instruments; it is an independent project.
 
 ## Is the protocol production-ready?
 
 **No.** Unaudited, nothing on mainnet, no live execution anywhere, and a known live-indexer limitation. See [Project status](/docs/introduction/project-status) and [Known limitations](/docs/security/limitations).
 
-## Does SEAT have a token?
+## Does Axbook have a token?
 
-Not deployed. `$SEAT` is Phase 2 code (fixed 1B supply) that has never been broadcast. See [The SEAT token](/docs/economics/seat-token).
+Not deployed. `$AXBOOK` is Phase 2 code (fixed 1B supply) that has never been broadcast. See [The Axbook token](/docs/economics/seat-token).
 
 ## Where should developers start?
 

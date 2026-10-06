@@ -22,7 +22,7 @@ const ENTRIES: readonly Entry[] = [
   {
     id: "desk",
     title: "Desk",
-    body: "Deposit and redeem write to the vault. NAV, cash, and seats are the live desk.",
+    body: "Deposit and redeem write to the vault. NAV, cash, and shares are the live desk.",
     tour: true,
   },
   {
@@ -64,7 +64,7 @@ const ENTRIES: readonly Entry[] = [
   {
     id: "foot",
     title: "Status bar",
-    body: "Session summary: last print, realized, win, NAV, cash, seats, and copies.",
+    body: "Session summary: last print, realized, win, NAV, cash, shares, and copies.",
   },
 ];
 

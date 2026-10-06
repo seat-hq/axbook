@@ -101,7 +101,7 @@ export function VaultPanel({ vault, compact = false }: { vault: VaultState; comp
         </div>
         {!compact && (
           <div>
-            <dt>Seat shares</dt>
+            <dt>Book shares</dt>
             <dd className="mono">
               <CountUp value={vault.shares} />
             </dd>

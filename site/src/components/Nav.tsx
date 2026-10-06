@@ -97,7 +97,7 @@ export function Nav() {
       <header className={`${styles.bar} ${scrolled ? styles.scrolled : ""}`} data-open={open}>
         <div className={styles.progress} aria-hidden="true" />
         <div className={styles.inner}>
-          <Link href="/" className={styles.brand} aria-label="SEAT home">
+          <Link href="/" className={styles.brand} aria-label="Axbook home">
             <Wordmark />
           </Link>
           <nav aria-label="Primary" className={styles.primary}>
@@ -145,7 +145,7 @@ export function Nav() {
       >
         <div className={styles.menuInner}>
           <nav aria-label="Menu" className={styles.menuPrimary}>
-            <p className="eyebrow">Explore SEAT</p>
+            <p className="eyebrow">Explore Axbook</p>
             <ol>
               {primaryNav.map((item, i) => (
                 <li key={item.label}>

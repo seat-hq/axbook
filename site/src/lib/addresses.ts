@@ -3,7 +3,7 @@ export const MAINNET_CHAIN_ID = 4663 as const;
 
 const BLOCKSCOUT_BASE = "https://robinhoodchain.blockscout.com";
 
-/** pons launchpad — where $SEAT is launched / traded. */
+/** pons launchpad — where $AXBOOK is launched / traded. */
 const PONS_LAUNCHPAD_BASE = "https://www.ponsfamily.com/launchpad";
 
 const ADDRESS_RE = /^0x[a-fA-F0-9]{40}$/;
@@ -14,7 +14,7 @@ export function isHexAddress(value: string): value is HexAddress {
   return ADDRESS_RE.test(value);
 }
 
-/** `$SEAT` on mainnet; unset until TGE env is configured. */
+/** `$AXBOOK` on mainnet; unset until TGE env is configured. */
 export function getSeatTokenAddress(): HexAddress | null {
   const raw = process.env.NEXT_PUBLIC_SEAT_TOKEN_ADDRESS?.trim();
   if (!raw) return null;

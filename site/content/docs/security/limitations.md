@@ -23,7 +23,7 @@ order: 2
 
 ## Token / economics
 
-- `$SEAT`, staking, LP locking, and the listing bond are **Phase 2 code, never deployed**. No token exists on any chain. See [Economics](/docs/economics/seat-token).
+- `$AXBOOK`, staking, LP locking, and the listing bond are **Phase 2 code, never deployed**. No token exists on any chain. See [Economics](/docs/economics/seat-token).
 - The Phase 1 fee split leaves the staker slice as a vault liability until Phase 2 wires `stakerRecipient`.
 
 ## Assurance

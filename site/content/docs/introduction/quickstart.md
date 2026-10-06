@@ -1,6 +1,6 @@
 ---
 title: Quickstart
-description: Clone, install, test, and run the paper-copy engine — the fastest path to seeing SEAT work.
+description: Clone, install, test, and run the paper-copy engine — the fastest path to seeing Axbook work.
 order: 5
 ---
 

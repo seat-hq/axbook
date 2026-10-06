@@ -54,7 +54,7 @@ export function Footer() {
 
         <div className={styles.disclaimer} role="note" aria-label="Risk disclosure">
           <p>
-            <strong>Risk.</strong> SEAT is experimental software. You can lose money. There are no guarantees of profit,
+            <strong>Risk.</strong> Axbook is experimental software. You can lose money. There are no guarantees of profit,
             capital preservation, liquidity, execution or correctness. Contracts are unaudited. A leader&apos;s past
             behavior does not predict future results, and a desk will not match leader performance because copies are
             delayed, scaled and capped. Every number on this site is an illustrative example unless it is explicitly

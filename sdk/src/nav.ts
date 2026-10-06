@@ -1,5 +1,5 @@
 /**
- * SEAT NAV math.
+ * Axbook NAV math.
  *
  * All arithmetic is integer / fixed-point using bigint. There is no floating
  * point in the accounting path, mirroring the on-chain NavLib. Values are kept
@@ -13,7 +13,7 @@
  *   - applicable liabilities / fees
  *   = desk equity
  *
- * Seat NAV = desk equity / outstanding seat shares.
+ * Seat NAV = desk equity / outstanding book shares.
  *
  * Token balances use the authoritative supported balance interface
  * (`balanceOfUI()`), not raw ERC-20 `balanceOf()`. The exact interface must be
@@ -218,7 +218,7 @@ export function calculateNav(
 }
 
 /**
- * NAV per seat share, scaled to `sharePrecision` decimals of USDG per share.
+ * NAV per book share, scaled to `sharePrecision` decimals of USDG per share.
  * Returns 0 when there are no shares (a fresh desk has no per-share value).
  */
 export function navPerShare(

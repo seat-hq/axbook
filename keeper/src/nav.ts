@@ -21,7 +21,7 @@ export function deskEquity(
   return calculateNav(cashUsdg, positions, opts);
 }
 
-/** NAV per seat share (USDG base units per share). */
+/** NAV per book share (USDG base units per share). */
 export function deskNavPerShare(
   equityUsdg: bigint,
   totalShares: bigint,

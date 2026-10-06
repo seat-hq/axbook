@@ -1,5 +1,5 @@
 ---
-title: Why SEAT?
+title: Why Axbook?
 description: The problem with wallet copy-trading and the gap a pooled, risk-boxed copy desk fills on Robinhood Chain.
 order: 2
 ---
@@ -13,15 +13,15 @@ Copy-trading as practiced on-chain today is usually **wallet mirroring**: a bot 
 - **Misaligned fees.** Terminal and sniper tools typically charge on volume. The tool gets paid whether or not you ever make money.
 - **Custody confusion.** Some "copy" products ask for keys or deposits into opaque strategies. It is hard to answer the simplest question: *where is my money, and who can move it?*
 
-## The SEAT answer
+## The Axbook answer
 
-SEAT keeps the appealing part — following a trader you rate — and changes the ownership primitive:
+Axbook keeps the appealing part — following a trader you rate — and changes the ownership primitive:
 
-| Wallet mirroring | SEAT copy desk |
+| Wallet mirroring | Axbook copy desk |
 |---|---|
 | You copy a wallet address | You join a desk by depositing USDG |
 | Your wallet trades | The desk vault trades |
-| No accounting | Seat shares + NAV per share |
+| No accounting | Book shares + NAV per share |
 | Copies anything the wallet touches | Only verified, enabled Stock Tokens from the official registry |
 | No limits beyond your own config | On-chain caps per fill, per position, and gross exposure; session sizing; drawdown halt |
 | Fee on volume | Fee on profit above the high-water mark; no volume fee |

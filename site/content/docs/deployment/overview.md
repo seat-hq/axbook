@@ -13,7 +13,7 @@ Deployment is Foundry scripts in `contracts/script/`, driven by Makefile targets
 | `DeployPhase2.s.sol` | 4663 | `CONFIRM_MAINNET` **and** `CONFIRM_SEAT_TGE=I_UNDERSTAND` | TGE (`SeatToken`, `StakingPool`, `LpLocker`), extra desks, staker fee wiring |
 
 :::callout{type="danger" title="Production readiness"}
-SEAT is **not production-ready**. Mainnet scripts have never been broadcast; the system is unaudited; the live fill path has a known indexer limitation. Treat every deployment as an experiment. See [Security](/docs/security/security-model).
+Axbook is **not production-ready**. Mainnet scripts have never been broadcast; the system is unaudited; the live fill path has a known indexer limitation. Treat every deployment as an experiment. See [Security](/docs/security/security-model).
 :::
 
 ## Common flow

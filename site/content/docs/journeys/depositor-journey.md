@@ -1,12 +1,12 @@
 ---
 title: Depositor Journey
-description: From obtaining USDG to redeeming seat shares — the follower lifecycle, verified against DeskVault.
+description: From obtaining USDG to redeeming book shares — the follower lifecycle, verified against DeskVault.
 order: 2
 ---
 
 ## 1. Obtain USDG
 
-The desk's accounting asset is USDG on Robinhood Chain (6 decimals). Official addresses are listed in [Networks](/docs/networks/overview). SEAT does not sell or bridge USDG; acquiring it is out of the protocol's scope.
+The desk's accounting asset is USDG on Robinhood Chain (6 decimals). Official addresses are listed in [Networks](/docs/networks/overview). Axbook does not sell or bridge USDG; acquiring it is out of the protocol's scope.
 
 ## 2. Choose a desk and deposit
 
@@ -19,7 +19,7 @@ Depositing is two transactions:
 
 The vault accrues fees, checks the **deposit cap** (mainnet: 50,000 USDG of equity after the deposit; testnet: uncapped), mints shares pro-rata to equity (`shares = assets × totalShares / equity`; 1:1 on an empty desk), and takes the USDG. Deposits are blocked while the vault is paused.
 
-## 3. Hold seat shares
+## 3. Hold book shares
 
 Your position is `sharesOf[you] / totalShares` of the desk. The blotter shows your shares, NAV, cash, the leader, and the desk's fill tape. Shares are internal accounting — not a transferable token — so there is nothing to stake, send, or lose in a wallet drain.
 
@@ -47,7 +47,7 @@ Redeeming while the vault is **paused** is possible, but always lands in the que
 flowchart LR
   U["You"] -->|"1. approve"| T["USDG"]
   U -->|"2. deposit"| V["DeskVault"]
-  V -->|"seat shares"| U
+  V -->|"book shares"| U
   V -->|"copies leader activity"| P["Stock Token positions"]
   U -->|"3. redeem shares"| V
   V -->|"cash available: pay now"| U

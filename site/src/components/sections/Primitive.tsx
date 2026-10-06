@@ -15,7 +15,7 @@ export const primitiveSteps: readonly PrimitiveStep[] = [
   { icon: "gate", name: "Risk engine", line: "Asset, session, price, drawdown and size are checked. Uncertain = skip.", tone: "neutral" },
   { icon: "vault", name: "Desk vault", line: "The desk trades its own USDG — a smaller copy, by design.", tone: "desk" },
   { icon: "nav", name: "NAV", line: "Cash plus the value of copied positions. It can go down.", tone: "desk" },
-  { icon: "shares", name: "Seat shares", line: "Your pro-rata claim on NAV. Redeem them to leave.", tone: "desk" },
+  { icon: "shares", name: "Book shares", line: "Your pro-rata claim on NAV. Redeem them to leave.", tone: "desk" },
 ];
 
 export function Primitive() {
@@ -26,7 +26,7 @@ export function Primitive() {
           <b>03</b> The new primitive
         </p>
         <h2 id="primitive-title" className={`display h-xl ${styles.title}`}>
-          SEAT changes the <em>primitive.</em>
+          Axbook changes the <em>primitive.</em>
         </h2>
 
         <div className={styles.versus}>

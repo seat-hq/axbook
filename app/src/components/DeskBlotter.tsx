@@ -344,7 +344,7 @@ export function DeskBlotter() {
     try {
       amount = parseUnits(stakeAmt.trim(), 18);
     } catch {
-      setNote("Enter a valid $SEAT amount.");
+      setNote("Enter a valid $AXBOOK amount.");
       return;
     }
     if (amount <= 0n) {
@@ -533,7 +533,7 @@ export function DeskBlotter() {
             <h2>Stake</h2>
             <div className="field">
               <label className="field-label" htmlFor="stake-seat">
-                SEAT
+                AXBOOK
               </label>
               <input
                 className="input"
@@ -580,7 +580,7 @@ export function DeskBlotter() {
                     typeof listingBond === "bigint"
                       ? formatUnits(listingBond, 18)
                       : "…"
-                  } SEAT`}
+                  } AXBOOK`}
             </button>
           </form>
         ) : null}
@@ -588,7 +588,7 @@ export function DeskBlotter() {
           <p className="hint">Connect a wallet on Robinhood Chain to deposit or redeem.</p>
         ) : null}
           <p className="legal">
-            <strong>Mainnet.</strong> NAV includes open positions. SEAT is not affiliated
+            <strong>Mainnet.</strong> NAV includes open positions. Axbook is not affiliated
             with Robinhood Markets. Stock Tokens are not shares. This is not investment advice.
           </p>
         </>

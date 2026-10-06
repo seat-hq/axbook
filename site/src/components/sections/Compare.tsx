@@ -8,12 +8,12 @@ const seat = [
   "Scaled execution",
   "Desk vault",
   "NAV",
-  "Seat shares",
+  "Book shares",
   "Redemption",
 ];
 
 const rows: readonly [string, string, string][] = [
-  ["What you hold", "Tokens in your own wallet", "Seat shares — a claim on desk NAV"],
+  ["What you hold", "Tokens in your own wallet", "Book shares — a claim on desk NAV"],
   ["Where capital sits", "Your wallet", "The desk vault contract"],
   ["Unit of copying", "Individual trades", "A portfolio: filtered, scaled, capped"],
   ["Leaving", "Sell your positions", "Redeem shares at NAV — from cash, or queued"],
@@ -47,7 +47,7 @@ export function Compare() {
             </ol>
           </figure>
           <figure className={styles.pipe} data-kind="seat">
-            <figcaption className="mono">SEAT desk model</figcaption>
+            <figcaption className="mono">Axbook desk model</figcaption>
             <ol>
               {seat.map((n, i) => (
                 <li
@@ -72,7 +72,7 @@ export function Compare() {
                   <span className="sr-only">Aspect</span>
                 </th>
                 <th scope="col">Wallet copy</th>
-                <th scope="col">SEAT desk</th>
+                <th scope="col">Axbook desk</th>
               </tr>
             </thead>
             <tbody>

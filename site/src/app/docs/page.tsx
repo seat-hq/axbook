@@ -8,9 +8,9 @@ import { links } from "@/lib/links";
 import styles from "@/components/docs/docs.module.css";
 
 export const metadata: Metadata = {
-  title: "SEAT Documentation",
+  title: "Axbook Documentation",
   description:
-    "Technical documentation for the SEAT copy-desk protocol on Robinhood Chain: smart contracts, keeper, SDK, NAV accounting, risk engine, deployment and operations.",
+    "Technical documentation for the Axbook copy-desk protocol on Robinhood Chain: smart contracts, keeper, SDK, NAV accounting, risk engine, deployment and operations.",
   alternates: { canonical: "/docs" },
 };
 
@@ -22,7 +22,7 @@ const ARCHITECTURE = `flowchart TD
   sdk["@seat/sdk<br/>registry + NAV math"]
   subgraph contracts["Smart contracts"]
     factory["DeskFactory"]
-    vault["DeskVault<br/>USDG + Stock Tokens · seat shares"]
+    vault["DeskVault<br/>USDG + Stock Tokens · book shares"]
     risk["RiskModule<br/>caps · sessions · drawdown"]
     swap["SwapAdapter<br/>restricted router"]
     fee["FeeModule<br/>HWM + AUM · 70/20/10"]
@@ -60,9 +60,9 @@ const STATUS: readonly {
     note: "Wired in code with cited MAG7 tokens, feeds and SwapRouter02. Broadcast is guarded by CONFIRM_MAINNET; $50k deposit cap per desk.",
   },
   {
-    title: "Phase 2 — $SEAT, staking, open desks",
+    title: "Phase 2 — $AXBOOK, staking, open desks",
     status: "implemented",
-    note: "Code shipped and tested. TGE requires CONFIRM_MAINNET + CONFIRM_SEAT_TGE; no $SEAT contract is deployed yet.",
+    note: "Code shipped and tested. TGE requires CONFIRM_MAINNET + CONFIRM_SEAT_TGE; no $AXBOOK contract is deployed yet.",
   },
   {
     title: "Buyback-and-burn, bond slashing, Phase 3+",
@@ -75,20 +75,20 @@ export default function DocsIndex() {
   const tree = getDocsTree();
   return (
     <div className={styles.landing}>
-      <p className={styles.landingEyebrow}>SEAT Protocol Documentation</p>
-      <h1 className={styles.landingTitle}>SEAT</h1>
+      <p className={styles.landingEyebrow}>Axbook Protocol Documentation</p>
+      <h1 className={styles.landingTitle}>Axbook</h1>
       <p className={styles.landingTagline}>Copy desks for programmable capital.</p>
       <p className={styles.landingLede}>
-        SEAT is a copy-desk protocol on Robinhood Chain. A desk is a USDG-denominated vault that
+        Axbook is a copy-desk protocol on Robinhood Chain. A desk is a USDG-denominated vault that
         copies the trades of an opted-in leader across a small set of verified official Stock
-        Tokens. Depositors hold seat shares — a pro-rata claim on desk equity (NAV). A keeper
+        Tokens. Depositors hold book shares — a pro-rata claim on desk equity (NAV). A keeper
         observes leader fills, evaluates them against deterministic on-chain risk rules, resizes
-        or skips them, and executes permitted copies through a restricted swap adapter. SEAT is
+        or skips them, and executes permitted copies through a restricted swap adapter. Axbook is
         experimental, unaudited, and not affiliated with Robinhood Markets.
       </p>
       <div className={styles.landingCtas}>
         <Link href="/docs/introduction/what-is-seat" className={styles.ctaPrimary}>
-          Start: What is SEAT?
+          Start: What is Axbook?
         </Link>
         <Link href="/docs/development/setup" className={styles.ctaSecondary}>
           Developer setup

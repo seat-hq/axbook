@@ -160,7 +160,7 @@ function HeroSceneGraphic({ vertical }: { readonly vertical: boolean }) {
       <title id="hero-scene-title">Alex&apos;s wallet and the desk vault are separate</title>
       <desc id="hero-scene-desc">
         A trade signal leaves Alex&apos;s wallet, passes asset, session and size gates, and a smaller copy lands in the
-        desk vault, which holds USDG cash and copied positions. The vault&apos;s NAV is split into seat shares. Some
+        desk vault, which holds USDG cash and copied positions. The vault&apos;s NAV is split into book shares. Some
         signals are skipped at a gate.
       </desc>
 
@@ -274,7 +274,7 @@ function HeroSceneGraphic({ vertical }: { readonly vertical: boolean }) {
         </g>
         <g data-h="readout">
           <text x={-vw / 2 + 18} y={26} className={styles.readoutDim}>
-            ÷ SEAT SHARES = your claim
+            ÷ BOOK SHARES = your claim
           </text>
         </g>
       </g>

@@ -59,7 +59,7 @@ export function Economics() {
   const split = [
     { k: "Leader", sub: "Alex", bps: fees.leaderShareBps.value, v: u.split.alex, tone: "alex" },
     { k: "Protocol", sub: "treasury", bps: fees.protocolShareBps.value, v: u.split.protocol, tone: "ink" },
-    { k: "Stakers", sub: "$SEAT stakers", bps: fees.stakerShareBps.value, v: u.split.stakers, tone: "desk" },
+    { k: "Stakers", sub: "$AXBOOK stakers", bps: fees.stakerShareBps.value, v: u.split.stakers, tone: "desk" },
   ];
   return (
     <section id="economics" className={`sec sec--paper ${styles.sec}`} aria-labelledby="econ-title">
@@ -143,15 +143,15 @@ export function Economics() {
             </p>
           </li>
           <li>
-            <h3>$SEAT staking</h3>
+            <h3>$AXBOOK staking</h3>
             <p>
-              Fixed supply of {seatToken.totalSupply} $SEAT, no mint after deploy. Stakers claim USDG from the{" "}
+              Fixed supply of {seatToken.totalSupply} $AXBOOK, no mint after deploy. Stakers claim USDG from the{" "}
               {pct(fees.stakerShareBps.value)} fee share. Staking a bond can list a new desk.
             </p>
           </li>
         </ul>
         <p className={styles.footnote}>
-          Phase 2 desk defaults from <code>DeployPhase2.s.sol</code>. {phase1FeeNote} $SEAT TGE on mainnet has not been
+          Phase 2 desk defaults from <code>DeployPhase2.s.sol</code>. {phase1FeeNote} $AXBOOK TGE on mainnet has not been
           broadcast.
         </p>
       </div>

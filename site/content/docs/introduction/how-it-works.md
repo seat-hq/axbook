@@ -1,6 +1,6 @@
 ---
 title: How It Works
-description: The SEAT copy lifecycle end to end — from a leader's fill to vault accounting and NAV per share.
+description: The Axbook copy lifecycle end to end — from a leader's fill to vault accounting and NAV per share.
 order: 3
 ---
 

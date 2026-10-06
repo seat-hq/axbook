@@ -1,6 +1,6 @@
 # Not Affiliated
 
-SEAT is an independent, community project. It is **not affiliated with,
+Axbook is an independent, community project. It is **not affiliated with,
 endorsed by, or sponsored by Robinhood Markets, Inc.** or any of its
 subsidiaries or affiliates. All product names, logos, and brands are the
 property of their respective owners and are used for identification purposes

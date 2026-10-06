@@ -24,13 +24,13 @@ const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-mono-face", 
 const brand = Montserrat({ subsets: ["latin"], weight: ["600"], variable: "--font-montserrat", display: "swap" });
 
 const description =
-  "SEAT is a copy desk, not a sniper bot. Deposit USDG into a separate desk vault, receive seat shares that claim the desk's NAV, and let a risk engine decide which of a leader's Stock Token trades get copied — smaller, filtered and capped.";
+  "Axbook is a copy desk, not a sniper bot. Deposit USDG into a separate desk vault, receive book shares that claim the desk's NAV, and let a risk engine decide which of a leader's Stock Token trades get copied — smaller, filtered and capped.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "SEAT — Copy desk, not sniper bot",
-    template: "%s · SEAT",
+    default: "Axbook — Copy desk, not sniper bot",
+    template: "%s · Axbook",
   },
   description,
   keywords: [
@@ -41,20 +41,20 @@ export const metadata: Metadata = {
     "vault-based trading",
     "trading desk",
     "NAV",
-    "seat shares",
+    "book shares",
     "Robinhood Chain",
     "USDG",
   ],
   openGraph: {
     type: "website",
-    siteName: "SEAT",
-    title: "SEAT — Copy desk, not sniper bot",
+    siteName: "Axbook",
+    title: "Axbook — Copy desk, not sniper bot",
     description,
     url: "/",
   },
   twitter: {
     card: "summary_large_image",
-    title: "SEAT — Copy desk, not sniper bot",
+    title: "Axbook — Copy desk, not sniper bot",
     description,
   },
   alternates: { canonical: "/" },
@@ -68,7 +68,7 @@ export const viewport: Viewport = {
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "Organization",
-  name: "SEAT",
+  name: "Axbook",
   url: siteUrl,
   description,
   logo: `${siteUrl}/brand/seat-mark-light.svg`,

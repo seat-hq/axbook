@@ -4,7 +4,7 @@ description: The two fees, the high-water mark, and where every bip goes — Pha
 order: 1
 ---
 
-SEAT has exactly two fees. There is **no volume fee, no deposit fee, no withdrawal fee**.
+Axbook has exactly two fees. There is **no volume fee, no deposit fee, no withdrawal fee**.
 
 | Fee | Rate | Trigger |
 |---|---|---|

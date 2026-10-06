@@ -1,13 +1,13 @@
 ---
 title: DeskFactory
-description: Deploys and registers one DeskVault per leader; custodies $SEAT listing bonds for permissionless listings.
+description: Deploys and registers one DeskVault per leader; custodies $AXBOOK listing bonds for permissionless listings.
 order: 3
 status: implemented
 ---
 
 `contracts/src/DeskFactory.sol` — inherits `Ownable`.
 
-> One DeskVault per leader. Owner may `createDesk` with no bond. Anyone may `listDesk` by posting a $SEAT listing bond.
+> One DeskVault per leader. Owner may `createDesk` with no bond. Anyone may `listDesk` by posting a $AXBOOK listing bond.
 
 ## Storage
 
@@ -24,7 +24,7 @@ status: implemented
 | Function | Access | Behaviour |
 |---|---|---|
 | `createDesk(leader) → vault` | owner | Deploys a `DeskVault` (owner = factory owner), registers it, emits `DeskCreated` |
-| `listDesk(leader) → vault` | anyone | Pulls `listingBondSeat` `$SEAT` from the caller, deploys + registers, records the bond, emits `BondPosted` |
+| `listDesk(leader) → vault` | anyone | Pulls `listingBondSeat` `$AXBOOK` from the caller, deploys + registers, records the bond, emits `BondPosted` |
 | `setListingParams(seat, bond)` | owner | Enables the bonded path; emits `ListingParamsSet` |
 | `returnBond(vault)` | owner | Returns the bond to the original bonder; emits `BondReturned` |
 | `deskCount() → uint256` | view | `allDesks.length` |

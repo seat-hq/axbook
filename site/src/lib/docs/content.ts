@@ -47,14 +47,14 @@ const REPO_DOCS_DIR = path.join(process.cwd(), "..", "docs");
 
 /** Repo docs published under /docs/runbooks, in reading order. */
 const REPO_RUNBOOKS: readonly { file: string; description: string }[] = [
-  { file: "litepaper", description: "The SEAT litepaper: desks, accounting, sessions, components, roadmap." },
+  { file: "litepaper", description: "The Axbook litepaper: desks, accounting, sessions, components, roadmap." },
   { file: "phase-1", description: "Phase 1 runbook: testnet desks on Robinhood Chain 46630." },
   { file: "phase-1-live", description: "Cited 4663 facts: Stock Tokens, Chainlink feeds, SwapRouter02, the $50k cap." },
-  { file: "phase-2", description: "Phase 2: open desks, fixed-supply $SEAT, 70/20/10 fees, stake-to-list." },
+  { file: "phase-2", description: "Phase 2: open desks, fixed-supply $AXBOOK, 70/20/10 fees, stake-to-list." },
   { file: "mainnet-day", description: "The Phase 2 mainnet-day checklist for broadcasting on 4663." },
   { file: "risk", description: "Risk disclosure: fail-closed rules, market, copy, contract and operational risk." },
   { file: "allowlist", description: "Asset allowlist and the verification promotion process." },
-  { file: "not-affiliated", description: "SEAT is independent and not affiliated with Robinhood Markets." },
+  { file: "not-affiliated", description: "Axbook is independent and not affiliated with Robinhood Markets." },
 ];
 
 /** Repo files referenced from docs but intentionally not published. */

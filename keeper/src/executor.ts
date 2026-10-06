@@ -94,7 +94,7 @@ function mulDiv(x: bigint, num: bigint, den: bigint): bigint {
   return (x * num) / den;
 }
 
-/** Create a fresh desk state seeded with USDG cash and seat shares. */
+/** Create a fresh desk state seeded with USDG cash and book shares. */
 export function createRiskState(
   cashUsdg: bigint,
   shares: bigint,

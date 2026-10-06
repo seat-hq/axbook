@@ -1,10 +1,10 @@
 ---
 title: Architecture Overview
-description: The major components of SEAT and how they connect — contracts, keeper, application and SDK.
+description: The major components of Axbook and how they connect — contracts, keeper, application and SDK.
 order: 4
 ---
 
-SEAT is a monorepo of four deployable parts plus shared documentation. This page is the map; each component has a full page in [Protocol Architecture](/docs/architecture/system-overview) and a reference page in [Smart Contracts](/docs/contracts/overview).
+Axbook is a monorepo of four deployable parts plus shared documentation. This page is the map; each component has a full page in [Protocol Architecture](/docs/architecture/system-overview) and a reference page in [Smart Contracts](/docs/contracts/overview).
 
 ## System diagram
 
@@ -18,7 +18,7 @@ flowchart LR
 
   subgraph onchain["On-chain (Robinhood Chain)"]
     factory["DeskFactory<br/>one vault per leader"]
-    vault["DeskVault<br/>USDG cash + positions<br/>seat shares · fee liabilities"]
+    vault["DeskVault<br/>USDG cash + positions<br/>book shares · fee liabilities"]
     risk["RiskModule<br/>deterministic evaluate()"]
     swap["SwapAdapter<br/>no arbitrary calldata"]
     router["ExactInputRouter02<br/>Uniswap SwapRouter02 wrapper"]

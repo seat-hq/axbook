@@ -11,7 +11,7 @@ order: 3
 **Technically.**
 
 - The binding is the immutable `leader` address set in the `DeskVault` constructor. `DeskFactory` enforces one vault per leader (`deskOf` mapping, `DeskExists` error).
-- Bootstrap desks are created by the owner via `createDesk(leader)`. After Phase 2 TGE, anyone can permissionlessly create a desk for a leader via `listDesk(leader)` by posting the `$SEAT` listing bond (default `100_000e18`, configurable at `setListingParams`).
+- Bootstrap desks are created by the owner via `createDesk(leader)`. After Phase 2 TGE, anyone can permissionlessly create a desk for a leader via `listDesk(leader)` by posting the `$AXBOOK` listing bond (default `100_000e18`, configurable at `setListingParams`).
 - The leader receives the leader share of fees at `leaderFeeRecipient`, which defaults to the leader address itself and can be redirected by the owner via `setFeeRecipients`.
 - The keeper reads the binding from chain (`vault.leader()`); an operator can override observation with `LEADER_ADDRESS`, but the vault's executed copies are always for its immutable leader's desk.
 
@@ -19,7 +19,7 @@ order: 3
 
 ## Followers (depositors)
 
-**Plain English.** A follower deposits USDG into a desk and receives seat shares. From that moment, their money participates in every copy the desk makes — gains and losses — proportional to their share count. They can redeem shares for USDG at the current NAV per share, instantly when the vault has cash, otherwise via a queue.
+**Plain English.** A follower deposits USDG into a desk and receives book shares. From that moment, their money participates in every copy the desk makes — gains and losses — proportional to their share count. They can redeem shares for USDG at the current NAV per share, instantly when the vault has cash, otherwise via a queue.
 
 **Technically.**
 
@@ -36,7 +36,7 @@ flowchart LR
   M -->|"Transfer logs"| K["Keeper"]
   K -->|"executeCopy (only if risk passes)"| V["DeskVault"]
   F["Followers"] -->|"deposit USDG"| V
-  V -->|"seat shares"| F
+  V -->|"book shares"| F
   F -->|"redeem shares"| V
   V -->|"70% of performance fee"| L
   V -->|"20% protocol / 10% stakers"| X["Fee recipients"]

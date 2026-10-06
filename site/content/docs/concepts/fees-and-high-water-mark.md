@@ -6,13 +6,13 @@ order: 6
 
 ## Plain English
 
-SEAT charges for **results and time**, never for activity:
+Axbook charges for **results and time**, never for activity:
 
 - **Performance fee — 10%.** When a desk's NAV per share rises above the highest level it has ever reached (the **high-water mark**), 10% of that new profit becomes a fee liability. If the desk loses money, the fee stops until NAV per share fully recovers past its previous peak.
 - **AUM fee — 2% per year.** A small fee accrues continuously on desk equity, prorated by the second.
 - **No volume fee.** Copying ten trades or zero trades costs depositors nothing by itself. This is an explicit design rule of the protocol.
 
-Fees are shared: **70% to the leader**, **20% to the protocol**, **10% to $SEAT stakers** (Phase 2 configuration; Phase 1 vaults run 80/20 with no staker share).
+Fees are shared: **70% to the leader**, **20% to the protocol**, **10% to $AXBOOK stakers** (Phase 2 configuration; Phase 1 vaults run 80/20 with no staker share).
 
 ## Technically
 

@@ -4,7 +4,7 @@ description: The heart of the protocol — custody, share accounting, fee liabil
 order: 3
 ---
 
-**Responsibility.** Custody depositor funds, account for ownership in seat shares, value positions for NAV, accrue and pay fees, and execute keeper-submitted copies that pass risk.
+**Responsibility.** Custody depositor funds, account for ownership in book shares, value positions for NAV, accrue and pay fees, and execute keeper-submitted copies that pass risk.
 
 **Contract:** `contracts/src/DeskVault.sol` — full reference: [DeskVault](/docs/contracts/desk-vault).
 
@@ -12,7 +12,7 @@ order: 3
 
 | Caller | Function | Effect |
 |---|---|---|
-| Anyone | `deposit(assetsUsdg)` | Mints seat shares; takes USDG |
+| Anyone | `deposit(assetsUsdg)` | Mints book shares; takes USDG |
 | Shareholder | `redeem(shares)` | Burns shares; pays USDG or queues |
 | Anyone | `processWithdrawals(maxCount)` | Pays queued withdrawals FIFO while cash covers |
 | Keeper only | `executeCopy(...)` | Risk-checked swap through the adapter |

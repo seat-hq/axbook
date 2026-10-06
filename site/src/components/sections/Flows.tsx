@@ -13,7 +13,7 @@ export function Flows() {
             Trade signals in. Risk decisions. <em>NAV out.</em>
           </h2>
           <p className="lede">
-            Two different things move through SEAT. Information about Alex&apos;s trades. And your capital. They never
+            Two different things move through Axbook. Information about Alex&apos;s trades. And your capital. They never
             share a path.
           </p>
           <ul className={styles.legend}>
@@ -51,7 +51,7 @@ export function Flows() {
                 <li>You deposit USDG into the desk vault.</li>
                 <li>The vault swaps its own USDG for allowlisted assets.</li>
                 <li>Cash plus asset value is the NAV.</li>
-                <li>NAV divided by shares is what each seat share claims.</li>
+                <li>NAV divided by shares is what each book share claims.</li>
                 <li>Redeeming shares returns USDG to you — from the vault.</li>
               </ol>
             </div>

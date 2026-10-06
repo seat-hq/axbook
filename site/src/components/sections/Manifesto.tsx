@@ -40,7 +40,7 @@ export function Manifesto() {
     <section ref={ref} id="manifesto" className={`sec sec--void ${styles.sec}`} aria-labelledby="manifesto-title">
       <div className="wrap">
         <p className="eyebrow">
-          <b>09</b> What makes SEAT new
+          <b>09</b> What makes Axbook new
         </p>
         <h2 id="manifesto-title" className="sr-only">
           Six shifts in the primitive

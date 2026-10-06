@@ -41,7 +41,7 @@ export function Enter() {
       <section id="ecosystem" className={`sec sec--tight ${styles.eco}`} aria-labelledby="eco-title">
         <div className="wrap">
           <h2 id="eco-title" className={`mono ${styles.ecoTitle}`}>
-            The SEAT ecosystem
+            The Axbook ecosystem
           </h2>
           <ul className={styles.grid}>
             {eco.map(({ key, icon, kicker }) => {

@@ -1,6 +1,6 @@
 ---
 title: System Overview
-description: How the contracts, keeper, application and SDK compose into the SEAT system — with the trust and data-flow boundaries.
+description: How the contracts, keeper, application and SDK compose into the Axbook system — with the trust and data-flow boundaries.
 order: 1
 ---
 
@@ -73,7 +73,7 @@ The leader never enters the capital path. The keeper touches capital only throug
 ## Dependency map (code level)
 
 - `DeskVault` → `IRiskModule`, `ISwapAdapter`, `IPriceOracle` (NavLib), `FeeModule`, `IStakingPool`, OpenZeppelin (`Ownable`, `Pausable`, `ReentrancyGuard`, `SafeERC20`)
-- `DeskFactory` → deploys `DeskVault`; `IERC20` for the `$SEAT` bond
+- `DeskFactory` → deploys `DeskVault`; `IERC20` for the `$AXBOOK` bond
 - `SwapAdapter` → `IExactInputRouter`; `ExactInputRouter02` → `ISwapRouter02` (Uniswap)
 - `ChainlinkOracle` → `AggregatorV3Interface`
 - keeper → `@seat/sdk` (registry, NAV math, chain constants)

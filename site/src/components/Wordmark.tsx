@@ -1,8 +1,8 @@
 type Tone = "inherit" | "dark" | "light" | "badge";
 
 /**
- * Official SEAT mark: a chair inside a gold ring.
- * The ring is the desk. The chair is the seat you take.
+ * Official Axbook mark: a chair inside a gold ring.
+ * The ring is the desk.
  * `inherit` follows the surrounding ink (cream on the dark site, forest on paper).
  */
 function Chair({ fill }: { fill: string }) {
@@ -46,13 +46,13 @@ export function Wordmark({ size = 26, tone = "inherit" }: { size?: number; tone?
         gap: "0.6em",
         fontFamily: "var(--font-brand)",
         fontWeight: 600,
-        letterSpacing: "0.16em",
+        letterSpacing: "0.08em",
         fontSize: size * 0.62,
         lineHeight: 1,
       }}
     >
       <Mark size={size} tone={tone} />
-      <span style={{ marginRight: "-0.16em" }}>SEAT</span>
+      <span style={{ marginRight: "-0.08em" }}>AXBOOK</span>
     </span>
   );
 }

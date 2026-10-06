@@ -1,4 +1,4 @@
-# SEAT marketing site
+# Axbook marketing site
 
 Next.js app on port **3100** (`pnpm dev` from repo root: `make site-dev`).
 
@@ -6,7 +6,7 @@ Next.js app on port **3100** (`pnpm dev` from repo root: `make site-dev`).
 
 | Variable | Required | Description |
 |---|---|---|
-| `NEXT_PUBLIC_SEAT_TOKEN_ADDRESS` | No | Mainnet `$SEAT` ERC-20 address (`0x` + 40 hex). When unset or invalid, the hero **Token** row is hidden. Set after Phase 2 TGE broadcast. |
+| `NEXT_PUBLIC_SEAT_TOKEN_ADDRESS` | No | Mainnet `$AXBOOK` ERC-20 address (`0x` + 40 hex). When unset or invalid, the hero **Token** row is hidden. Set after Phase 2 TGE broadcast. |
 
 Example (local):
 

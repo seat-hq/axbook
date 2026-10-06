@@ -119,7 +119,7 @@ function main(): void {
   const executor = new PaperExecutor(market);
   const state = createRiskState(usdg(10_000), usdg(10_000));
 
-  console.log("SEAT paper-copy engine — Phase 0 (PAPER, no funds move)\n");
+  console.log("Axbook paper-copy engine — Phase 0 (PAPER, no funds move)\n");
   console.log(
     `Seed: cash=${formatUsdg(state.cashUsdg)} USDG, shares=${formatUsdg(
       state.shares,

@@ -4,7 +4,7 @@ description: How desks are created — the owner path, the bonded listing path, 
 order: 2
 ---
 
-**Responsibility.** Deploy and register exactly one `DeskVault` per leader, and (Phase 2) custody the `$SEAT` listing bonds of permissionlessly listed desks.
+**Responsibility.** Deploy and register exactly one `DeskVault` per leader, and (Phase 2) custody the `$AXBOOK` listing bonds of permissionlessly listed desks.
 
 **Contract:** `contracts/src/DeskFactory.sol` — reference: [DeskFactory](/docs/contracts/desk-factory).
 

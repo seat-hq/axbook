@@ -4,7 +4,7 @@ description: Robinhood Chain mainnet 4663 and testnet 46630 — what is deployed
 order: 1
 ---
 
-SEAT targets **Robinhood Chain** only. The keeper and deploy scripts refuse any other chain ID.
+Axbook targets **Robinhood Chain** only. The keeper and deploy scripts refuse any other chain ID.
 
 | | Mainnet | Testnet |
 |---|---|---|
@@ -12,10 +12,10 @@ SEAT targets **Robinhood Chain** only. The keeper and deploy scripts refuse any 
 | Gas token | ETH | ETH |
 | RPC | `https://rpc.mainnet.chain.robinhood.com` | `https://rpc.testnet.chain.robinhood.com` |
 | USDG | `0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168` | `0x7E955252E15c84f5768B83c41a71F9eba181802F` |
-| SEAT contracts | **None deployed** | Phase 1 set deployed |
+| Axbook contracts | **None deployed** | Phase 1 set deployed |
 
 :::callout{type="warning" title="Nothing is deployed on mainnet"}
-Every mainnet module address in `app/src/lib/addresses.ts` is `null`. Mainnet deployment scripts exist but have never been broadcast. Do not send funds to any SEAT contract on mainnet — there are none.
+Every mainnet module address in `app/src/lib/addresses.ts` is `null`. Mainnet deployment scripts exist but have never been broadcast. Do not send funds to any Axbook contract on mainnet — there are none.
 :::
 
 ## Where the addresses live

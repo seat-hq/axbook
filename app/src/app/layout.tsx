@@ -25,7 +25,7 @@ const brand = Montserrat({
 });
 
 export const metadata: Metadata = {
-  title: "SEAT — Copy desk",
+  title: "Axbook — Copy desk",
   description:
     "USDG copy desks for official Stock Tokens on Robinhood Chain. Not affiliated with Robinhood Markets. Not investment advice.",
 };

@@ -5,7 +5,7 @@ order: 1
 ---
 
 :::callout{type="danger" title="Unaudited, experimental software"}
-SEAT has **no security audit**, no bug bounty, and no production deployment. Nothing in this section is a guarantee. It is a description of the intended privilege boundaries as implemented in the code.
+Axbook has **no security audit**, no bug bounty, and no production deployment. Nothing in this section is a guarantee. It is a description of the intended privilege boundaries as implemented in the code.
 :::
 
 ## Trust matrix
@@ -15,7 +15,7 @@ SEAT has **no security audit**, no bug bounty, and no production deployment. Not
 | **Owner** | Pause/unpause; set risk parameters (bounded); set keeper; set fee recipients; configure desk | Withdraw user funds — no admin sweep exists |
 | **Keeper** | Call `executeCopy` only | Touch deposits, redemptions, configuration; every copy is re-checked by `RiskModule` on-chain |
 | **Factory owner** | `createDesk` permissioning | Access existing vaults' funds |
-| **Anyone** | List a desk by posting the `$SEAT` bond (Phase 2); call `processWithdrawals` | — |
+| **Anyone** | List a desk by posting the `$AXBOOK` bond (Phase 2); call `processWithdrawals` | — |
 | **Depositor** | Deposit; queue a redemption at any time (even paused) | — |
 
 ## Key-management requirements
@@ -46,4 +46,4 @@ SEAT has **no security audit**, no bug bounty, and no production deployment. Not
 
 - Copy trading **amplifies leader risk** across all follower capital. Caps bound size, not direction of P&L.
 - Stock Tokens trade in market sessions; the session clock (ET, no holiday calendar) can misjudge holidays — it fails closed (size 0) when unsure.
-- USDG and Stock Tokens are issuer-backed instruments; their own risks are out of SEAT's control. SEAT is [not affiliated with Robinhood](/docs/runbooks/not-affiliated).
+- USDG and Stock Tokens are issuer-backed instruments; their own risks are out of Axbook's control. Axbook is [not affiliated with Robinhood](/docs/runbooks/not-affiliated).

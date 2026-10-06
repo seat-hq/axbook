@@ -42,7 +42,7 @@ All variables are documented in `.env.example`. Copy it to a **gitignored** `.en
 
 | Variable | Used by | Purpose |
 |---|---|---|
-| `SEAT_HOLDER` | `DeployPhase2` | Receives the 1B `$SEAT` mint (defaults to `OWNER`) |
+| `SEAT_HOLDER` | `DeployPhase2` | Receives the 1B `$AXBOOK` mint (defaults to `OWNER`) |
 | `LISTING_BOND_SEAT` | `DeployPhase2` | Listing bond (default `100_000e18`) |
 | `POSITION_MANAGER_ADDRESS` | operator | Cited Uniswap v3 NPM on 4663 (`0x7399…E0D3`); LP mint stays manual |
 | `SEAT_LP_USDG` | `DeployPhase2` | If set, logs LP seeding intent; the script never mints the position |
@@ -74,7 +74,7 @@ All variables are documented in `.env.example`. Copy it to a **gitignored** `.en
 
 | Variable | Purpose |
 |---|---|
-| `NEXT_PUBLIC_SEAT_PRODUCT_URL` | "Product" link target (defaults to `https://app.seatdesks.xyz`) |
+| `NEXT_PUBLIC_SEAT_PRODUCT_URL` | "Product" link target (defaults to `https://app.axbook.xyz`) |
 | `NEXT_PUBLIC_SEAT_X_URL` | X/Twitter link (defaults to `https://x.com/seatdesks_xyz`) |
 | `NEXT_PUBLIC_SEAT_SITE_URL` | Canonical site URL for metadata/sitemap |
 

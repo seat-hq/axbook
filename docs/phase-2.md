@@ -1,14 +1,14 @@
-# Phase 2 — Open desks + `$SEAT`
+# Phase 2 — Open desks + `$AXBOOK`
 
 **Status: code shipped.** Broadcast to Robinhood mainnet `4663` still
 requires `CONFIRM_MAINNET=I_UNDERSTAND` **and** `CONFIRM_SEAT_TGE=I_UNDERSTAND`.
 The 46630 cash vault (`0x8ff6…`) is unchanged (immutable, no router).
 
 Phase 2 skips the 30-day live gate. It adds extra opted-in desks, a
-fixed-supply `$SEAT` token, stake-to-list, and the Idea.md **70 / 20 / 10**
+fixed-supply `$AXBOOK` token, stake-to-list, and the Idea.md **70 / 20 / 10**
 fee loop. Buyback-and-burn is **not** in this phase.
 
-Ticker is **`$SEAT`** (not `$WAKE`). No mint after deploy. No volume fee.
+Ticker is **`$AXBOOK`** (not `$WAKE`). No mint after deploy. No volume fee.
 Do not invent token / oracle / router / NPM addresses.
 
 ## Token
@@ -17,7 +17,7 @@ Do not invent token / oracle / router / NPM addresses.
 
 | Field | Value |
 |---|---|
-| Name / symbol | `SEAT` / `SEAT` |
+| Name / symbol | `Axbook` / `Axbook` |
 | Decimals | 18 |
 | `totalSupply` | `1_000_000_000e18` |
 | Mint | constructor only, to `SEAT_HOLDER` (default `OWNER`) |
@@ -28,7 +28,7 @@ addresses:
 
 | Bucket | Share | Notes |
 |---|---|---|
-| Liquidity / market | 40% | SEAT/USDG Uniswap v3; NFT locked 12 months |
+| Liquidity / market | 40% | AXBOOK/USDG Uniswap v3; NFT locked 12 months |
 | Community / airdrop | 20% | Later merkle; not deployed here |
 | Team | 15% | Later vesting; not deployed here |
 | Treasury / protocol | 12% | Ops + protocol 20% fee recipient |
@@ -54,7 +54,7 @@ If `stakerRecipient` is `address(0)`, the staker slice **stays in the
 vault** as unpaid `feeLiabilitiesUsdg` (fail closed — not given to
 protocol).
 
-`StakingPool`: stake / unstake `$SEAT`, `notifyReward` USDG from vaults,
+`StakingPool`: stake / unstake `$AXBOOK`, `notifyReward` USDG from vaults,
 `claim` pro-rata. No rebase. No vote-to-print.
 
 Phase 1 testnet / `DeployMainnet` keep `stakerShareBps: 0` (80/20) so
@@ -67,7 +67,7 @@ existing cash vaults do not change.
 
 Anyone may `listDesk(leader)` after `setListingParams`:
 
-- Pull `listingBondSeat` `$SEAT` from `msg.sender` (default `100_000e18`)
+- Pull `listingBondSeat` `$AXBOOK` from `msg.sender` (default `100_000e18`)
 - Same one-vault-per-leader invariant
 - Record `bondOf[vault]` / `bonderOf[vault]`
 - Owner `returnBond` on sunset; **no auto-slash** (Phase 3)
@@ -98,7 +98,7 @@ Cited NonfungiblePositionManager on 4663
 
 `0x73991a25C818Bf1f1128dEAaB1492D45638DE0D3`
 
-Seeding SEAT/USDG liquidity is a **manual owner tx**. `DeployPhase2`
+Seeding AXBOOK/USDG liquidity is a **manual owner tx**. `DeployPhase2`
 logs “seed+lock later” unless `SEAT_LP_USDG` is set; it does not invent
 ticks or mint a position in the script.
 

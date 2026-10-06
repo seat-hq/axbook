@@ -1,6 +1,6 @@
 ---
 title: NAV & Accounting
-description: How SEAT values a desk — USDG base units, balanceOfUI, oracle prices, and the exact NAV formulas.
+description: How Axbook values a desk — USDG base units, balanceOfUI, oracle prices, and the exact NAV formulas.
 order: 1
 ---
 
@@ -13,7 +13,7 @@ This page is the authoritative description of desk accounting. The rules here ar
 | USDG amounts | 6 | All vault accounting is in USDG base units |
 | Stock Token balances | 18 | Via `balanceOfUI()`, never raw `balanceOf` for equity |
 | Oracle prices | 8 | On the cited 4663 Chainlink feeds |
-| Seat shares | 6 | `SHARE_PRECISION = 6` |
+| Book shares | 6 | `SHARE_PRECISION = 6` |
 
 **Raw vs UI balances.** Stock Tokens expose `balanceOfUI(address)` (ERC-8056), the authoritative supported-balance interface. The vault's valuation path is: try `balanceOfUI` → fall back to `balanceOf` → fall back to `0` (only if both calls fail). The SDK's `Position.uiBalance` is the same quantity. Display formatting (`formatUsdg`) happens only at the edges; internally everything is integer base units.
 

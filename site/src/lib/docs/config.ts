@@ -17,7 +17,7 @@ export const DOCS_SECTIONS: readonly DocsSection[] = [
   {
     slug: "introduction",
     title: "Introduction",
-    description: "What SEAT is, why it exists, and how the pieces fit together.",
+    description: "What Axbook is, why it exists, and how the pieces fit together.",
   },
   {
     slug: "concepts",
@@ -42,7 +42,7 @@ export const DOCS_SECTIONS: readonly DocsSection[] = [
   {
     slug: "accounting",
     title: "NAV & Accounting",
-    description: "NAV, seat shares, deposits, withdrawals, fees and the high-water mark.",
+    description: "NAV, book shares, deposits, withdrawals, fees and the high-water mark.",
   },
   {
     slug: "risk",
@@ -92,7 +92,7 @@ export const DOCS_SECTIONS: readonly DocsSection[] = [
   {
     slug: "economics",
     title: "Economics",
-    description: "Fees, the high-water mark, $SEAT, staking and the listing bond.",
+    description: "Fees, the high-water mark, $AXBOOK, staking and the listing bond.",
   },
   {
     slug: "reference",

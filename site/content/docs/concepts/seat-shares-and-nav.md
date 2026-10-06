@@ -1,18 +1,18 @@
 ---
 title: Seat Shares & NAV
-description: How desk ownership is measured — seat shares, NAV, and NAV per share.
+description: How desk ownership is measured — book shares, NAV, and NAV per share.
 order: 5
 ---
 
 ## Plain English
 
-When you deposit USDG into a desk you receive **seat shares** — the unit that measures your slice of the desk. The desk's total value is its **NAV** (net asset value): the USDG it holds as cash, plus the current USDG value of every Stock Token position, minus fees owed. **NAV per share** is NAV divided by all outstanding shares; it is the single number that tells you what one share is worth, and it is what deposits, redemptions, fees and the drawdown halt all key off.
+When you deposit USDG into a desk you receive **book shares** — the unit that measures your slice of the desk. The desk's total value is its **NAV** (net asset value): the USDG it holds as cash, plus the current USDG value of every Stock Token position, minus fees owed. **NAV per share** is NAV divided by all outstanding shares; it is the single number that tells you what one share is worth, and it is what deposits, redemptions, fees and the drawdown halt all key off.
 
 If the desk trades well, NAV per share rises above 1.00 (the bootstrap value); if it trades poorly, it falls below. Your shares never change number — their USDG value moves.
 
 ## Technically
 
-Seat shares are **not** an ERC-20. They are internal vault accounting: `totalShares` and `sharesOf[account]` in `DeskVault`, with `SHARE_PRECISION = 6` decimals (matching USDG).
+Book shares are **not** an ERC-20. They are internal vault accounting: `totalShares` and `sharesOf[account]` in `DeskVault`, with `SHARE_PRECISION = 6` decimals (matching USDG).
 
 ### NAV
 

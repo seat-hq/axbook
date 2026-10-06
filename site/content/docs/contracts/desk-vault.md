@@ -7,7 +7,7 @@ status: implemented
 
 `contracts/src/DeskVault.sol` — one deployment per leader, created by `DeskFactory`.
 
-> USDG desk: seat shares, oracle NAV, fee liabilities, keeper copies. Live swaps require a configured SwapAdapter router (none on 46630). Mainnet uses `depositCapUsdg = 50_000e6` (0 = unlimited, testnet).
+> USDG desk: book shares, oracle NAV, fee liabilities, keeper copies. Live swaps require a configured SwapAdapter router (none on 46630). Mainnet uses `depositCapUsdg = 50_000e6` (0 = unlimited, testnet).
 
 Inherits `Ownable`, `Pausable`, `ReentrancyGuard`, `IDeskVault`.
 

@@ -1,21 +1,21 @@
-# SEAT
+# Axbook
 
-![SEAT — copy desks for Stock Tokens on Robinhood Chain](docs/cover.png)
+![Axbook — copy desks for Stock Tokens on Robinhood Chain](docs/cover.png)
 
 USDG desks that copy opted-in Stock Token traders on Robinhood Chain.
 
-A leader trades from their own wallet. The key stays there. You deposit USDG into a separate vault and receive seat shares: a pro-rata claim on that vault’s NAV, cash plus the positions the desk actually holds. A keeper may place a smaller copy of the leader’s fill. If the asset is not allowed, the session is closed, the price is stale, or the size breaks a limit, the desk skips. You leave by redeeming shares.
+A leader trades from their own wallet. The key stays there. You deposit USDG into a separate vault and receive book shares: a pro-rata claim on that vault’s NAV, cash plus the positions the desk actually holds. A keeper may place a smaller copy of the leader’s fill. If the asset is not allowed, the session is closed, the price is stale, or the size breaks a limit, the desk skips. You leave by redeeming shares.
 
 The desk can lose money. Copies are delayed, scaled, and capped, so a desk will not match the leader trade for trade.
 
-Site: [seatdesks.xyz](https://www.seatdesks.xyz/) · Product: [app.seatdesks.xyz](https://app.seatdesks.xyz/) · Docs: [seatdesks.xyz/docs](https://www.seatdesks.xyz/docs)
+Site: [axbook.xyz](https://axbook.xyz/) · Product: [app.axbook.xyz](https://app.axbook.xyz/) · Docs: [axbook.xyz/docs](https://axbook.xyz/docs)
 
 Not affiliated with Robinhood Markets. Stock Tokens are not the same as directly owning shares.
 
 ## How a desk works
 
 1. **Two piles.** The leader’s wallet is theirs. The vault is depositor capital.
-2. **Seat shares.** A deposit of USDG mints shares. Shares claim the desk’s NAV.
+2. **Book shares.** A deposit of USDG mints shares. Shares claim the desk’s NAV.
 3. **A signal.** The keeper watches the leader’s fills and proposes a copy.
 4. **Risk first.** Session size, then caps on each fill, each position, and gross exposure. A deep drawdown from the desk’s high-water NAV can stop new copies.
 5. **Redeem.** If the vault has cash, it pays. If it does not, the claim waits in line.
@@ -29,10 +29,10 @@ Fees are a performance charge on profit above the previous peak NAV per share, p
 | Phase 0 | Paper copy. Every accept, resize, and skip is explainable. | Shipped. `make paper` |
 | Phase 1 | Factory, cash vault, USDG deposit and redeem. | Shipped on Robinhood testnet `46630` |
 | Capped mainnet | One desk, 50,000 USDG deposit cap. | Deploy is written. Broadcast stays behind `CONFIRM_MAINNET` |
-| Phase 2 | Fixed-supply `$SEAT`, staking, stake-to-list, 12-month LP lock. | Code shipped. No token is deployed |
+| Phase 2 | Fixed-supply `$AXBOOK`, staking, stake-to-list, 12-month LP lock. | Code shipped. No token is deployed |
 | Later | Buyback, vesting, bond slashing, ungated mainnet AUM. | Named only. No code |
 
-`$SEAT`, when deployed, is an ERC-20 with a fixed supply of 1 billion, minted once, with no further mint. It is the listing bond (default 100,000 `$SEAT`), the asset staked for the 10% fee slice, and the token in a SEAT/USDG pool locked at least 365 days. It is not a claim on vault NAV, and it is not governance. Anything trading under a SEAT ticker today is not this repository.
+`$AXBOOK`, when deployed, is an ERC-20 with a fixed supply of 1 billion, minted once, with no further mint. It is the listing bond (default 100,000 `$AXBOOK`), the asset staked for the 10% fee slice, and the token in a AXBOOK/USDG pool locked at least 365 days. It is not a claim on vault NAV, and it is not governance. Anything trading under an Axbook ticker today is not this repository.
 
 ## Chain
 
@@ -48,9 +48,9 @@ Fees are a performance charge on profit above the previous peak NAV per share, p
 
 | Path | Job |
 |---|---|
-| [`contracts/`](contracts/) | Desk factory, vault, risk, fees, swap adapter, `$SEAT` suite |
+| [`contracts/`](contracts/) | Desk factory, vault, risk, fees, swap adapter, `$AXBOOK` suite |
 | [`keeper/`](keeper/) | Watches leader fills and submits vault copies |
-| [`app/`](app/) | Blotter: deposit, redeem, seats, fill tape |
+| [`app/`](app/) | Blotter: deposit, redeem, shares, fill tape |
 | [`sdk/`](sdk/) | Official token registry and NAV math |
 | [`site/`](site/) | Project site and developer docs |
 | [`docs/`](docs/) | Litepaper, runbooks, and risk |
@@ -58,12 +58,12 @@ Fees are a performance charge on profit above the previous peak NAV per share, p
 | Contract | Responsibility |
 |---|---|
 | `DeskFactory.sol` | Creates one `DeskVault` per leader |
-| `DeskVault.sol` | Holds USDG and allowlisted stock tokens, issues seat shares |
+| `DeskVault.sol` | Holds USDG and allowlisted stock tokens, issues book shares |
 | `RiskModule.sol` | Caps, session clock, drawdown halt, skip rules |
 | `SwapAdapter.sol` | Restricted swap adapter |
 | `FeeModule.sol` | High-water performance fee, AUM accrual, fee split |
-| `SeatToken.sol` | Fixed 1B `$SEAT`, no mint after deploy |
-| `StakingPool.sol` | Stake `$SEAT`, claim the USDG fee share |
+| `SeatToken.sol` | Fixed 1B `$AXBOOK`, no mint after deploy |
+| `StakingPool.sol` | Stake `$AXBOOK`, claim the USDG fee share |
 | `LpLocker.sol` | Locks a Uniswap v3 position NFT for at least 12 months |
 | `NavLib.sol` | USDG NAV from `balanceOfUI` and the oracle price |
 
@@ -108,7 +108,7 @@ CONFIRM_MAINNET=I_UNDERSTAND CONFIRM_SEAT_TGE=I_UNDERSTAND make deploy-phase2
 
 ## Invariants
 
-- `$SEAT` has no mint after the constructor.
+- `$AXBOOK` has no mint after the constructor.
 - No fee on volume.
 - NAV uses `balanceOfUI()`, not raw balances.
 - After-hours size is smaller than cash-session size.
@@ -120,9 +120,9 @@ CONFIRM_MAINNET=I_UNDERSTAND CONFIRM_SEAT_TGE=I_UNDERSTAND make deploy-phase2
 - [Litepaper](docs/litepaper.md)
 - [Phase 1 runbook](docs/phase-1.md)
 - [Cited mainnet facts](docs/phase-1-live.md)
-- [Phase 2 and `$SEAT`](docs/phase-2.md)
+- [Phase 2 and `$AXBOOK`](docs/phase-2.md)
 - [Mainnet day](docs/mainnet-day.md)
 - [Risk](docs/risk.md)
 - [Not affiliated](docs/not-affiliated.md)
 
-SEAT is independent software. It is not affiliated with, endorsed by, or sponsored by Robinhood Markets. This repository is not investment advice. [MIT](LICENSE).
+Axbook is independent software. It is not affiliated with, endorsed by, or sponsored by Robinhood Markets. This repository is not investment advice. [MIT](LICENSE).

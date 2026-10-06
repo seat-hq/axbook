@@ -30,7 +30,7 @@ const actors: readonly Actor[] = [
     role: "Depositor",
     tone: "you",
     groups: [
-      { label: "Owns", items: ["Seat shares — a pro-rata claim on desk NAV"] },
+      { label: "Owns", items: ["Book shares — a pro-rata claim on desk NAV"] },
       { label: "Can", items: ["Deposit USDG (up to the desk cap)", "Redeem shares at NAV — paid from cash, or queued"] },
       { label: "Cannot", kind: "no", items: ["Access Alex's private key", "Direct the vault's trades"] },
     ],

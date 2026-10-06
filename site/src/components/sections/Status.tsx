@@ -17,10 +17,10 @@ const phases = [
   },
   {
     n: "Phase 2",
-    title: "Open desks + $SEAT",
+    title: "Open desks + $AXBOOK",
     state: "Code shipped · TGE not broadcast",
     tone: "partial",
-    items: ["Fixed 1B $SEAT, no mint", "70 / 20 / 10 fee split, stake-to-list, extra desks", "12-month LP lock"],
+    items: ["Fixed 1B $AXBOOK, no mint", "70 / 20 / 10 fee split, stake-to-list, extra desks", "12-month LP lock"],
   },
   {
     n: "Later",

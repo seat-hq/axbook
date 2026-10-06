@@ -1,6 +1,6 @@
 ---
 title: Copy Desk
-description: The core SEAT primitive — one leader, one vault, one risk configuration.
+description: The core Axbook primitive — one leader, one vault, one risk configuration.
 order: 2
 ---
 
@@ -17,7 +17,7 @@ A desk is the composition of:
 | Piece | Contract / component | Fixed or configurable |
 |---|---|---|
 | Leader binding | `DeskVault.leader` (immutable) | Fixed at deployment |
-| Vault | `DeskVault` | Holds USDG + allowlisted Stock Tokens; issues seat shares |
+| Vault | `DeskVault` | Holds USDG + allowlisted Stock Tokens; issues book shares |
 | Risk configuration | `RiskModule.deskConfig[desk]` + token allowlist + session multipliers | Owner-configured |
 | Swap path | `SwapAdapter` router + token allowlist | Owner-configured; `router = 0` means no execution |
 | Fee parameters | `FeeModule.params` | Owner-configured |
@@ -26,15 +26,15 @@ A desk is the composition of:
 Desks are created by the **DeskFactory**, which enforces **one vault per leader**:
 
 - `createDesk(leader)` — owner only, no bond. Used for bootstrap leaders.
-- `listDesk(leader)` — anyone, by posting the `$SEAT` listing bond (Phase 2; inert until `setListingParams` is called at TGE).
+- `listDesk(leader)` — anyone, by posting the `$AXBOOK` listing bond (Phase 2; inert until `setListingParams` is called at TGE).
 
 Each deployed vault is a full `DeskVault` with the factory's shared `riskModule` and `swapAdapter`, and the factory records `deskOf[leader]`, `allDesks[]`, and (for listed desks) the bond.
 
 ## What a desk can and cannot do
 
-**Can:** hold USDG and allowlisted Stock Tokens; mint/burn seat shares; execute keeper-submitted copies that pass risk; accrue and pay fees; queue withdrawals when cash is deployed.
+**Can:** hold USDG and allowlisted Stock Tokens; mint/burn book shares; execute keeper-submitted copies that pass risk; accrue and pay fees; queue withdrawals when cash is deployed.
 
-**Cannot:** trade assets outside the allowlist; trade when the session is closed; exceed its caps; be traded by anyone other than its keeper; be upgraded (there is no proxy or admin upgrade path); mint `$SEAT`.
+**Cannot:** trade assets outside the allowlist; trade when the session is closed; exceed its caps; be traded by anyone other than its keeper; be upgraded (there is no proxy or admin upgrade path); mint `$AXBOOK`.
 
 ## The two piles
 

@@ -1,5 +1,5 @@
 /**
- * SEAT official Stock Token registry.
+ * Axbook official Stock Token registry.
  *
  * The registry is the single source of truth for which assets a desk may hold.
  * Assets are NOT identified by symbol, name, or metadata alone. Every entry

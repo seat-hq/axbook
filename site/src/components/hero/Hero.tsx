@@ -14,7 +14,7 @@ export function Hero() {
     <section className={`${styles.hero} sec--grid`} aria-labelledby="hero-title">
       <div className={`wrap ${styles.inner}`}>
         <p className={`eyebrow ${styles.eyebrow}`}>
-          <b>SEAT</b> · Copy desks for Stock Tokens
+          <b>Axbook</b> · Copy desks for Stock Tokens
         </p>
         <div className={styles.stage}>
           <HeroScene />
@@ -32,7 +32,7 @@ export function Hero() {
           </h1>
           <div className={styles.side}>
             <p className={styles.lede}>
-              You don&apos;t copy someone&apos;s wallet. You join a separate desk. Your USDG buys seat shares, the desk
+              You don&apos;t copy someone&apos;s wallet. You join a separate desk. Your USDG buys book shares, the desk
               copies selected trades — smaller, filtered, capped — and your shares claim its NAV.
             </p>
             <div className={styles.ctas}>

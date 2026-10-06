@@ -29,4 +29,4 @@ status: experimental
 
 ## Purpose and status
 
-The locker exists so the Phase 2 SEAT/USDG liquidity position can be provably locked for 12 months. The cited NonfungiblePositionManager on 4663 is `0x73991a25C818Bf1f1128dEAaB1492D45638DE0D3`. **Seeding the pool is a manual owner transaction** — `DeployPhase2` does not mint a position; it logs "seed+lock later" unless `SEAT_LP_USDG` is set. The lock therefore does not exist until an operator performs those steps after TGE; see [Deployment → Phase 2](/docs/deployment/phase-2).
+The locker exists so the Phase 2 AXBOOK/USDG liquidity position can be provably locked for 12 months. The cited NonfungiblePositionManager on 4663 is `0x73991a25C818Bf1f1128dEAaB1492D45638DE0D3`. **Seeding the pool is a manual owner transaction** — `DeployPhase2` does not mint a position; it logs "seed+lock later" unless `SEAT_LP_USDG` is set. The lock therefore does not exist until an operator performs those steps after TGE; see [Deployment → Phase 2](/docs/deployment/phase-2).

@@ -23,7 +23,7 @@ const nodes: readonly Node[] = [
   { id: "vault", x: 850, y: 330, label: "Desk vault", sub: "cash + positions", kind: "desk", w: 200 },
   { id: "assets", x: 1090, y: 330, label: "Assets", sub: "NVDA · AAPL · SPY", kind: "desk", w: 150 },
   { id: "nav", x: 850, y: 520, label: "NAV", sub: "cash + Σ value", kind: "desk" },
-  { id: "shares", x: 490, y: 520, label: "Seat shares", sub: "claim on NAV", kind: "desk" },
+  { id: "shares", x: 490, y: 520, label: "Book shares", sub: "claim on NAV", kind: "desk" },
 ];
 
 const signalPaths = [

@@ -38,7 +38,7 @@ Eligibility is enforced twice: the keeper's `isTradeEligible` (chain + symbol) a
 |---|---|
 | USDG | **6** |
 | Stock Tokens | **18** |
-| `$SEAT` | 18 |
+| `$AXBOOK` | 18 |
 
 Every accounting path normalizes through these decimals — see [NAV & Accounting](/docs/accounting/nav-and-accounting). UI code must never mix raw and UI units; the SDK's `nav.ts` helpers exist for exactly that reason.
 

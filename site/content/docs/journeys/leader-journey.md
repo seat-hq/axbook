@@ -11,7 +11,7 @@ This is the lifecycle of a leader and their desk, as the code implements it toda
 There is no self-serve "become a leader" flow in the current phase. A leader exists when a desk is created for their address:
 
 - **Owner path:** the protocol owner calls `DeskFactory.createDesk(leader)` (used by the deploy scripts for `LEADER_ADDRESS`, `LEADER_2`, `LEADER_3`).
-- **Bonded path (Phase 2):** anyone calls `DeskFactory.listDesk(leader)` after approving the listing bond (default 100,000 `$SEAT`). The bond is recorded (`bondOf`, `bonderOf`) and is returnable by the owner on sunset via `returnBond`. There is **no slashing** — that is explicitly Phase 3.
+- **Bonded path (Phase 2):** anyone calls `DeskFactory.listDesk(leader)` after approving the listing bond (default 100,000 `$AXBOOK`). The bond is recorded (`bondOf`, `bonderOf`) and is returnable by the owner on sunset via `returnBond`. There is **no slashing** — that is explicitly Phase 3.
 
 Either path deploys a fresh `DeskVault` with the leader's address immutable. One leader, one vault: `createDesk`/`listDesk` revert with `DeskExists` otherwise.
 

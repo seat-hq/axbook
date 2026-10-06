@@ -15,7 +15,7 @@ order: 3
 | Gas | ETH |
 | USDG | `0x7E955252E15c84f5768B83c41a71F9eba181802F` (6 decimals) |
 
-## Deployed SEAT contracts
+## Deployed Axbook contracts
 
 From `app/src/lib/addresses.ts` (generated from the broadcast log; see `docs/phase-1-live.md` for the deploy runbook):
 

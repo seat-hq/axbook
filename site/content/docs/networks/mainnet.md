@@ -1,6 +1,6 @@
 ---
 title: Mainnet (4663)
-description: Robinhood Chain mainnet — verified token registry, Uniswap addresses, and SEAT deployment status.
+description: Robinhood Chain mainnet — verified token registry, Uniswap addresses, and Axbook deployment status.
 order: 2
 ---
 
@@ -15,7 +15,7 @@ order: 2
 | Gas | ETH |
 | USDG | `0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168` (6 decimals) |
 
-## SEAT deployment status
+## Axbook deployment status
 
 **Nothing is deployed.** `app/src/lib/addresses.ts` mainnet entries are all `null`. The deployment scripts (`DeployMainnet.s.sol`, `DeployPhase2.s.sol`) are written and tested but gated behind `CONFIRM_MAINNET=I_UNDERSTAND` and have never been broadcast.
 
@@ -41,7 +41,7 @@ Only these three are `eligible` for copy trading in the keeper's `isTradeEligibl
 | QuoterV2 | `0x33e885ed0ec9bf04ecfb19341582aadcb4c8a9e7` (cited, unused) |
 | WETH | `0x0Bd7D308f8E1639FAb988df18A8011f41EAcAD73` |
 
-`ExactInputRouter02` wraps SwapRouter02 with an immutable `poolFee` of `3000` (0.3%). No SEAT router is deployed yet.
+`ExactInputRouter02` wraps SwapRouter02 with an immutable `poolFee` of `3000` (0.3%). No Axbook router is deployed yet.
 
 ## Mainnet defaults (from `DeployMainnet.s.sol`)
 

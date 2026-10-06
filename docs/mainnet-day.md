@@ -3,7 +3,7 @@
 One-page checklist for when you are ready to broadcast. **Do not run this
 until you mean it.** `.env` stays gitignored.
 
-46630 testnet vault `0x8ff6…` is **unchanged** (no router, no `$SEAT`).
+46630 testnet vault `0x8ff6…` is **unchanged** (no router, no `$AXBOOK`).
 
 Full Phase 2 spec: [`phase-2.md`](phase-2.md). Cited 4663 facts:
 [`phase-1-live.md`](phase-1-live.md).
@@ -24,8 +24,8 @@ Full Phase 2 spec: [`phase-2.md`](phase-2.md). Cited 4663 facts:
 
 | Path | When |
 |---|---|
-| **`make deploy-phase2`** | Full stack: `$SEAT`, staking, factory, up to 3 desks (recommended if nothing live on 4663 yet) |
-| **`make deploy-mainnet`** | Phase 1 only: one capped desk, **no** `$SEAT` — skip if you want Phase 2 in one shot |
+| **`make deploy-phase2`** | Full stack: `$AXBOOK`, staking, factory, up to 3 desks (recommended if nothing live on 4663 yet) |
+| **`make deploy-mainnet`** | Phase 1 only: one capped desk, **no** `$AXBOOK` — skip if you want Phase 2 in one shot |
 
 This runbook assumes **`deploy-phase2`**.
 
@@ -102,7 +102,7 @@ Script deploys (single tx batch):
 2. `StakingPool`, `LpLocker`
 3. `RiskModule`, `SwapAdapter`, `ExactInputRouter02`, `FeeModule` (70/20/10)
 4. `ChainlinkOracle` + NVDA/AAPL/SPY feeds
-5. `DeskFactory` + `setListingParams($SEAT, bond)`
+5. `DeskFactory` + `setListingParams($AXBOOK, bond)`
 6. `createDesk` for each set `LEADER_*` (oracle, fees, $50k cap, MAG7, session bps, keeper)
 
 **Save console output** — addresses for step 4.
@@ -128,7 +128,7 @@ Restart app with `NEXT_PUBLIC_CHAIN_ID=4663`:
 make app-dev
 ```
 
-Blotter should show **Phase 2 · $SEAT**, desk picker when `deskCount > 1`,
+Blotter should show **Phase 2 · $AXBOOK**, desk picker when `deskCount > 1`,
 stake + list-desk forms.
 
 ---
@@ -137,24 +137,24 @@ stake + list-desk forms.
 
 Order is flexible; typical sequence:
 
-### 5a. `$SEAT` bucket transfers
+### 5a. `$AXBOOK` bucket transfers
 
 From `SEAT_HOLDER`, transfer per [`phase-2.md`](phase-2.md) buckets (40/20/15/12/8/5).
 Do **not** invent team/airdrop addresses in the constructor — allocate now.
 
-### 5b. SEAT/USDG liquidity + lock
+### 5b. AXBOOK/USDG liquidity + lock
 
 Cited NPM (4663):
 `0x73991a25C818Bf1f1128dEAaB1492D45638DE0D3`
 
-1. Create / use SEAT–USDG pool on Uni v3 (fee 3000) if needed
+1. Create / use Axbook–USDG pool on Uni v3 (fee 3000) if needed
 2. Mint position via NPM
 3. `LpLocker.lock(npm, tokenId, 365 days, beneficiary)` from owner
 4. Confirm `unlockTime` ≥ 365 days; no early withdraw
 
 ### 5c. Optional staker bootstrap
 
-Transfer `$SEAT` to stakers or seed messaging; optional USDG is **not** required
+Transfer `$AXBOOK` to stakers or seed messaging; optional USDG is **not** required
 for the pool to work (rewards come from desk fees via `notifyReward`).
 
 ### 5d. Extra desks
@@ -183,7 +183,7 @@ after vault has USDG and you accept live swap risk.
 
 - [ ] Blotter on 4663: NAV / cash / leader read from vault
 - [ ] Deposit ≤ $50k USDG on desk 1; redeem instant when cash available
-- [ ] Stake `$SEAT` → after fee accrual, claim USDG from pool
+- [ ] Stake `$AXBOOK` → after fee accrual, claim USDG from pool
 - [ ] `listDesk` posts bond; new vault appears in picker (`?desk=`)
 - [ ] Keeper writes tape with correct `desk` field
 - [ ] 46630 vault still works unchanged (optional regression)
@@ -209,4 +209,4 @@ after vault has USDG and you accept live swap risk.
 | NPM | `0x73991a25C818Bf1f1128dEAaB1492D45638DE0D3` |
 | Deposit cap | $50k USDG **per desk** |
 | Fee split | 70% leader / 20% protocol / 10% stakers |
-| Listing bond default | 100_000 `$SEAT` |
+| Listing bond default | 100_000 `$AXBOOK` |

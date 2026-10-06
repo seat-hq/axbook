@@ -8,8 +8,8 @@ contract SeatTokenTest is Test {
     function test_MintsFixedSupplyToHolder() public {
         address holder = makeAddr("holder");
         SeatToken token = new SeatToken(holder);
-        assertEq(token.name(), "SEAT");
-        assertEq(token.symbol(), "SEAT");
+        assertEq(token.name(), "Axbook");
+        assertEq(token.symbol(), "AXBOOK");
         assertEq(token.decimals(), 18);
         assertEq(token.totalSupply(), 1_000_000_000 ether);
         assertEq(token.MAX_SUPPLY(), 1_000_000_000 ether);

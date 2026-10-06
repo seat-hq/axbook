@@ -5,7 +5,7 @@ const questions = [
   { q: "How is risk sized?", a: "Session multiplier first, then fill, position and gross caps.", href: "#risk" },
   { q: "What happens when markets close?", a: "Closed session means skip. Uncertain means do not trade.", href: "#story" },
   { q: "What happens when a follower wants to leave?", a: "Redeem shares at NAV — paid from cash, or queued.", href: "#story" },
-  { q: "What does ownership actually mean?", a: "Seat shares: a pro-rata claim on the desk's NAV.", href: "#primitive" },
+  { q: "What does ownership actually mean?", a: "Book shares: a pro-rata claim on the desk's NAV.", href: "#primitive" },
   {
     q: "How do the leader's wallet and the follower's capital stay separate?",
     a: "They never share custody. The signal crosses over; the money doesn't.",
@@ -49,7 +49,7 @@ export function Questions() {
               <h3 className={styles.q}>{item.q}</h3>
               <a className={styles.a} href={item.href}>
                 <span className="mono" aria-hidden="true">
-                  SEAT →
+                  Axbook →
                 </span>{" "}
                 {item.a}
               </a>

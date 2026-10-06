@@ -350,7 +350,7 @@ export function SeatTerminal({
   return (
     <div className="fx">
       <header className="fx-top">
-        <div className="fx-brand">SEAT</div>
+        <div className="fx-brand">AXBOOK</div>
         <span className="fx-live">
           <i />
           LIVE
@@ -507,7 +507,7 @@ export function SeatTerminal({
           CASH <b>{cash}</b>
         </span>
         <span>
-          SEATS <b>{seats}</b>
+          SHARES <b>{seats}</b>
         </span>
         <span key={sim?.logs.filter((line) => line.tag === "COPY").length ?? 0}>
           COPIES <b>{sim?.logs.filter((line) => line.tag === "COPY").length ?? 0}</b>
@@ -578,13 +578,13 @@ const GUIDE: readonly {
   {
     id: "desk",
     title: "Desk",
-    body: "Deposit USDG to buy seat shares, or redeem shares to leave. This form writes to the desk vault.",
+    body: "Deposit USDG to buy book shares, or redeem shares to leave. This form writes to the desk vault.",
     place: "above",
   },
   {
     id: "foot",
     title: "Status",
-    body: "Last print, realized P&L, and win rate are from the sim tape. NAV, cash, and seats are the desk.",
+    body: "Last print, realized P&L, and win rate are from the sim tape. NAV, cash, and shares are the desk.",
     place: "above",
   },
 ];

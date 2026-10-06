@@ -1,6 +1,6 @@
 ---
 title: Roadmap
-description: The phase model — Phase 0 paper copy, Phase 1 testnet desks, Phase 2 open desks and $SEAT — and what is explicitly later.
+description: The phase model — Phase 0 paper copy, Phase 1 testnet desks, Phase 2 open desks and $AXBOOK — and what is explicitly later.
 order: 7
 ---
 
@@ -22,7 +22,7 @@ Run it with `make paper`. Specification: [litepaper](/docs/runbooks/litepaper).
 **Goal: wire the cash vault to Robinhood testnet `46630`.**
 
 - `DeskFactory.createDesk(leader)` on `46630`.
-- Depositors approve USDG and mint seat shares; redeem is instant when cash is available, otherwise queued.
+- Depositors approve USDG and mint book shares; redeem is instant when cash is available, otherwise queued.
 - The app reads NAV, shares, cash and leader from the vault; writes are enabled on `46630` (and `4663` once a capped vault exists).
 - The keeper binds to `vault.leader()`; it does not choose a leader.
 - Fill tape rows are labelled `source=fixture` or `source=chain`; fixtures are never labelled live.
@@ -40,14 +40,14 @@ Wired into `DeployMainnet.s.sol` but not broadcast:
 
 See [Deployment → Mainnet](/docs/deployment/mainnet).
 
-## Phase 2 — Open desks + $SEAT ::status{value="experimental"}
+## Phase 2 — Open desks + $AXBOOK ::status{value="experimental"}
 
 **Code shipped; TGE guarded.** Specification: [Phase 2](/docs/runbooks/phase-2).
 
-- `SeatToken`: fixed 1,000,000,000 `$SEAT`, 18 decimals, minted once to the holder at deploy, **no mint after**.
+- `SeatToken`: fixed 1,000,000,000 `$AXBOOK`, 18 decimals, minted once to the holder at deploy, **no mint after**.
 - Fee split becomes **70% leader / 20% protocol / 10% stakers** on Phase 2 desks (Phase 1 vaults keep 80/20).
-- `StakingPool`: stake `$SEAT`, claim pro-rata USDG from desk fee harvest.
-- Stake-to-list: anyone can `listDesk(leader)` by posting a `$SEAT` bond (default 100,000 `$SEAT`); owner `createDesk` remains.
+- `StakingPool`: stake `$AXBOOK`, claim pro-rata USDG from desk fee harvest.
+- Stake-to-list: anyone can `listDesk(leader)` by posting a `$AXBOOK` bond (default 100,000 `$AXBOOK`); owner `createDesk` remains.
 - `LpLocker`: locks a Uniswap v3 position NFT for ≥ 365 days.
 - Up to three leader desks from `LEADER_ADDRESS` / `LEADER_2` / `LEADER_3`; later leaders via `listDesk`.
 

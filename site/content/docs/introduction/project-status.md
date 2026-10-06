@@ -4,7 +4,7 @@ description: Honest, component-by-component implementation status — what is sh
 order: 6
 ---
 
-SEAT documentation uses a four-state model. It appears on pages and in sidebars wherever a component could be mistaken for something more finished than it is.
+Axbook documentation uses a four-state model. It appears on pages and in sidebars wherever a component could be mistaken for something more finished than it is.
 
 | Badge | Meaning |
 |---|---|
@@ -22,7 +22,7 @@ From the litepaper and README, verified against the code:
 | **Phase 0** — paper copy | Deterministic risk pipeline, paper executor, full test coverage | 🟢 Shipped |
 | **Phase 1** — testnet desks | Factory + cash vault on `46630`, USDG deposit/redeem in the blotter, keeper bound to `vault.leader()` | 🟢 Shipped on Robinhood testnet |
 | Capped mainnet desk | `$50k`-capped desk on `4663` with cited MAG7 tokens, feeds, SwapRouter02 | 🔵 Wired in code; broadcast guarded by `CONFIRM_MAINNET` |
-| **Phase 2** — $SEAT + open desks | Fixed-supply token, 70/20/10 fees, stake-to-list, LP locker | 🟡 Code shipped and tested; TGE guarded by `CONFIRM_MAINNET` + `CONFIRM_SEAT_TGE` |
+| **Phase 2** — $AXBOOK + open desks | Fixed-supply token, 70/20/10 fees, stake-to-list, LP locker | 🟡 Code shipped and tested; TGE guarded by `CONFIRM_MAINNET` + `CONFIRM_SEAT_TGE` |
 | Later | Buyback-and-burn, vesting, merkle airdrop, ungated AUM, Phase 3/4 tooling | 🔴 Not implemented (non-binding roadmap) |
 
 ## Component status
@@ -38,7 +38,7 @@ From the litepaper and README, verified against the code:
 | `ExactInputRouter02` | 🟡 | Implemented and tested with a mock router; deploys only via guarded mainnet scripts |
 | Live swap execution | 🔵 | Requires a configured router; `46630` has none cited, `4663` awaits a guarded broadcast |
 | Keeper live fill indexing | 🟡 | `LiveFillSource` decodes direction only; notional/price are not attached yet, so live fills reject as `ZERO_NOTIONAL` |
-| `SeatToken` ($SEAT) | 🟡 | Code shipped (1B fixed supply, no mint); **no contract deployed** |
+| `SeatToken` ($AXBOOK) | 🟡 | Code shipped (1B fixed supply, no mint); **no contract deployed** |
 | `StakingPool` | 🟡 | Code shipped and tested; not deployed |
 | `LpLocker` | 🟡 | Code shipped and tested; not deployed |
 | Stake-to-list (`listDesk` bond) | 🟡 | Implemented in `DeskFactory`; inert until `setListingParams` runs at Phase 2 TGE |
@@ -50,7 +50,7 @@ From the litepaper and README, verified against the code:
 | Network | What exists |
 |---|---|
 | Robinhood testnet `46630` | RiskModule, SwapAdapter (router `0`), FeeModule, DeskFactory, one DeskVault. Full table in [Networks → Testnet](/docs/networks/testnet). |
-| Robinhood mainnet `4663` | **No SEAT contracts deployed.** Only the official USDG address is recorded. Deploys are guarded; see [Deployment](/docs/deployment/overview). |
+| Robinhood mainnet `4663` | **No Axbook contracts deployed.** Only the official USDG address is recorded. Deploys are guarded; see [Deployment](/docs/deployment/overview). |
 
 :::callout{type="danger" title="Do not deposit on mainnet"}
 Until a capped vault address is recorded from a real `DeployMainnet` or `DeployPhase2` broadcast, there is nothing to deposit into on `4663`. The app enforces this: writes are only enabled on chains with a wired vault address.

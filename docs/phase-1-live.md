@@ -71,7 +71,7 @@ exist at that fee (factory `getPool`).
 (testnet). `DeployMainnet` sets the cap after `createDesk`.
 
 `make deploy-mainnet` **refuses** unless `CONFIRM_MAINNET=I_UNDERSTAND`.
-It never deploys `SeatToken` / `$SEAT`. Phase 2 TGE is a separate
+It never deploys `SeatToken` / `$AXBOOK`. Phase 2 TGE is a separate
 `make deploy-phase2` with dual confirm — see [`phase-2.md`](phase-2.md).
 
 ---

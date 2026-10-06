@@ -1,6 +1,6 @@
 # Risk
 
-SEAT is experimental software. You can lose money. There are **no guarantees**
+Axbook is experimental software. You can lose money. There are **no guarantees**
 of profit, capital preservation, availability, or correctness. This is not
 investment advice.
 

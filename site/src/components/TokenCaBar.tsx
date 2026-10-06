@@ -40,13 +40,13 @@ export function TokenCaBar({ address: addressProp }: { readonly address?: HexAdd
   const pons = ponsLaunchpadUrl(address);
 
   return (
-    <aside className={styles.bar} aria-label="$SEAT token contract">
+    <aside className={styles.bar} aria-label="$AXBOOK token contract">
       <div className={styles.inner}>
         <p className={styles.kicker}>
           <span className={styles.pulse} aria-hidden="true" />
-          Live · Mainnet $SEAT
+          Live · Mainnet $AXBOOK
         </p>
-        <span className={styles.ticker}>$SEAT</span>
+        <span className={styles.ticker}>$AXBOOK</span>
         <code className={styles.addr} title={address}>
           <span className={styles.addrShort}>{truncateAddress(address, 6, 4)}</span>
           <span className={styles.addrLong}>{truncateAddress(address, 10, 8)}</span>

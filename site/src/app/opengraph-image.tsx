@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "SEAT — Copy desk, not sniper bot. Leader wallet and desk vault, two separate piles.";
+export const alt = "Axbook — Copy desk, not sniper bot. Leader wallet and desk vault, two separate piles.";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -34,7 +34,7 @@ export default function OpengraphImage() {
         <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={markSrc} width={64} height={64} alt="" />
-          <div style={{ fontSize: 36, letterSpacing: 8, fontWeight: 600 }}>SEAT</div>
+          <div style={{ fontSize: 32, letterSpacing: 4, fontWeight: 600 }}>AXBOOK</div>
         </div>
 
         <div style={{ display: "flex", flexDirection: "column" }}>

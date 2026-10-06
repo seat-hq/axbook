@@ -6,7 +6,7 @@ fail-closed until a cited 46630 router and feed exist — see
 [`phase-1-live.md`](phase-1-live.md).
 
 Phase 1 wires Phase 0’s cash vault and factory to **Robinhood testnet
-`46630`**. It does **not** deploy `$SEAT`, does **not** set a SwapAdapter
+`46630`**. It does **not** deploy `$AXBOOK`, does **not** set a SwapAdapter
 router, and does **not** invent USDG / token / oracle / router addresses.
 
 `make paper` still runs the Phase 0 paper engine with no key and no RPC.
@@ -136,6 +136,6 @@ The 46630 cash vault is unchanged (immutable, no router).
 
 ## Out of scope for Phase 1
 
-`$SEAT` / `SeatToken`, extra leaders, and ungated mainnet AUM. Those
+`$AXBOOK` / `SeatToken`, extra leaders, and ungated mainnet AUM. Those
 moved to Phase 2 — see [`phase-2.md`](phase-2.md). The 30-day live wait
 was skipped by choice.
