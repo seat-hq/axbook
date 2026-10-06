@@ -1,22 +1,23 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { CHAIN, isTradeEligible, listSymbols } from "@seat/sdk";
 
 /* =========================================================================
-   AI OFFICE // B2B GROWTH AGENCY — live dashboard
-   Faithful reconstruction of the reference frames. Real animated UI:
-   ticking counters, marquee feeds, a radial agent graph on canvas, a
-   skill-forge state machine, a sweeping schedule, cycling desks and an
-   eight-gate method field. All timings live in TIMING below.
+   AXBOOK copy-desk dashboard. Same animated shell as the office layout,
+   filled with this project's desks: leader, keeper, vault, book, NAV.
+   Live deposit / redeem forms come in through `forms`.
    ========================================================================= */
 
-// ---- animation constants -------------------------------------------------
+const BOOK = listSymbols().filter((symbol) => isTradeEligible(symbol, CHAIN.MAINNET_ID));
+const NAMES = BOOK.length > 0 ? BOOK : ["NVDA", "AAPL", "SPY", "MSTR", "PLTR", "TSLA"];
+
 const TIMING = {
-  beat: 1100, // sim pulse (counters, roles)
-  log: 2100, // new agent-log line
-  forge: 1500, // skill-forge step
-  activeBeats: 5, // beats the big node stays active
-  centreBeats: 3, // beats between CENTRE label changes
+  beat: 1100,
+  log: 2100,
+  forge: 1500,
+  activeBeats: 5,
+  centreBeats: 3,
 };
 
 type Role = {
@@ -27,97 +28,81 @@ type Role = {
 };
 
 const ROLES: Role[] = [
-  { code: "STRAT", name: "Growth Strategy", color: "#4a86ff", icon: "strat" },
-  { code: "OUTBD", name: "Sales Outbound", color: "#39ff7a", icon: "outbd" },
-  { code: "PAID", name: "Paid Media", color: "#f0c14a", icon: "paid" },
-  { code: "ANLST", name: "Sales Analyst", color: "#a877ff", icon: "anlst" },
-  { code: "ACCT", name: "Account Manager", color: "#35c0e0", icon: "acct" },
+  { code: "LEAD", name: "Leader wallet", color: "#5ec8ff", icon: "strat" },
+  { code: "KEEP", name: "Keeper copies", color: "#7aa2ff", icon: "outbd" },
+  { code: "DESK", name: "USDG vault", color: "#39ff7a", icon: "paid" },
+  { code: "BOOK", name: "Stock Tokens", color: "#f0c14a", icon: "anlst" },
+  { code: "NAV", name: "Book shares", color: "#c084fc", icon: "acct" },
 ];
 
-const CENTRES = ["GROK", "STRAT", "OUTBD", "PAID", "ANLST", "ACCT"];
+const CENTRES = ["AX", "LEAD", "KEEP", "DESK", "BOOK", "NAV"];
 
 const FEED: { t: string; c?: string }[] = [
-  { t: "MANUAL RUNS" },
-  { t: "SAVED AS A SKILL", c: "g" },
-  { t: "SALES ANALYST · CLIENT I" },
-  { t: "DROP-OFF AT FIRST REPLY", c: "r" },
-  { t: "FED BACK TO STRATEGY", c: "g" },
-  { t: "OUTBOUND", c: "g" },
-  { t: "TEACH A TASK" },
-  { t: "SALES OUTBOUND" },
-  { t: "BROWSER WORKFLOW OBSERVED" },
-  { t: "DRAFT SKILL", c: "y" },
-  { t: "NEEDS REVIEW", c: "r" },
-  { t: "HANDOFF · OUTBD → ACCT" },
-  { t: "CLIENT C" },
-  { t: "SITE TEARDOWN RESULT PASSED ON" },
-  { t: "PICKED UP", c: "g" },
-  { t: "APPROVAL" },
-  { t: "PAID MEDIA · CLIENT J" },
-  { t: "GRANT ACCESS ×3 PREPARED" },
-  { t: "WAITING FOR THE OWNER", c: "r" },
-  { t: "QUALIFY COMPANY RESULT PASSED ON" },
-  { t: "11 COMPANIES CHECKED" },
-  { t: "3 QUALIFIED → /workspace/research", c: "g" },
+  { t: "DEPOSIT USDG", c: "g" },
+  { t: "MINT BOOK SHARES", c: "g" },
+  { t: "LEADER FILLS FROM THEIR WALLET" },
+  { t: "KEEPER PROPOSES A SMALLER COPY" },
+  { t: "SIGNAL" },
+  { t: "SESSION" },
+  { t: "SIZE" },
+  { t: "CAP" },
+  { t: "DELAY" },
+  { t: "COPY", c: "g" },
+  { t: "SKIP · ASSET NOT ALLOWED", c: "r" },
+  { t: "SKIP · SESSION CLOSED", c: "r" },
+  { t: "SKIP · STALE PRICE", c: "y" },
+  { t: "SKIP · SIZE BREAKS A LIMIT", c: "r" },
+  { t: "NVDA BUY COPIED", c: "g" },
+  { t: "AAPL SELL SKIPPED", c: "r" },
+  { t: "REDEEM SHARES FOR USDG", c: "g" },
+  { t: "NO FEE ON VOLUME" },
+  { t: "NAV FROM BALANCEOFUI" },
+  { t: "NOT AFFILIATED WITH ROBINHOOD MARKETS", c: "w" },
 ];
 
 const FOOTER: { t: string; c?: string }[] = [
-  { t: "SIMPLE" },
-  { t: "10 CLIENTS IN PARALLEL", c: "g" },
-  { t: "5 AI EMPLOYEES" },
-  { t: "PARALLEL CLIENT CAPACITY +50%", c: "g" },
-  { t: "10 CLIENTS NOW, 6-7 BEFORE" },
-  { t: "ONE PERSISTENT CLOUD COMPUTER" },
-  { t: "NO HUMAN IN THE MIDDLE", c: "w" },
-  { t: "AVG TASK 3M 60S" },
-  { t: "MEDIAN 2M 18S", c: "g" },
-  { t: "OWNER TOUCH TIME 12.8 MIN PER CLIENT PER DAY" },
-  { t: "IT USED TO BE 36" },
-  { t: "THAT IS 13.9 HOURS A WEEK" },
-  { t: "ROUTINE RUNS 1,772", c: "g" },
-  { t: "4.1 TASKS PER RUN" },
-  { t: "I STILL DECIDE STRATEGY, PRICING AND CONTRACTS", c: "w" },
-  { t: "THE ROUTINE NO LONGER WAITS FOR ME" },
+  { t: "AXBOOK" },
+  { t: "COPY DESK, NOT A SNIPER BOT", c: "w" },
+  { t: "DEPOSIT USDG · RECEIVE BOOK SHARES", c: "g" },
+  { t: "SHARES CLAIM THE DESK NAV" },
+  { t: "LEADER KEY STAYS IN THEIR WALLET" },
+  { t: "KEEPER MAY PLACE A SMALLER COPY" },
+  { t: "SESSION SIZE, THEN CAPS, THEN DRAWDOWN HALT" },
+  { t: "REDEEM IF THE VAULT HAS CASH", c: "g" },
+  { t: "COPIES ARE DELAYED, SCALED, AND CAPPED" },
+  { t: "NO FEE ON VOLUME" },
+  { t: "70% LEADER / 20% PROTOCOL / 10% STAKERS" },
+  { t: "ROBINHOOD CHAIN 4663 · TESTNET 46630" },
+  { t: "ACCOUNTING ASSET USDG, 6 DECIMALS" },
+  { t: "STOCK TOKENS ARE NOT SHARES", c: "y" },
+  { t: "NOT INVESTMENT ADVICE", c: "r" },
 ];
 
 const LOG_MSGS = [
-  "inbound mail: Me re an answer",
-  "speed vs leads pulled for 3 campaigns",
-  "risk on request, needs a plan",
-  "16 companies against the ICP",
-  "post-positioning options prepared",
-  "qualify match: I times in 1.1 min",
-  "personalised drafts prepared",
-  "channel quality, not just volume",
-  "reply triage done on the inbox",
-  "qualified batch entered the funnel",
-  "result report ready to publish",
-  "site teardown result passed on",
-  "draft report ready to publish",
-  "reply triage came on the index",
-  "qualified list for the client report",
-  "prospect sweep: I tasks in 4.0 min",
+  "leader fill proposed as a smaller copy",
+  "session closed — skip",
+  "stale oracle price — skip",
+  "size breaks the fill cap — resize",
+  "asset not on the allowlist — skip",
+  "gross exposure would breach — skip",
+  "drawdown halt from high-water NAV",
+  "copy placed in the desk vault",
+  "after-hours size is smaller",
+  "USDG deposit minted book shares",
+  "redeem queued — vault cash short",
+  "keeper bound to vault.leader",
 ];
 const LOG_TAGS = [
-  { t: "PASS", c: "pass" },
-  { t: "APPROVED", c: "approved" },
-  { t: "ROUTED", c: "routed" },
-  { t: "FACTION", c: "faction" },
-  { t: "CAUTION", c: "caution" },
-  { t: "CLIENT 2", c: "client" },
+  { t: "COPY", c: "pass" },
+  { t: "SKIP", c: "caution" },
+  { t: "SIZE", c: "routed" },
+  { t: "HALT", c: "faction" },
+  { t: "STALE", c: "client" },
+  { t: "CAP", c: "approved" },
 ];
 
-const SKILLS = [
-  "OUTBOUND DRAFT",
-  "SITE TEARDOWN",
-  "CLIENT REPLY",
-  "AD VARIANT",
-  "ICP SCORING",
-  "REPORT DIGEST",
-  "QUALIFY COMPANY",
-];
-
-const TEACH_DRAFTS = ["MENU REVIEW", "MENU REVIEW", "MENU REVIEW"];
+const SKILLS = ["SIGNAL", "SESSION", "SIZE", "CAP", "DELAY", "COPY"];
+const TEACH_DRAFTS = NAMES.slice(0, 3);
 
 // ---- helpers -------------------------------------------------------------
 function mulberry32(seed: number) {
@@ -356,7 +341,7 @@ function Workspace({ active, counts }: { active: number; counts: number[] }) {
       ctx.font = "700 9px var(--font-mono, monospace)";
       ctx.fillStyle = "rgba(205,219,236,0.75)";
       ctx.textAlign = "center";
-      ctx.fillText("GROK", grok.x, grok.y - gr - 6);
+      ctx.fillText("AX", grok.x, grok.y - gr - 6);
 
       raf = requestAnimationFrame(draw);
     };
@@ -444,18 +429,35 @@ function MethodField() {
 // =========================================================================
 // Main dashboard
 // =========================================================================
-export default function AiOffice() {
+export default function AiOffice({
+  title = "Copy desk",
+  vault = "—",
+  wallet = null,
+  nav = "—",
+  cash = "—",
+  seats = "—",
+  forms = null,
+  note = null,
+  deskChain,
+}: {
+  title?: string;
+  vault?: string;
+  wallet?: ReactNode;
+  nav?: string;
+  cash?: string;
+  seats?: string;
+  forms?: ReactNode;
+  note?: string | null;
+  leader?: `0x${string}` | null;
+  deskChain?: number;
+}) {
   const [beat, setBeat] = useState(0);
   const [clock, setClock] = useState({ hms: "00:00:00", live: true });
   const [stats, setStats] = useState({
-    pipeline: 1930,
-    tasks24h: 248,
-    handoffs: 50,
-    clients: 10,
-    autonomy: 88.7,
-    routinesOk: 97.1,
-    tasksMonth: 7203,
-    approveMin: 43,
+    copies: 24,
+    skips: 11,
+    copyRate: 68.4,
+    names: NAMES.length,
   });
   const [roleData, setRoleData] = useState(() =>
     ROLES.map((r, i) => ({
@@ -497,14 +499,10 @@ export default function AiOffice() {
       setBeat((b) => b + 1);
       const r = Math.random();
       setStats((s) => ({
-        pipeline: 1928 + Math.floor(Math.random() * 11),
-        tasks24h: 247 + Math.floor(Math.random() * 3),
-        handoffs: 49 + Math.floor(Math.random() * 2),
-        clients: 10,
-        autonomy: +(88.3 + Math.random() * 0.9).toFixed(1),
-        routinesOk: +(97.0 + Math.random() * 0.4).toFixed(1),
-        tasksMonth: s.tasksMonth + (r > 0.55 ? 1 : 0),
-        approveMin: 40 + Math.floor(Math.random() * 8),
+        copies: s.copies + (r > 0.45 ? 1 : 0),
+        skips: s.skips + (r > 0.72 ? 1 : 0),
+        copyRate: +(62 + Math.random() * 18).toFixed(1),
+        names: NAMES.length,
       }));
       setRoleData((prev) => {
         const act = Math.floor((beatRef.current + 1) / TIMING.activeBeats) % ROLES.length;
@@ -561,11 +559,11 @@ export default function AiOffice() {
         if (f.phase === "draft") return { ...f, phase: "save" };
         // save -> commit + start next
         setSaved((s) => ({ count: s.count + 1, freshAt: Date.now() }));
-        const next = SKILLS[(SKILLS.indexOf(f.skill) + 1) % SKILLS.length];
+        const next = SKILLS[(SKILLS.indexOf(f.skill) + 1) % SKILLS.length] ?? SKILLS[0];
         return {
           skill: next,
           idx: 0,
-          total: 5 + Math.floor(Math.random() * 2),
+          total: 6,
           phase: "run",
           color: Math.random() > 0.5 ? "teach" : "green",
         };
@@ -586,16 +584,16 @@ export default function AiOffice() {
 
   const slotFor = (code: string): React.CSSProperties => {
     switch (code) {
-      case "ACCT":
+      case "KEEP":
         return { top: "6%", left: "1.5%" };
-      case "STRAT":
+      case "LEAD":
         return { top: "6%", right: "1.5%" };
-      case "ANLST":
+      case "NAV":
         return { top: "42%", left: "1.5%" };
-      case "OUTBD":
+      case "BOOK":
         return { top: "42%", right: "1.5%" };
       default:
-        return { bottom: "9%", left: "1.5%" }; // PAID
+        return { bottom: "9%", left: "1.5%" };
     }
   };
 
@@ -609,37 +607,37 @@ export default function AiOffice() {
       {/* ---- header ---- */}
       <header className="ao-top">
         <div className="ao-brand">
-          <div className="ao-logo">AI</div>
+          <div className="ao-logo">AX</div>
           <div className="ao-brand-tx">
             <div className="ao-brand-k">
               <span className="ao-dot" style={{ width: 5, height: 5 }} />
-              <b>FIVE PERSISTENT BOTS</b>
-              <span className="ao-chip-xs">AUTONOMY {stats.autonomy}%</span>
+              <b>FOLLOW THE BOOK</b>
+              <span className="ao-chip-xs">HOLD THE SHARES</span>
             </div>
             <div className="ao-title">
-              <span className="b">AI OFFICE</span>
-              <span className="s">//</span> B2B GROWTH AGENCY
+              <span className="b">AXBOOK</span>
+              <span className="s">//</span> COPY DESK
             </div>
           </div>
         </div>
         <div className="ao-stats">
           <div className="ao-stat">
-            <div className="k">Pipeline</div>
+            <div className="k">NAV</div>
             <div className="v">
-              {stats.pipeline.toLocaleString()} <span className="ao-livetag">LIVE</span>
+              {nav} <span className="ao-livetag">LIVE</span>
             </div>
           </div>
           <div className="ao-stat">
-            <div className="k">Tasks 24h</div>
-            <div className="v">{stats.tasks24h}</div>
+            <div className="k">Cash</div>
+            <div className="v">{cash}</div>
           </div>
           <div className="ao-stat">
-            <div className="k">Handoffs</div>
-            <div className="v">{stats.handoffs}</div>
+            <div className="k">Shares</div>
+            <div className="v">{seats}</div>
           </div>
           <div className="ao-stat">
-            <div className="k">Clients</div>
-            <div className="v">{stats.clients}</div>
+            <div className="k">Vault</div>
+            <div className="v">{vault}</div>
           </div>
         </div>
         <div className="ao-clock">
@@ -647,16 +645,18 @@ export default function AiOffice() {
             {clock.hms} <span className="u">UTC</span>
           </div>
           <div className={`st${clock.live ? " live" : ""}`}>
-            <b>{clock.live ? "LIVE" : "LOST"}</b> UTC
+            <b>{clock.live ? "LIVE" : "LOST"}</b> {deskChain ?? "UTC"}
+            {title ? ` · ${title}` : ""}
           </div>
         </div>
+        {wallet ? <div className="ao-wallet">{wallet}</div> : null}
       </header>
 
       {/* ---- feed ---- */}
       <div className="ao-feed">
         <div className="ao-feed-lab">
           <span className="d" />
-          LIVE FEED
+          LIVE TAPE
         </div>
         <div className="ao-marq">
           <div className="ao-marq-in">
@@ -676,37 +676,37 @@ export default function AiOffice() {
         <section className="ao-panel">
           <div className="ao-ph">
             <span className="ao-dot" />
-            <span className="t">AI OFFICE · 5 BOTS</span>
+            <span className="t">COPY DESK · {NAMES.length} NAMES</span>
             <span className="meta green">ACTIVE</span>
           </div>
           <div className="ao-office-body">
             <div className="ao-office-path">
-              /workspace · clients · research · campaigns · reports <b>SHARED</b>
+              leader wallet · keeper · vault · book · nav <b>USDG</b>
             </div>
-            <div className="ao-big">{stats.tasksMonth.toLocaleString()}</div>
-            <div className="ao-big-k">Tasks done this month</div>
-            <div className="ao-big-note">▲ FIVE ROLES RUNNING IN PARALLEL · {stats.tasks24h} TASKS 24H</div>
+            <div className="ao-big">{nav}</div>
+            <div className="ao-big-k">Desk NAV, cash plus positions</div>
+            <div className="ao-big-note">▲ BOOK SHARES CLAIM THIS VAULT · {cash} CASH</div>
             <div className="ao-mini3">
               <div>
-                <div className="k">Tasks 24h</div>
-                <div className="v">{stats.tasks24h}</div>
+                <div className="k">Cash</div>
+                <div className="v">{cash}</div>
               </div>
               <div>
-                <div className="k">Routines OK</div>
-                <div className="v g">{stats.routinesOk}%</div>
+                <div className="k">Shares</div>
+                <div className="v g">{seats}</div>
               </div>
               <div>
-                <div className="k">Autonomy</div>
-                <div className="v g">{stats.autonomy}%</div>
+                <div className="k">Copy rate</div>
+                <div className="v g">{stats.copyRate}%</div>
               </div>
             </div>
             <div className="ao-approve">
-              <div className="cap">GAUGE / SPREAD</div>
+              <div className="cap">SIM TAPE / SPREAD</div>
               <svg viewBox="0 0 100 44" preserveAspectRatio="none">
-                <path d={approve.area} fill="rgba(255,59,78,0.14)" />
-                <path d={approve.line} fill="none" stroke="#ff3b4e" strokeWidth="1" />
+                <path d={approve.area} fill="rgba(57,255,122,0.14)" />
+                <path d={approve.line} fill="none" stroke="#39ff7a" strokeWidth="1" />
               </svg>
-              <div className="cap">TIME TO APPROVE · {stats.approveMin} MIN</div>
+              <div className="cap">COPIES {stats.copies} · SKIPS {stats.skips}</div>
               <div className="ao-bars">
                 {Array.from({ length: 11 }).map((_, i) => (
                   <i key={i} style={{ height: `${30 + ((i * 37 + beat * 13) % 70)}%` }} />
@@ -720,7 +720,7 @@ export default function AiOffice() {
         <section className="ao-panel">
           <div className="ao-ph">
             <span className="ao-dot" />
-            <span className="t">AGENT LOG</span>
+            <span className="t">COPY TAPE</span>
             <span className="meta red">{clock.hms}</span>
           </div>
           <div className="ao-log-body">
@@ -742,7 +742,9 @@ export default function AiOffice() {
                 </div>
               ))}
             </div>
-            <div className="ao-log-foot">368 TASKS · {stats.handoffs} HANDOFFS · 30 BUILT FOR WD · NO HUMAN IN THE FIELD</div>
+            <div className="ao-log-foot">
+              {stats.copies} COPIES · {stats.skips} SKIPS · {NAMES.length} NAMES · LEADER KEY STAYS OUT
+            </div>
           </div>
         </section>
 
@@ -751,32 +753,36 @@ export default function AiOffice() {
           <section className="ao-panel">
             <div className="ao-ph">
               <span className="ao-dot" />
-              <span className="t">SKILL FORGE</span>
-              <span className="sub">· MANUAL RUNS → SAVED SKILL</span>
+              <span className="t">GATES</span>
+              <span className="sub">· EVERY PRINT</span>
               <span className={`meta ${forge.phase === "save" ? "red" : "green"}`}>
-                {forge.phase === "save" ? "SAVING SKILL" : forge.phase === "draft" ? "DRAFT READY" : `RUN ${forge.idx} OF ${forge.total}`}
+                {forge.phase === "save" ? "COPY" : forge.phase === "draft" ? "SKIP" : `GATE ${forge.idx} OF ${forge.total}`}
               </span>
             </div>
             <div className="ao-forge-body">
               <div className="ao-forge-top">
                 <div className="ao-forge-left">
-                  <div className="ao-forge-lab">MANUAL RUNS WITH THE BOT</div>
+                  <div className="ao-forge-lab">RISK FIRST, THEN A COPY</div>
                   <div className="ao-forge-name">{forge.skill}</div>
                   <div className="ao-cells">
-                    {Array.from({ length: forge.total }).map((_, i) => (
+                    {Array.from({ length: Math.min(forge.total, SKILLS.length) }).map((_, i) => (
                       <div key={i} className={`ao-cell ${i < forge.idx ? (forge.color === "teach" ? "teach" : "on") : "empty"}`}>
                         {i + 1}
                       </div>
                     ))}
-                    {forge.phase !== "run" && <span className={`ao-chip-skill ${forge.phase === "save" ? "save" : "draft"}`}>{forge.phase === "save" ? "SKILL" : "DRAFT"}</span>}
+                    {forge.phase !== "run" && (
+                      <span className={`ao-chip-skill ${forge.phase === "save" ? "save" : "draft"}`}>
+                        {forge.phase === "save" ? "COPY" : "SKIP"}
+                      </span>
+                    )}
                   </div>
-                  <div className="ao-forge-sub">RERUN A MANUAL ROUTINE AS IT IS SAVED</div>
+                  <div className="ao-forge-sub">SIGNAL · SESSION · SIZE · CAP · DELAY · COPY</div>
                 </div>
                 <div className="ao-arrow" />
                 <div className="ao-forge-right">
                   <div className="ao-saved-lab">
-                    <span>SAVED SKILLS</span>
-                    <b>{saved.count}</b>
+                    <span>ALLOWLIST</span>
+                    <b>{NAMES.length}</b>
                   </div>
                   <div className="ao-saved-grid">
                     {savedCells.map((c, i) => (
@@ -785,7 +791,7 @@ export default function AiOffice() {
                   </div>
                   <div className="ao-teach">
                     <div className="ao-saved-lab">
-                      <span>TEACH-A-TASK DRAFTS</span>
+                      <span>BOOK</span>
                     </div>
                     <div className="ao-teach-row">
                       {TEACH_DRAFTS.map((d, i) => (
@@ -806,9 +812,9 @@ export default function AiOffice() {
           <section className="ao-panel">
             <div className="ao-ph">
               <span className="ao-dot" />
-              <span className="t">THE SCHEDULE</span>
+              <span className="t">SESSION</span>
               <span className="sub">· THE DAY IS A LOOP</span>
-              <span className="meta red">{(beat % 5) + 1} RUNNING</span>
+              <span className="meta red">ET</span>
             </div>
             <div className="ao-sched-body">
               <div className="ao-sched-lanes">
@@ -833,7 +839,7 @@ export default function AiOffice() {
               <div className="ao-play" />
               <div className="ao-sched-foot">
                 <span>{pad((beat * 2) % 24)}:{pad((beat * 7) % 60)}</span>
-                <span>AI · 1 DAY · 1 LOOP</span>
+                <span>PRE · REG · POST · HALT</span>
               </div>
             </div>
           </section>
@@ -845,8 +851,8 @@ export default function AiOffice() {
         <div className="ao-ph">
           <span className="ao-dot" />
           <span className="t">THE WORKSPACE</span>
-          <span className="sub">GROK AGENTS · THE WHOLE AGENCY AS ONE GRAPH · 210 NODES · ARC EDGES · STRAIGHT LINES ARE ARCS ON A HYPERBOLIC DISK</span>
-          <span className="meta">SIGNALS {2200 + beat} · HANDOFFS {34 + (beat % 12)}</span>
+          <span className="sub">LEADER · KEEPER · DESK · BOOK · NAV · 210 NODES · ARC EDGES ON THE DESK GRAPH</span>
+          <span className="meta">COPIES {stats.copies} · SKIPS {stats.skips}</span>
         </div>
         <Workspace active={active} counts={counts} />
         {ROLES.map((role, i) => {
@@ -871,15 +877,25 @@ export default function AiOffice() {
                 <i style={{ width: `${Math.min(100, d.pct * 1.3)}%` }} />
               </div>
               <div className="ao-ncard-s">
-                {d.clients} CLIENTS · {d.tasks} TASKS · {d.skills} SKILLS · {d.routines} ROUTINES
+                {role.code === "BOOK"
+                  ? `${NAMES.length} NAMES ON THE ALLOWLIST`
+                  : role.code === "NAV"
+                    ? `SHARES ${seats} · CLAIM ON NAV`
+                    : role.code === "DESK"
+                      ? `CASH ${cash} · USDG VAULT`
+                      : role.code === "KEEP"
+                        ? `${stats.copies} COPIES THIS TAPE`
+                        : `${title} · KEY STAYS OUT`}
               </div>
-              <div className="ao-ncard-sig">SIGNALS THIS SESSION {d.signals}</div>
+              <div className="ao-ncard-sig">
+                {role.code === "LEAD" ? "FILLS FROM THE LEADER WALLET" : `SIGNALS THIS SESSION ${d.signals}`}
+              </div>
             </div>
           );
         })}
         <div className="ao-ws-foot">
           <span>
-            {pad((beat * 2) % 24)}:{pad((beat * 11) % 60)} HANDOFF · {handoff} → THROUGH /workspace · NO HUMAN IN THE MIDDLE
+            {pad((beat * 2) % 24)}:{pad((beat * 11) % 60)} HANDOFF · {handoff} → THROUGH THE VAULT · LEADER KEY STAYS OUT
           </span>
           <span className="c">
             CENTRE: <b>{centre}</b>
@@ -893,8 +909,8 @@ export default function AiOffice() {
         <section className="ao-panel">
           <div className="ao-ph">
             <span className="ao-dot" />
-            <span className="t">THE FIVE DESKS</span>
-            <span className="sub">· ONE FUNCTION, ONE OWNER</span>
+            <span className="t">FIVE READINGS</span>
+            <span className="sub">· ONE TAPE</span>
             <span className="meta green">● {ROLES[active].code} ACTIVE</span>
           </div>
           <div className="ao-desks">
@@ -924,7 +940,7 @@ export default function AiOffice() {
                       <span>/h</span>
                     </div>
                     <div className="ao-desk-row">
-                      <span>TASKS 24H</span>
+                      <span>PRINTS</span>
                       <b>{d.tasks}</b>
                     </div>
                     <div className="ao-desk-row">
@@ -946,11 +962,24 @@ export default function AiOffice() {
           <div className="ao-ph">
             <span className="ao-dot" />
             <span className="t">THE METHOD</span>
-            <span className="sub">· EIGHT GATES EVERY TASK GOES THROUGH</span>
-            <span className="meta red">GATE 7 · {4 + (beat % 4)} WAITING</span>
+            <span className="sub">· GATES EVERY FILL GOES THROUGH</span>
+            <span className="meta red">GATE {(beat % 6) + 1} · {SKILLS[beat % SKILLS.length]}</span>
           </div>
           <div className="ao-method-body">
             <MethodField />
+          </div>
+        </section>
+
+        <section className="ao-panel ao-forms">
+          <div className="ao-ph">
+            <span className="ao-dot" />
+            <span className="t">DESK</span>
+            <span className="sub">· DEPOSIT USDG · REDEEM SHARES</span>
+            <span className="meta">{nav} · {cash} · {seats}</span>
+          </div>
+          <div className="ao-forms-body">
+            {forms}
+            {note ? <p className="note">{note}</p> : null}
           </div>
         </section>
       </div>

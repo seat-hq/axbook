@@ -11,7 +11,7 @@ import {
   useWriteContract,
 } from "wagmi";
 import { deskFactoryAbi, deskVaultAbi, erc20Abi, stakingPoolAbi } from "@/abis";
-import { SeatTerminal } from "@/components/SeatTerminal";
+import AiOffice from "@/components/AiOffice";
 import { WalletBar } from "@/components/WalletBar";
 import { canWriteOnChain, getAddresses } from "@/lib/addresses";
 import { formatNav } from "@/lib/desks";
@@ -437,7 +437,7 @@ export function DeskBlotter() {
   }
 
   return (
-    <SeatTerminal
+    <AiOffice
       cash={cashUsdg !== null ? formatNav(cashUsdg) : "—"}
       deskChain={activeChain}
       forms={

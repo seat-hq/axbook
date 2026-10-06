@@ -4,6 +4,7 @@ import { Inter_Tight, JetBrains_Mono, Montserrat } from "next/font/google";
 import { Providers } from "@/components/Providers";
 import "./globals.css";
 import "./terminal.css";
+import "./ai-office.css";
 
 const inter = Inter_Tight({
   subsets: ["latin"],
