@@ -4,6 +4,7 @@ pragma solidity 0.8.28;
 import {Script, console2} from "forge-std/Script.sol";
 import {ChainlinkOracle} from "../src/ChainlinkOracle.sol";
 import {ExactInputRouter02} from "../src/ExactInputRouter02.sol";
+import {IRiskModule} from "../src/interfaces/IRiskModule.sol";
 import {RiskModule} from "../src/RiskModule.sol";
 import {SwapAdapter} from "../src/SwapAdapter.sol";
 import {FeeModule} from "../src/FeeModule.sol";
@@ -106,6 +107,10 @@ contract DeployMainnet is Script {
                 risk.setTokenAllowed(vault, NVDA, true);
                 risk.setTokenAllowed(vault, AAPL, true);
                 risk.setTokenAllowed(vault, SPY, true);
+                risk.setSessionRisk(vault, IRiskModule.Session.Regular, 10_000);
+                risk.setSessionRisk(vault, IRiskModule.Session.PreMarket, 3_000);
+                risk.setSessionRisk(vault, IRiskModule.Session.AfterHours, 3_000);
+                risk.setSessionRisk(vault, IRiskModule.Session.Closed, 0);
             }
         }
 
