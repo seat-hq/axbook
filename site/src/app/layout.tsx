@@ -55,8 +55,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    site: "@bosonax",
-    creator: "@bosonax",
+    site: "@xxniiinxx",
+    creator: "@xxniiinxx",
     title: "Axbook — Follow the book. Hold the shares.",
     description,
   },

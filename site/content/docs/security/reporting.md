@@ -8,8 +8,8 @@ The repository contains **no `SECURITY.md`, no bug-bounty program, and no dedica
 
 ## What to do today
 
-- **Non-security bugs:** contact [@bosonax](https://x.com/bosonax) with reproduction steps, chain ID, and relevant addresses/tx hashes.
-- **Suspected security issues:** there is no published private channel. Do **not** post exploit details publicly. Until the project publishes a security policy, the most responsible available path is a private message to [@bosonax](https://x.com/bosonax) asking for a contact, rather than disclosing details.
+- **Non-security bugs:** contact [@xxniiinxx](https://x.com/xxniiinxx) with reproduction steps, chain ID, and relevant addresses/tx hashes.
+- **Suspected security issues:** there is no published private channel. Do **not** post exploit details publicly. Until the project publishes a security policy, the most responsible available path is a private message to [@xxniiinxx](https://x.com/xxniiinxx) asking for a contact, rather than disclosing details.
 
 ## What not to do
 

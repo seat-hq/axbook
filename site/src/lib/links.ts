@@ -30,7 +30,7 @@ export const links = {
   },
   x: {
     label: "X",
-    href: env(process.env.NEXT_PUBLIC_SEAT_X_URL) ?? "https://x.com/bosonax",
+    href: env(process.env.NEXT_PUBLIC_SEAT_X_URL) ?? "https://x.com/xxniiinxx",
     description: "Announcements and release notes.",
     external: true,
   },

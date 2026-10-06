@@ -11,7 +11,7 @@ Monorepo for **Axbook**: USDG copy desks for official Stock Tokens on Robinhood 
 | Site | https://axbook.xyz |
 | App | https://app.axbook.xyz |
 | Docs | https://axbook.xyz/docs |
-| X | https://x.com/bosonax |
+| X | https://x.com/xxniiinxx |
 | Testnet | Robinhood `46630` — Phase 1 vault shipped |
 | Mainnet | Robinhood `4663` — **no Axbook vault yet** |
 | Token | `$AXBOOK` code exists. **Nothing is deployed.** Ignore any ticker using this name today. |
