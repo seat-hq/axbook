@@ -85,21 +85,32 @@ function Pinned() {
   useEffect(() => {
     const el = pinRef.current;
     if (!el) return;
-    const { ScrollTrigger } = getGsap();
-    const st = ScrollTrigger.create({
-      trigger: el,
-      start: "top top",
-      end: `+=${(N - 1) * 70}%`,
-      pin: true,
-      anticipatePin: 1,
-      snap: { snapTo: 1 / (N - 1), duration: { min: 0.2, max: 0.5 }, delay: 0.08, ease: "power2.inOut" },
-      onUpdate: (self) => setIndex(Math.round(self.progress * (N - 1))),
-    });
-    stRef.current = st;
+    const { gsap, ScrollTrigger } = getGsap();
+    let alive = true;
+    const ctx = gsap.context(() => {
+      const st = ScrollTrigger.create({
+        trigger: el,
+        start: "top top",
+        end: `+=${(N - 1) * 22}%`,
+        pin: true,
+        anticipatePin: 1,
+        snap: { snapTo: 1 / (N - 1), duration: { min: 0.18, max: 0.38 }, delay: 0.05, ease: "power2.inOut" },
+        onUpdate: (self) => {
+          if (alive) setIndex(Math.round(self.progress * (N - 1)));
+        },
+      });
+      stRef.current = st;
+    }, el);
     return () => {
-      st.kill(true);
+      alive = false;
       stRef.current = null;
-      ScrollTrigger.refresh();
+      // Revert only this pin. A global ScrollTrigger.refresh() here measures
+      // nodes Next has already detached and throws removeChild on null.
+      try {
+        ctx.revert();
+      } catch {
+        /* route change detached the pin spacer first */
+      }
     };
   }, []);
 

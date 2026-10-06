@@ -1,16 +1,16 @@
 :root {
-  --void: #050f0a;
-  --bg: #07140e;
-  --panel: #0e2419;
-  --panel-2: #122c1e;
-  --ink: #eaf5ee;
-  --ink-dim: #8eae9c;
-  --ink-faint: #5f7d6b;
-  --line: #1c3b2c;
-  --line-2: #2a5540;
-  --accent: #35d07f;
-  --accent-soft: rgba(53, 208, 127, 0.14);
-  --gold: #d8b36e;
+  --void: #07090e;
+  --bg: #10141c;
+  --panel: #1c2333;
+  --panel-2: #232b3d;
+  --ink: #e8eef8;
+  --ink-dim: #9aa6b8;
+  --ink-faint: #6d7a8c;
+  --line: #2a3344;
+  --line-2: #3d4a62;
+  --accent: #5b8cff;
+  --accent-soft: rgba(91, 140, 255, 0.16);
+  --gold: #7ec8e0;
   --loss: #e3715a;
   --loss-soft: rgba(227, 113, 90, 0.14);
   --font-ui: var(--font-inter), system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -27,7 +27,7 @@ body {
   margin: 0;
   padding: 0;
   background:
-    radial-gradient(1200px 480px at 80% -10%, rgba(53, 208, 127, 0.06), transparent 60%),
+    radial-gradient(1200px 480px at 80% -10%, rgba(91, 140, 255, 0.06), transparent 60%),
     var(--bg);
   color: var(--ink);
   font-family: var(--font-ui);
@@ -98,7 +98,7 @@ a {
   height: 7px;
   border-radius: 50%;
   background: var(--accent);
-  box-shadow: 0 0 0 4px rgba(53, 208, 127, 0.16);
+  box-shadow: 0 0 0 4px rgba(91, 140, 255, 0.16);
 }
 
 .wallet-bar {
@@ -293,7 +293,7 @@ a {
 
 .stat-panel {
   background:
-    linear-gradient(180deg, rgba(53, 208, 127, 0.05), transparent 42%),
+    linear-gradient(180deg, rgba(91, 140, 255, 0.05), transparent 42%),
     var(--panel);
   border: 1px solid var(--line);
   border-radius: 14px;
@@ -404,7 +404,7 @@ a {
   margin-top: 16px;
   border-radius: 99px;
   overflow: hidden;
-  background: #163226;
+  background: #232b3d;
 }
 
 .dist-bar span {
@@ -414,7 +414,7 @@ a {
 }
 
 .d-hot {
-  background: #7dffb5;
+  background: #8eabff;
 }
 
 .d-up {
@@ -507,7 +507,7 @@ a {
 .skel {
   border-radius: 14px;
   min-height: 196px;
-  background: linear-gradient(90deg, #0e2419 0%, #183628 45%, #0e2419 100%);
+  background: linear-gradient(90deg, #1c2333 0%, #2a3348 45%, #1c2333 100%);
   background-size: 200% 100%;
   animation: sheen 1.3s ease infinite;
 }
@@ -671,7 +671,7 @@ tbody tr:hover td {
 }
 
 .input:focus {
-  outline: 2px solid rgba(53, 208, 127, 0.35);
+  outline: 2px solid rgba(91, 140, 255, 0.35);
   border-color: var(--accent);
 }
 
@@ -695,7 +695,7 @@ tbody tr:hover td {
 
 .btn-on {
   background: var(--accent);
-  color: #062214;
+  color: #10141c;
   border-color: var(--accent);
   font-weight: 650;
 }

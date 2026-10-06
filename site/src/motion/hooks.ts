@@ -71,7 +71,12 @@ export function useGsap(
     }, scope.current);
     return () => {
       if (typeof extra === "function") extra();
-      ctx.revert();
+      // Revert can measure a pin whose parent Next already removed.
+      try {
+        ctx.revert();
+      } catch {
+        /* detached during route change */
+      }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reduced, ...deps]);

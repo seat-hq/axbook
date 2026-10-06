@@ -1,9 +1,40 @@
 .hero {
   position: relative;
   min-height: 100svh;
-  padding: calc(var(--nav-h) + 1rem) 0 2rem;
+  display: flex;
+  flex-direction: column;
+  padding: calc(var(--nav-h) + 0.75rem) 0 1.1rem;
   background-color: var(--bg);
   overflow: hidden;
+}
+
+:global(body.has-token-bar) .hero {
+  min-height: calc(100svh - var(--token-bar-h));
+}
+
+@media (min-width: 980px) {
+  .hero {
+    height: 100svh;
+    min-height: 0;
+    max-height: 100svh;
+  }
+
+  :global(body.has-token-bar) .hero {
+    height: calc(100svh - var(--token-bar-h));
+    max-height: calc(100svh - var(--token-bar-h));
+  }
+
+  .inner {
+    height: 100%;
+  }
+
+  .scene {
+    width: auto;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    margin-inline: auto;
+  }
 }
 
 .hero::before {
@@ -12,15 +43,18 @@
   inset: 0;
   pointer-events: none;
   background:
-    radial-gradient(60% 50% at 82% 38%, rgba(53, 208, 127, 0.1), transparent 70%),
-    radial-gradient(40% 40% at 14% 40%, rgba(216, 179, 110, 0.07), transparent 70%),
+    radial-gradient(60% 50% at 82% 38%, rgba(91, 140, 255, 0.1), transparent 70%),
+    radial-gradient(40% 40% at 14% 40%, rgba(126, 200, 224, 0.07), transparent 70%),
     linear-gradient(to bottom, transparent 70%, var(--bg));
 }
 
 .inner {
   position: relative;
+  flex: 1;
   display: grid;
-  gap: 1rem;
+  grid-template-rows: auto minmax(0, 1fr) auto auto;
+  gap: 0.75rem;
+  min-height: 0;
 }
 
 .eyebrow {
@@ -29,27 +63,30 @@
 
 .stage {
   position: relative;
+  min-height: 0;
+  display: flex;
+  align-items: center;
   margin-inline: calc(var(--gutter) * -0.5);
 }
 
 .scene {
   width: 100%;
   height: auto;
-  max-height: 44vh;
+  max-height: min(34vh, 100%);
   overflow: visible;
 }
 
 @media (max-width: 720px) {
   .scene {
-    max-height: 62svh;
-    max-width: 340px;
+    max-height: 28svh;
+    max-width: 280px;
     margin-inline: auto;
   }
 }
 
 .copy {
   display: grid;
-  gap: 2rem;
+  gap: 1rem;
   align-items: end;
 }
 
@@ -60,7 +97,7 @@
 }
 
 .title {
-  font-size: clamp(3rem, 1.4rem + 6vw, 8.2rem);
+  font-size: clamp(2.5rem, 1.2rem + 4.2vw, 5.6rem);
 }
 
 .line {
@@ -91,7 +128,7 @@
 
 .side {
   display: grid;
-  gap: 1.6rem;
+  gap: 1rem;
 }
 
 .lede {
@@ -107,8 +144,8 @@
 }
 
 .facts {
-  margin: 1.5rem 0 0;
-  padding-top: 1.2rem;
+  margin: 0.4rem 0 0;
+  padding-top: 0.85rem;
   border-top: 1px solid var(--line);
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -155,13 +192,13 @@
 }
 
 .wallet {
-  fill: rgba(216, 179, 110, 0.08);
+  fill: rgba(126, 200, 224, 0.08);
   stroke: var(--alex);
   stroke-width: 1.5;
 }
 
 .walletStrap {
-  fill: rgba(216, 179, 110, 0.22);
+  fill: rgba(126, 200, 224, 0.22);
 }
 
 .key {
@@ -198,7 +235,7 @@
 }
 
 .vault {
-  fill: rgba(53, 208, 127, 0.06);
+  fill: rgba(91, 140, 255, 0.06);
   stroke: var(--desk);
   stroke-width: 1.5;
 }
@@ -222,7 +259,7 @@
 .blockLabelDark {
   font-family: var(--font-mono);
   font-size: 13px;
-  fill: #04120b;
+  fill: var(--on-desk);
   letter-spacing: 0.08em;
 }
 

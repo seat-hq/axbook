@@ -1,7 +1,7 @@
 .sec {
   background:
-    radial-gradient(50% 40% at 0% 20%, rgba(216, 179, 110), 0.06), transparent 70%),
-    radial-gradient(50% 40% at 100% 40%, rgba(53, 208, 127, 0.06), transparent 70%),
+    radial-gradient(50% 40% at 0% 20%, rgba(126, 200, 224), 0.06), transparent 70%),
+    radial-gradient(50% 40% at 100% 40%, rgba(91, 140, 255, 0.06), transparent 70%),
     var(--bg);
 }
 
@@ -13,7 +13,7 @@
 
 .actors {
   list-style: none;
-  margin: 3.5rem 0 0;
+  margin: 1.75rem 0 0;
   padding: 0;
   display: grid;
   gap: 1rem;

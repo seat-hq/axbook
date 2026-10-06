@@ -1,13 +1,13 @@
 .sec {
   background:
-    radial-gradient(60% 40% at 50% 0%, rgba(216, 179, 110, 0.06), transparent 70%),
+    radial-gradient(60% 40% at 50% 0%, rgba(126, 200, 224, 0.06), transparent 70%),
     var(--void);
 }
 
 .head {
   display: grid;
   gap: 1.4rem;
-  margin-bottom: 3rem;
+  margin-bottom: 1.5rem;
   max-width: 900px;
 }
 
@@ -18,7 +18,7 @@
 
 .controls {
   list-style: none;
-  margin: 3.5rem 0 0;
+  margin: 1.75rem 0 0;
   padding: 0;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));

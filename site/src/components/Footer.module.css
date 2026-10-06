@@ -1,7 +1,7 @@
 .footer {
   background: var(--void);
   border-top: 1px solid var(--line);
-  padding: clamp(3.5rem, 2rem + 5vw, 6rem) 0 2rem;
+  padding: clamp(2.25rem, 1.2rem + 2.5vw, 3.5rem) 0 1.5rem;
   font-size: 0.92rem;
 }
 

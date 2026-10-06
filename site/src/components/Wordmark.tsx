@@ -1,17 +1,15 @@
 type Tone = "inherit" | "dark" | "light" | "badge";
 
 /**
- * Official Axbook mark: a chair inside a gold ring.
- * The ring is the desk.
- * `inherit` follows the surrounding ink (cream on the dark site, forest on paper).
+ * Official Axbook mark: an open book inside a cobalt ring.
+ * The ring is the desk. The book is the copied book.
+ * `inherit` follows the surrounding ink (paper on the dark site, ink on paper).
  */
-function Chair({ fill }: { fill: string }) {
+function Book({ fill }: { fill: string }) {
   return (
     <g fill={fill}>
-      <rect x="39" y="22" width="22" height="26" rx="5" />
-      <rect x="25" y="44" width="50" height="13" rx="3.5" />
-      <rect x="32" y="54" width="10" height="20" rx="3" />
-      <rect x="58" y="54" width="10" height="20" rx="3" />
+      <polygon points="18,44 46,34 46,66 18,76" />
+      <polygon points="54,34 82,44 82,76 54,66" />
     </g>
   );
 }
@@ -20,18 +18,18 @@ export function Mark({ size = 26, tone = "inherit" }: { size?: number; tone?: To
   if (tone === "badge") {
     return (
       <svg width={size} height={size} viewBox="0 0 100 100" aria-hidden="true" focusable="false">
-        <circle cx="50" cy="50" r="48.6" fill="none" stroke="var(--brand-gold)" strokeWidth="1.4" />
-        <circle cx="50" cy="50" r="45.5" fill="var(--brand-green)" />
-        <Chair fill="var(--brand-cream)" />
+        <circle cx="50" cy="50" r="48.6" fill="none" stroke="#8eabff" strokeWidth="1.4" />
+        <circle cx="50" cy="50" r="45.5" fill="var(--brand-ink)" />
+        <Book fill="var(--brand-paper)" />
       </svg>
     );
   }
   const glyph =
-    tone === "light" ? "var(--brand-green)" : tone === "dark" ? "var(--brand-cream)" : "currentColor";
+    tone === "light" ? "var(--brand-ink)" : tone === "dark" ? "var(--brand-paper)" : "currentColor";
   return (
     <svg width={size} height={size} viewBox="0 0 100 100" aria-hidden="true" focusable="false">
-      <circle cx="50" cy="50" r="46" fill="none" stroke="var(--brand-gold)" strokeWidth="3.2" />
-      <Chair fill={glyph} />
+      <circle cx="50" cy="50" r="46" fill="none" stroke="var(--brand-cobalt)" strokeWidth="3.2" />
+      <Book fill={glyph} />
     </svg>
   );
 }

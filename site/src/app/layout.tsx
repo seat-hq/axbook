@@ -5,6 +5,7 @@ import { Nav } from "@/components/Nav";
 import { TokenCaBar } from "@/components/TokenCaBar";
 import { Footer } from "@/components/Footer";
 import { getSeatTokenAddress } from "@/lib/addresses";
+import { Cursor } from "@/motion/Cursor";
 import { MotionBoot, motionHeadScript } from "@/motion/MotionBoot";
 import { siteUrl, links } from "@/lib/links";
 import "./globals.css";
@@ -24,12 +25,12 @@ const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-mono-face", 
 const brand = Montserrat({ subsets: ["latin"], weight: ["600"], variable: "--font-montserrat", display: "swap" });
 
 const description =
-  "Axbook is a copy desk, not a sniper bot. Deposit USDG into a separate desk vault, receive book shares that claim the desk's NAV, and let a risk engine decide which of a leader's Stock Token trades get copied — smaller, filtered and capped.";
+  "Follow a leader's Stock Token book in a separate USDG vault. Book shares claim the desk's NAV. A risk engine copies each fill smaller, filtered, and capped.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Axbook — Copy desk, not sniper bot",
+    default: "Axbook Site — Follow the book. Hold the shares.",
     template: "%s · Axbook",
   },
   description,
@@ -48,20 +49,20 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     siteName: "Axbook",
-    title: "Axbook — Copy desk, not sniper bot",
+    title: "Axbook — Follow the book. Hold the shares.",
     description,
     url: "/",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Axbook — Copy desk, not sniper bot",
+    title: "Axbook — Follow the book. Hold the shares.",
     description,
   },
   alternates: { canonical: "/" },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#07140e",
+  themeColor: "#10141c",
   colorScheme: "dark",
 };
 
@@ -71,7 +72,7 @@ const jsonLd = {
   name: "Axbook",
   url: siteUrl,
   description,
-  logo: `${siteUrl}/brand/seat-mark-light.svg`,
+  logo: `${siteUrl}/brand/axbook-mark-light.svg`,
   sameAs: [links.github.href, links.x.href].filter(Boolean),
 };
 
@@ -99,6 +100,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           <Footer />
         </div>
         <MotionBoot />
+        <Cursor />
       </body>
     </html>
   );

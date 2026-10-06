@@ -5,6 +5,14 @@ import { CHAIN, isTradeEligible, listSymbols } from "@seat/sdk";
 
 const BOOK = listSymbols().filter((symbol) => isTradeEligible(symbol, CHAIN.MAINNET_ID));
 const NAMES = BOOK.length > 0 ? BOOK : ["NVDA", "AAPL", "SPY", "MSTR", "PLTR", "TSLA"];
+const GATES = ["SIGNAL", "SESSION", "SIZE", "CAP", "DELAY", "COPY"] as const;
+const NODES = [
+  { label: "LEAD", color: "#5ec8ff" },
+  { label: "KEEP", color: "#7aa2ff" },
+  { label: "DESK", color: "#39ff7a" },
+  { label: "BOOK", color: "#f0c14a" },
+  { label: "NAV", color: "#c084fc" },
+] as const;
 
 interface Bar {
   o: number;
@@ -386,97 +394,113 @@ export function SeatTerminal({
         </div>
       </div>
 
-      <section className="fx-metrics" data-guide="metrics">
-        <Metric label="REALIZED" value={sim ? signed(sim.realized) : "—"} delta={sim ? signed(sim.realized * 0.01) : ""} up={(sim?.realized ?? 0) >= 0} series={sim?.path ?? []} />
-        <Metric label="UNREALIZED" value={sim ? signed(sim.unrealized) : "—"} delta="open" up={(sim?.unrealized ?? 0) >= 0} series={sim?.path.map((n) => -n * 0.15) ?? []} />
-        <Metric label="WIN RATE" value={winRate == null ? "—" : `${winRate.toFixed(1)}%`} delta={sim ? `${sim.wins}/${sim.closed}` : ""} up series={sim ? sim.prints.map((_, i) => i).reverse() : []} />
-        <Metric label="VOLUME" value={sim ? money(sim.volume) : "—"} delta={sim ? money(sim.bought) + " buy" : ""} up series={sim?.prints.map((row) => row.notional).reverse() ?? []} />
-        <Metric label="SOLD" value={sim ? money(sim.sold) : "—"} delta={sim ? `${sim.trades} prints` : ""} up={false} series={sim?.prints.filter((row) => row.side === "sell").map((row) => row.notional) ?? []} />
-        <Metric label="GAS" value={sim ? `${sim.gasEth.toFixed(4)} ETH` : "—"} delta="desk" up series={sim ? [sim.gasEth, sim.gasEth] : []} />
-      </section>
-
-      <section className="fx-mid">
-        <article className="fx-panel fx-rails" data-guide="rails">
-          <Rail label="REALIZED" value={sim ? signed(sim.realized) : "—"} values={sim?.path ?? []} color="#3dff7a" />
-          <Rail label="VOLUME" value={sim ? money(sim.volume) : "—"} values={sim?.prints.map((row) => row.notional).reverse() ?? []} color="#5ec8ff" />
-          <Rail label="WIN" value={winRate == null ? "—" : `${winRate.toFixed(0)}%`} values={sim?.prints.map((_, index) => index + 1) ?? []} color="#f0c14a" />
-          <Rail label="HOLD" value={sim ? `${sim.gasEth.toFixed(3)}` : "—"} values={sim?.path.map((value) => -value) ?? []} color="#ff5a6a" />
-          <Rail label="SOLD" value={sim ? money(sim.sold) : "—"} values={sim?.prints.filter((row) => row.side === "sell").map((row) => row.notional) ?? []} color="#d5e4ee" />
-          <Rail label="BOOK" value={String(NAMES.length)} values={sim?.prints.map((row) => (row.side === "sell" ? -1 : 1)) ?? []} color="#3dff7a" />
-        </article>
-          <article className="fx-panel fx-shell" data-guide="shell">
+      <section className="ws-top">
+        <article className={`fx-panel fx-hero ${(sim?.realized ?? 0) >= 0 ? "up" : "down"}`} data-guide="metrics">
           <div className="fx-h">
-            <span>Neural shell</span>
-            <span>{sim?.focus ?? "Priced names"}</span>
+            <span>Copy desk · {NAMES.length} names</span>
+            <span className="fx-live">
+              <i /> live
+            </span>
           </div>
-          <NeuralShell pulse={sim?.trades ?? 0} />
+          <strong>{sim ? signed(sim.realized) : "—"}</strong>
+          <p>Realized on the sim tape. Open {sim ? signed(sim.unrealized) : "—"}.</p>
+          <dl>
+            <div>
+              <dt>Prints</dt>
+              <dd>{sim?.trades ?? "—"}</dd>
+            </div>
+            <div>
+              <dt>Win</dt>
+              <dd>{winRate == null ? "—" : `${winRate.toFixed(1)}%`}</dd>
+            </div>
+            <div>
+              <dt>Copied</dt>
+              <dd>{sim ? `${Math.round((sim.logs.filter((line) => line.tag === "COPY").length / Math.max(1, sim.logs.length)) * 1000) / 10}%` : "—"}</dd>
+            </div>
+          </dl>
+          <Spark values={sim?.path ?? []} color={(sim?.realized ?? 0) >= 0 ? "#39ff7a" : "#ff4d6a"} />
         </article>
-        <article className="fx-panel fx-fills" data-guide="fills">
-          <div className="fx-h">
-            <span>Late fills</span>
-            <span>{sim?.prints.length ?? 0}</span>
-          </div>
-          <div className="fx-scroll">
-            {(sim?.prints.slice(0, 12) ?? []).map((row, index) => (
-              <div className={`fx-fill ${row.side}`} key={row.id} style={{ animationDelay: `${index * 40}ms` }}>
-                <strong>{row.symbol}</strong>
-                <span>{row.side.toUpperCase()}</span>
-                <b>{money(row.notional)}</b>
-              </div>
-            ))}
-          </div>
-        </article>
-      </section>
 
-      <section className="fx-lower">
-        <article className="fx-panel" data-guide="tape">
+        <article className="fx-panel ws-log" data-guide="tape">
           <div className="fx-h">
             <span>Copy tape</span>
             <span>{sim?.logs.length ?? 0}</span>
           </div>
           <div className="fx-log">
-            {(sim?.logs ?? []).map((line, index) => (
-              <div className={`fx-log-line ${index === 0 ? "new" : ""}`} key={line.id}>
+            {(sim?.logs ?? []).slice(0, 8).map((line, index) => (
+              <div className={`ws-code ${index === 0 ? "new" : ""}`} key={line.id}>
                 <span>{clock(line.atMs)}</span>
-                <b className={line.tag === "COPY" ? "fx-up" : "fx-am"}>{line.tag}</b>
+                <b className={line.tag === "COPY" ? "fx-up" : "fx-dn"}>{line.tag}</b>
                 <b>{line.symbol}</b>
                 <span className={line.side === "buy" ? "fx-up" : "fx-dn"}>{line.side.toUpperCase()}</span>
-                <span>
-                  ${line.price.toFixed(2)} · {line.detail}
-                </span>
+                <span>{line.detail}</span>
               </div>
             ))}
           </div>
         </article>
+
+        <div className="ws-stack">
+          <article className="fx-panel ws-forge" data-guide="fills">
+            <div className="fx-h">
+              <span>Gates · every print</span>
+              <span className="fx-am">{latest ? latest.symbol : "—"}</span>
+            </div>
+            <ol className="ws-steps">
+              {GATES.map((gate, index) => (
+                <li key={gate} data-on={sim ? index <= sim.trades % GATES.length : index === 0}>
+                  {index + 1}
+                  <small>{gate}</small>
+                </li>
+              ))}
+            </ol>
+            <div className="ws-run">
+              <span />
+              <b>{latest?.copied ? "COPY" : "SKIP"}</b>
+            </div>
+          </article>
+          <article className="fx-panel ws-sched">
+            <div className="fx-h">
+              <span>Session · the day is a loop</span>
+              <span>ET</span>
+            </div>
+            <div className="ws-lanes" aria-hidden="true">
+              <i data-tone="pre" />
+              <i data-tone="reg" />
+              <i data-tone="post" />
+              <i data-tone="halt" />
+              <b />
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section className="fx-panel ws-work" data-guide="shell">
+        <div className="fx-h">
+          <span>Workspace · leader, keeper, desk, book, nav</span>
+          <span>centre {NODES[sim ? sim.trades % NODES.length : 0]?.label}</span>
+        </div>
+        <Workspace pulse={sim?.trades ?? 0} prints={sim?.prints.slice(0, 4) ?? []} />
+      </section>
+
+      <section className="ws-bottom">
+        <article className="fx-panel" data-guide="rails">
+          <div className="fx-h">
+            <span>Five readings · one tape</span>
+          </div>
+          <div className="ws-desks">
+            <DeskCard label="LEAD" tone="#5ec8ff" value={sim?.focus ?? "—"} series={sim?.path ?? []} />
+            <DeskCard label="KEEP" tone="#7aa2ff" value={sim ? String(sim.logs.filter((line) => line.tag === "COPY").length) : "—"} series={sim?.prints.map((_, index) => index) ?? []} />
+            <DeskCard label="DESK" tone="#39ff7a" value={sim ? signed(sim.realized) : "—"} series={sim?.path ?? []} />
+            <DeskCard label="BOOK" tone="#f0c14a" value={String(NAMES.length)} series={sim?.prints.map((row) => (row.side === "sell" ? -1 : 1)) ?? []} />
+            <DeskCard label="NAV" tone="#c084fc" value={nav} series={sim?.path.map((value) => -value) ?? []} />
+          </div>
+        </article>
         <article className="fx-panel" data-guide="prints">
           <div className="fx-h">
-            <span>Prints</span>
-            <span>{sim?.prints.length ?? 0}</span>
+            <span>Eight gates · every fill goes through</span>
+            <span>gate {(sim?.trades ?? 0) % 8}</span>
           </div>
-          <div className="fx-scroll">
-            <table className="fx-table">
-              <thead>
-                <tr>
-                  <th>Time</th>
-                  <th>Symbol</th>
-                  <th>Side</th>
-                  <th>Last</th>
-                  <th>Notional</th>
-                </tr>
-              </thead>
-              <tbody>
-                {(sim?.prints ?? []).map((row, index) => (
-                  <tr key={row.id} className={index === 0 ? "new" : undefined}>
-                    <td>{clock(row.atMs)}</td>
-                    <td>{row.symbol}</td>
-                    <td className={row.side === "buy" ? "fx-up" : "fx-dn"}>{row.side.toUpperCase()}</td>
-                    <td>${row.price.toFixed(2)}</td>
-                    <td>{money(row.notional)}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <GateField active={(sim?.trades ?? 0) % 8} />
         </article>
         <article className="fx-panel fx-desk" data-guide="desk">
           <div className="fx-h">
@@ -548,19 +572,19 @@ const GUIDE: readonly {
   {
     id: "rails",
     title: "Shell rails",
-    body: "Six live readings from the sim tape. The strands run from here into the ring.",
+    body: "Five readings from the sim tape: leader, copies kept, desk P&L, book size, and NAV.",
     place: "right",
   },
   {
     id: "shell",
-    title: "Neural shell",
-    body: "The book drawn as a ring. Packets travel in from the rails and out toward the late fills.",
+    title: "Workspace",
+    body: "Leader, keeper, desk, book, and NAV sit on the ring. The live node grows, and the latest prints stay tethered to it.",
     place: "inset",
   },
   {
     id: "fills",
-    title: "Late fills",
-    body: "The newest simulated prints, stacked as they land, with side and notional.",
+    title: "Gates",
+    body: "Every print walks signal, session, size, cap, delay, and copy. Lit steps are the ones this print has passed.",
     place: "inset",
   },
   {
@@ -571,8 +595,8 @@ const GUIDE: readonly {
   },
   {
     id: "prints",
-    title: "Prints",
-    body: "The print log: time, symbol, side, last price, and notional.",
+    title: "Eight gates",
+    body: "The same gates as a field. The gold column is the gate this print is on.",
     place: "inset",
   },
   {
@@ -671,7 +695,7 @@ function Metric({
       <span>{label}</span>
       <strong className={up ? "fx-up" : "fx-dn"}>{value}</strong>
       <em className={up ? "fx-up" : "fx-dn"}>{delta}</em>
-      <Spark values={series} color={up ? "#3dff7a" : "#ff5a6a"} />
+      <Spark values={series} color={up ? "#3ecf8e" : "#ff5d6c"} />
     </article>
   );
 }
@@ -730,7 +754,7 @@ function CandlePlot({ bars }: { bars: Bar[] }) {
         const py = y(value);
         return (
           <g key={row}>
-            <line stroke="rgba(94,168,220,0.16)" x1="8" x2="572" y1={py} y2={py} />
+            <line stroke="rgba(197,212,238,0.12)" x1="8" x2="572" y1={py} y2={py} />
             <text fill="#7f96a8" fontSize="10" x="578" y={py + 3}>
               {value.toFixed(2)}
             </text>
@@ -745,13 +769,13 @@ function CandlePlot({ bars }: { bars: Bar[] }) {
         const body = Math.max(3, Math.min(10, slot * 0.62));
         return (
           <g key={index}>
-            <line stroke={up ? "#3dff7a" : "#ff5a6a"} x1={x} x2={x} y1={y(bar.h)} y2={y(bar.l)} />
-            <rect fill={up ? "#3dff7a" : "#ff5a6a"} height={Math.max(1.5, bot - top)} width={body} x={x - body / 2} y={top} />
+            <line stroke={up ? "#39ff7a" : "#ff4d6a"} x1={x} x2={x} y1={y(bar.h)} y2={y(bar.l)} />
+            <rect fill={up ? "#39ff7a" : "#ff4d6a"} height={Math.max(1.5, bot - top)} width={body} x={x - body / 2} y={top} className={index === bars.length - 1 ? "fx-candle-live" : undefined} />
           </g>
         );
       })}
       {last ? (
-        <line stroke="#f0c14a" strokeDasharray="3 3" x1="8" x2="572" y1={y(last.c)} y2={y(last.c)} />
+        <line stroke="#8b97ab" strokeDasharray="3 3" x1="8" x2="572" y1={y(last.c)} y2={y(last.c)} />
       ) : null}
     </svg>
   );
@@ -774,46 +798,65 @@ function AreaPlot({ series }: { series: number[] }) {
         const py = y(value);
         return (
           <g key={row}>
-            <line stroke="rgba(94,168,220,0.16)" x1="8" x2="416" y1={py} y2={py} />
+            <line stroke="rgba(197,212,238,0.12)" x1="8" x2="416" y1={py} y2={py} />
             <text fill="#7f96a8" fontSize="10" x="420" y={py + 3}>
               {Math.round(value)}
             </text>
           </g>
         );
       })}
-      <path d={area} fill="rgba(61,255,122,0.14)" />
-      <path d={line} fill="none" stroke="#3dff7a" strokeWidth="1.6" />
-      <circle cx={x(series.length - 1)} cy={y(last)} fill="#3dff7a" r="3" />
+      <path d={area} fill="rgba(62,207,142,0.12)" />
+      <path d={line} fill="none" stroke="#3ecf8e" strokeWidth="1.6" />
+      <circle cx={x(series.length - 1)} cy={y(last)} fill="#3ecf8e" r="3" />
     </svg>
   );
 }
 
-function cubic(pts: readonly { x: number; y: number }[], t: number): { x: number; y: number } {
-  const u = 1 - t;
-  const p0 = pts[0];
-  const p1 = pts[1];
-  const p2 = pts[2];
-  const p3 = pts[3];
-  if (!p0 || !p1 || !p2 || !p3) return { x: 0, y: 0 };
-  return {
-    x: u * u * u * p0.x + 3 * u * u * t * p1.x + 3 * u * t * t * p2.x + t * t * t * p3.x,
-    y: u * u * u * p0.y + 3 * u * u * t * p1.y + 3 * u * t * t * p2.y + t * t * t * p3.y,
-  };
+function DeskCard({ label, tone, value, series }: { label: string; tone: string; value: string; series: number[] }) {
+  return (
+    <div className="ws-desk" style={{ "--tone": tone } as React.CSSProperties}>
+      <b>{label}</b>
+      <strong>{value}</strong>
+      <Spark values={series} color={tone} />
+    </div>
+  );
 }
 
-function NeuralShell({ pulse }: { pulse: number }) {
+function GateField({ active }: { active: number }) {
+  const dots = Array.from({ length: 210 }, (_, index) => {
+    const gate = index % 8;
+    const row = Math.floor(index / 8);
+    const y = 10 + ((row * 17 + gate * 9) % 100);
+    const x = 18 + gate * 38 + ((index * 11) % 24);
+    return { x, y, hot: gate === active };
+  });
+  return (
+    <svg className="ws-gates" viewBox="0 0 340 120" role="img" aria-label="Eight gates">
+      {[0, 1, 2, 3, 4, 5, 6, 7].map((gate) => (
+        <line
+          key={gate}
+          x1={30 + gate * 38}
+          x2={30 + gate * 38}
+          y1="4"
+          y2="116"
+          stroke={gate === active ? "#f0c14a" : "rgba(94,200,255,0.28)"}
+          strokeWidth={gate === active ? 3 : 1}
+        />
+      ))}
+      <path d="M12 86 C 60 78, 110 28, 160 42 S 250 96, 328 24" fill="none" stroke="#39ff7a" strokeWidth="1.6" />
+      <path d="M12 48 C 80 60, 140 90, 200 70 S 280 30, 328 58" fill="none" stroke="rgba(94,200,255,0.45)" strokeWidth="1" />
+      {dots.map((dot, index) => (
+        <circle key={index} cx={dot.x} cy={dot.y} r={dot.hot ? 2.6 : 1.6} fill={dot.hot ? "#f0c14a" : "#39ff7a"} opacity={dot.hot ? 1 : 0.8} />
+      ))}
+    </svg>
+  );
+}
+
+function Workspace({ prints }: { pulse: number; prints: Print[] }) {
   const ref = useRef<HTMLCanvasElement>(null);
-  const pulseRef = useRef(pulse);
-  pulseRef.current = pulse;
   useEffect(() => {
     const canvas = ref.current;
     if (!canvas) return;
-    const points = Array.from({ length: 1280 }, (_, index) => ({
-      u: (index / 1280) * Math.PI * 2,
-      v: (((index * 47) % 1280) / 1280) * Math.PI * 2,
-      spike: index % 11 === 0,
-      tone: index % 29 === 0 ? "sell" : index % 17 === 0 ? "buy" : "gold",
-    }));
     let raf = 0;
     const draw = (time: number) => {
       const ctx = canvas.getContext("2d");
@@ -831,144 +874,160 @@ function NeuralShell({ pulse }: { pulse: number }) {
       }
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.clearRect(0, 0, w, h);
-      const rot = time * 0.00022;
-      const tilt = 0.72;
-      const major = Math.min(w, h) * 0.34;
-      const minor = major * 0.3;
-      const cx = w * 0.52;
-      const cy = h * 0.52;
-      const halo = ctx.createRadialGradient(cx, cy, 8, cx, cy, major * 1.5);
-      halo.addColorStop(0, "rgba(40,120,220,0.18)");
-      halo.addColorStop(1, "rgba(40,120,220,0)");
-      ctx.fillStyle = halo;
-      ctx.fillRect(0, 0, w, h);
-      const projected = points
-        .map((point, index) => {
-          const cu = Math.cos(point.u + rot);
-          const su = Math.sin(point.u + rot);
-          const cv = Math.cos(point.v);
-          const sv = Math.sin(point.v);
-          const x = (major + minor * cv) * cu;
-          const y = minor * sv;
-          const z = (major + minor * cv) * su;
-          const y2 = y * Math.cos(tilt) - z * Math.sin(tilt);
-          const z2 = y * Math.sin(tilt) + z * Math.cos(tilt);
-          return { x: cx + x, y: cy + y2, z: z2, spike: point.spike, tone: point.tone, i: index };
-        })
-        .sort((a, b) => a.z - b.z);
-      const colors = ["#3dff7a", "#5ec8ff", "#f0c14a", "#ff5a6a", "#d5e4ee", "#7aa2ff"];
-      const strands = [0.12, 0.26, 0.4, 0.54, 0.68, 0.84].map((at, index) => {
-        const y0 = h * at;
-        const endY = cy + (index - 2.5) * minor * 0.55;
-        const endX = cx - major * 0.55;
-        return {
-          color: colors[index] ?? "#5ec8ff",
-          seed: index * 0.17,
-          pts: [
-            { x: 0, y: y0 },
-            { x: w * 0.12, y: y0 },
-            { x: endX - 40, y: endY },
-            { x: endX, y: endY },
-          ],
-        };
+      const cx = w * 0.5;
+      const cy = h * 0.5;
+      const radius = Math.min(w * 0.3, h * 0.34);
+      const active = Math.floor(time / 2800) % NODES.length;
+      ctx.beginPath();
+      ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+      ctx.strokeStyle = "rgba(94,200,255,0.45)";
+      ctx.lineWidth = 1.2;
+      ctx.stroke();
+      const spots = NODES.map((node, index) => {
+        const angle = -Math.PI / 2 + (index / NODES.length) * Math.PI * 2;
+        return { ...node, index, angle, x: cx + Math.cos(angle) * radius, y: cy + Math.sin(angle) * radius };
       });
-      const outbound = [0.18, 0.38, 0.58, 0.78].map((at, index) => {
-        const startY = cy + (index - 1.5) * minor * 0.42;
-        const startX = cx + major * 0.52;
-        const y1 = h * at;
-        return {
-          color: colors[(index + 2) % colors.length] ?? "#f0c14a",
-          seed: 0.31 + index * 0.19,
-          pts: [
-            { x: startX, y: startY },
-            { x: startX + 36, y: startY },
-            { x: w * 0.78, y: y1 },
-            { x: w, y: y1 },
-          ],
-        };
-      });
-      const strandsAll = [...strands, ...outbound];
-      for (const strand of strandsAll) {
-        const [p0, p1, p2, p3] = strand.pts;
-        if (!p0 || !p1 || !p2 || !p3) continue;
-        ctx.strokeStyle = strand.color;
-        ctx.globalAlpha = 0.45;
-        ctx.lineWidth = 1;
+      const link = (x0: number, y0: number, x1: number, y1: number, color: string, alpha: number, width: number, bend = 18) => {
         ctx.beginPath();
-        ctx.moveTo(p0.x, p0.y);
-        ctx.bezierCurveTo(p1.x, p1.y, p2.x, p2.y, p3.x, p3.y);
+        ctx.moveTo(x0, y0);
+        const mx = (x0 + x1) / 2;
+        const my = (y0 + y1) / 2;
+        const dx = y1 - y0;
+        const dy = x0 - x1;
+        const norm = Math.hypot(dx, dy) || 1;
+        ctx.quadraticCurveTo(mx + (dx / norm) * bend, my + (dy / norm) * bend, x1, y1);
+        ctx.strokeStyle = color;
+        ctx.globalAlpha = alpha;
+        ctx.lineWidth = width;
         ctx.stroke();
+      };
+      const minors: { x: number; y: number; color: string }[] = [];
+      for (let i = 0; i < 36; i += 1) {
+        const parent = spots[i % spots.length];
+        if (!parent) continue;
+        const angle = (i / 36) * Math.PI * 2 + 0.15;
+        const rad = radius * (i % 2 === 0 ? 0.42 : 0.68);
+        minors.push({ x: cx + Math.cos(angle) * rad, y: cy + Math.sin(angle) * rad, color: parent.color });
+      }
+      for (let i = 0; i < minors.length; i += 1) {
+        const a = minors[i];
+        const b = minors[(i + 1) % minors.length];
+        const c = minors[(i + 6) % minors.length];
+        if (!a || !b || !c) continue;
+        link(a.x, a.y, b.x, b.y, a.color, 0.22, 0.7, 10);
+        link(a.x, a.y, c.x, c.y, a.color, 0.1, 0.6, 22);
+        link(cx, cy, a.x, a.y, a.color, 0.08, 0.6, 8);
+      }
+      for (let i = 0; i < spots.length; i += 1) {
+        const a = spots[i];
+        const b = spots[(i + 1) % spots.length];
+        const c = spots[(i + 2) % spots.length];
+        if (!a || !b || !c) continue;
+        link(a.x, a.y, b.x, b.y, a.color, 0.55, 1.1, 28);
+        link(a.x, a.y, c.x, c.y, a.color, 0.28, 0.9, 46);
+        link(cx, cy, a.x, a.y, a.color, a.index === active ? 0.95 : 0.5, a.index === active ? 1.8 : 1, 12);
+        const fan = a.index === active ? 28 : 16;
+        for (let n = 0; n < fan; n += 1) {
+          const spread = a.angle + (n - fan / 2) * (a.index === active ? 0.07 : 0.05);
+          const len = radius * (a.index === active ? 0.28 : 0.16) + (n % 4) * (radius * 0.035);
+          const sx = a.x + Math.cos(spread) * len;
+          const sy = a.y + Math.sin(spread) * len;
+          link(a.x, a.y, sx, sy, a.color, a.index === active ? 0.55 : 0.32, 0.8, 4);
+          if (n % 2 === 0) {
+            const neighbor = spots[(a.index + 1) % spots.length];
+            if (neighbor) link(sx, sy, neighbor.x, neighbor.y, a.color, 0.08, 0.5, 20);
+          }
+          ctx.globalAlpha = 0.95;
+          ctx.fillStyle = n % 4 === 0 ? "#f0c14a" : a.color;
+          ctx.shadowColor = a.color;
+          ctx.shadowBlur = 6;
+          ctx.beginPath();
+          ctx.arc(sx, sy, n % 5 === 0 ? 2.6 : 1.5, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+      ctx.shadowBlur = 0;
+      for (const minor of minors) {
+        ctx.globalAlpha = 0.85;
+        ctx.fillStyle = minor.color;
+        ctx.beginPath();
+        ctx.arc(minor.x, minor.y, 2.2, 0, Math.PI * 2);
+        ctx.fill();
       }
       ctx.globalAlpha = 1;
-      const rays: { x: number; y: number; dx: number; dy: number; reach: number; color: string; i: number }[] = [];
-      for (const point of projected) {
-        const depth = (point.z + major + minor) / (2 * (major + minor));
-        const twinkle = 0.4 + 0.6 * Math.sin(time * 0.008 + point.i * 0.7);
-        ctx.beginPath();
-        const radial = Math.hypot(point.x - cx, point.y - cy);
-        const outer = radial > major * 0.82;
-        const color = point.spike && outer
-          ? point.tone === "sell"
-            ? `rgba(255,90,106,${0.55 + depth * 0.45})`
-            : point.tone === "buy"
-              ? `rgba(61,255,122,${0.5 + depth * 0.5})`
-              : `rgba(240,193,74,${0.6 + depth * 0.4})`
-          : `rgba(94,200,255,${0.25 + depth * 0.7 * twinkle})`;
-        ctx.fillStyle = color;
-        ctx.arc(point.x, point.y, point.spike && outer ? 1.6 + depth : 0.55 + depth * 1.15, 0, Math.PI * 2);
-        ctx.fill();
-        if (point.spike && outer && depth > 0.35) {
-          const dx = point.x - cx;
-          const dy = point.y - cy;
-          const len = Math.hypot(dx, dy) || 1;
-          const reach = (10 + depth * 28) * (0.55 + 0.45 * Math.sin(time * 0.004 + point.i));
-          ctx.strokeStyle = color;
-          ctx.lineWidth = 1;
+      for (const spot of spots) {
+        for (let k = 0; k < 3; k += 1) {
+          const t = (time * 0.0004 + spot.index * 0.17 + k * 0.33) % 1;
+          ctx.fillStyle = spot.color;
+          ctx.shadowColor = spot.color;
+          ctx.shadowBlur = 8;
           ctx.beginPath();
-          ctx.moveTo(point.x, point.y);
-          ctx.lineTo(point.x + (dx / len) * reach, point.y + (dy / len) * reach);
-          ctx.stroke();
-          rays.push({ x: point.x, y: point.y, dx: dx / len, dy: dy / len, reach, color, i: point.i });
-        }
-      }
-      const boost = 1 + (pulseRef.current % 7) * 0.02;
-      for (const strand of strandsAll) {
-        for (let k = 0; k < 4; k += 1) {
-          const t = (time * 0.00055 + strand.seed + k * 0.25) % 1;
-          const head = cubic(strand.pts, t);
-          const tail = cubic(strand.pts, Math.max(0, t - 0.06));
-          ctx.globalAlpha = 0.7;
-          ctx.strokeStyle = strand.color;
-          ctx.lineWidth = 2;
-          ctx.beginPath();
-          ctx.moveTo(tail.x, tail.y);
-          ctx.lineTo(head.x, head.y);
-          ctx.stroke();
-          ctx.globalAlpha = 0.35;
-          ctx.fillStyle = strand.color;
-          ctx.beginPath();
-          ctx.arc(head.x, head.y, 6 * boost, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.globalAlpha = 1;
-          ctx.fillStyle = "#fff";
-          ctx.beginPath();
-          ctx.arc(head.x, head.y, 2.2, 0, Math.PI * 2);
+          ctx.arc(cx + (spot.x - cx) * t, cy + (spot.y - cy) * t, 2.6, 0, Math.PI * 2);
           ctx.fill();
         }
       }
-      for (const ray of rays) {
-        const t = (time * 0.00085 + ray.i * 0.02) % 1;
-        ctx.globalAlpha = 1 - t * 0.45;
-        ctx.fillStyle = "#fff";
+      ctx.shadowBlur = 0;
+      ctx.globalAlpha = 1;
+      ctx.font = "11px ui-monospace, SFMono-Regular, Menlo, monospace";
+      ctx.textAlign = "center";
+      for (const spot of spots) {
+        const on = spot.index === active;
+        const r = on ? 18 : 8;
         ctx.beginPath();
-        ctx.arc(ray.x + ray.dx * ray.reach * t, ray.y + ray.dy * ray.reach * t, 1.8, 0, Math.PI * 2);
+        ctx.arc(spot.x, spot.y, r, 0, Math.PI * 2);
+        ctx.fillStyle = spot.color;
+        ctx.shadowColor = spot.color;
+        ctx.shadowBlur = on ? 22 : 10;
         ctx.fill();
+        ctx.shadowBlur = 0;
+        ctx.fillStyle = "#d7e7f5";
+        ctx.fillText(spot.label, spot.x, spot.y + r + 12);
       }
+      ctx.beginPath();
+      ctx.arc(cx, cy, 18, 0, Math.PI * 2);
+      ctx.fillStyle = "#070b12";
+      ctx.strokeStyle = "#e7edf6";
+      ctx.lineWidth = 1.6;
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = "#e7edf6";
+      ctx.fillRect(cx - 6, cy - 7, 3.5, 14);
+      ctx.fillRect(cx + 2.5, cy - 7, 3.5, 14);
+      const cards = [
+        { x: w * 0.12, y: h * 0.2 },
+        { x: w * 0.88, y: h * 0.22 },
+        { x: w * 0.14, y: h * 0.78 },
+        { x: w * 0.86, y: h * 0.76 },
+      ];
+      cards.forEach((card, index) => {
+        const spot = spots[index % spots.length];
+        if (!spot) return;
+        ctx.beginPath();
+        ctx.moveTo(card.x, card.y);
+        ctx.lineTo(spot.x, spot.y);
+        ctx.strokeStyle = spot.color;
+        ctx.globalAlpha = 0.45;
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      });
       ctx.globalAlpha = 1;
       raf = requestAnimationFrame(draw);
     };
     raf = requestAnimationFrame(draw);
     return () => cancelAnimationFrame(raf);
   }, []);
-  return <canvas className="shell-canvas" ref={ref} />;
+  return (
+    <div className="ws-stage">
+      <canvas className="shell-canvas" ref={ref} />
+      {prints.map((row, index) => (
+        <div className={`ws-float ${row.side}`} key={row.id} style={{ animationDelay: `${index * -1.6}s` }} data-slot={index}>
+          <b>{row.symbol}</b>
+          <span>{row.side.toUpperCase()}</span>
+          <strong>{money(row.notional)}</strong>
+          <i />
+        </div>
+      ))}
+    </div>
+  );
 }
+

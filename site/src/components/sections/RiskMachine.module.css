@@ -66,7 +66,13 @@
 
 .option:has(input:focus-visible) {
   outline: 2px solid var(--focus);
-  outline-offset: 2px;
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .option:has(input:focus-visible) {
+    animation: focus-ring 520ms var(--ease-out);
+  }
 }
 
 .optSize {
@@ -101,7 +107,7 @@
   font-family: var(--font-mono);
   font-size: 0.8rem;
   background: var(--alex);
-  color: #1b1405;
+  color: #10141c;
   transition:
     left 380ms var(--ease-out),
     background var(--dur-2) var(--ease-out),
@@ -111,7 +117,7 @@
 .token[data-outcome="COPY"],
 .token[data-outcome="RESIZE"] {
   background: var(--desk);
-  color: #04120b;
+  color: var(--on-desk);
 }
 
 .token[data-outcome="SKIP"],

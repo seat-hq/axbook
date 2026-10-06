@@ -70,7 +70,142 @@ button {
 :focus-visible {
   outline: 2px solid var(--focus);
   outline-offset: 3px;
-  border-radius: 4px;
+  transition:
+    outline-offset var(--dur-2) var(--ease-out),
+    outline-color var(--dur-2) var(--ease-out),
+    box-shadow var(--dur-2) var(--ease-out);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  :focus-visible {
+    animation: focus-ring 520ms var(--ease-out);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :focus-visible {
+    animation: none;
+  }
+}
+
+@keyframes focus-ring {
+  0% {
+    outline-color: transparent;
+    outline-offset: 12px;
+    box-shadow: 0 0 0 0 transparent;
+  }
+  55% {
+    outline-color: var(--focus);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 7px color-mix(in srgb, var(--focus) 32%, transparent);
+  }
+  100% {
+    outline-color: var(--focus);
+    outline-offset: 3px;
+    box-shadow: 0 0 0 0 transparent;
+  }
+}
+
+/* Custom cursor. The system pointer stays until the first fine-pointer move. */
+.site-cursor {
+  position: fixed;
+  inset: 0;
+  z-index: 400;
+  pointer-events: none;
+}
+
+.site-cursor-dot,
+.site-cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  border-radius: 50%;
+  opacity: 0;
+  pointer-events: none;
+  will-change: transform;
+}
+
+html[data-cursor="on"] .site-cursor-dot,
+html[data-cursor="on"] .site-cursor-ring {
+  opacity: 1;
+}
+
+.site-cursor-dot {
+  width: 6px;
+  height: 6px;
+  margin: -3px 0 0 -3px;
+  background: var(--desk);
+  transition: opacity var(--dur-2) var(--ease-out), transform 0s;
+}
+
+.site-cursor-ring {
+  width: 32px;
+  height: 32px;
+  margin: -16px 0 0 -16px;
+  border: 1px solid color-mix(in srgb, var(--desk) 75%, white);
+  background: transparent;
+  transition:
+    width var(--dur-2) var(--ease-out),
+    height var(--dur-2) var(--ease-out),
+    margin var(--dur-2) var(--ease-out),
+    background var(--dur-2) var(--ease-out),
+    border-color var(--dur-2) var(--ease-out),
+    border-radius var(--dur-2) var(--ease-out),
+    opacity var(--dur-2) var(--ease-out);
+}
+
+html[data-cursor-state="link"] .site-cursor-ring {
+  width: 52px;
+  height: 52px;
+  margin: -26px 0 0 -26px;
+  background: color-mix(in srgb, var(--desk) 16%, transparent);
+  border-color: var(--desk);
+}
+
+html[data-cursor-state="text"] .site-cursor-ring {
+  width: 2px;
+  height: 1.15em;
+  margin: -0.58em 0 0 -1px;
+  border: none;
+  border-radius: 1px;
+  background: var(--ink);
+}
+
+html[data-cursor-state="text"] .site-cursor-dot {
+  opacity: 0;
+}
+
+html[data-cursor-state="off"] .site-cursor-dot,
+html[data-cursor-state="off"] .site-cursor-ring {
+  opacity: 0.35;
+}
+
+html[data-cursor-down="true"] .site-cursor-ring {
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
+}
+
+html.has-cursor,
+html.has-cursor * {
+  cursor: none !important;
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  a,
+  button,
+  summary,
+  label,
+  [role="tab"],
+  [role="button"] {
+    transition:
+      color var(--dur-2) var(--ease-out),
+      background-color var(--dur-2) var(--ease-out),
+      border-color var(--dur-2) var(--ease-out),
+      box-shadow var(--dur-2) var(--ease-out),
+      transform var(--dur-2) var(--ease-out),
+      opacity var(--dur-2) var(--ease-out);
+  }
 }
 
 ::selection {
@@ -120,11 +255,11 @@ p {
 
 .sec {
   position: relative;
-  padding-block: clamp(5rem, 3rem + 9vw, 11rem);
+  padding-block: clamp(2.6rem, 1.4rem + 3.6vw, 4.75rem);
 }
 
 .sec--tight {
-  padding-block: clamp(3.5rem, 2rem + 5vw, 7rem);
+  padding-block: clamp(1.8rem, 1rem + 2.2vw, 3.25rem);
 }
 
 .sec--paper {
@@ -132,18 +267,20 @@ p {
   color: var(--paper-ink);
   --ink: var(--paper-ink);
   --ink-dim: var(--paper-dim);
-  --ink-faint: #7b8a80;
+  --ink-faint: #7d8898;
   --line: var(--paper-line);
-  --line-2: #c4b28c;
-  --panel: #f4ecdb;
-  --panel-2: #ebe0c9;
-  --desk: #147a46;
-  --desk-soft: rgba(20, 122, 70, 0.12);
-  --alex: #85652c;
-  --alex-soft: rgba(187, 151, 87, 0.16);
+  --line-2: #b7c2d4;
+  --panel: #e4ebf5;
+  --panel-2: #d8e0ee;
+  --desk: #2a4fd0;
+  --desk-soft: rgba(42, 79, 208, 0.12);
+  --desk-hover: #1d3eab;
+  --on-desk: #eef2f8;
+  --alex: #0e7490;
+  --alex-soft: rgba(14, 116, 144, 0.14);
   --loss: #b2412b;
   --loss-soft: rgba(178, 65, 43, 0.1);
-  --focus: #147a46;
+  --focus: #2a4fd0;
 }
 
 .sec--void {
@@ -152,16 +289,16 @@ p {
 
 .sec--grid {
   background-image:
-    linear-gradient(to right, rgba(155, 184, 166, 0.06) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(155, 184, 166, 0.06) 1px, transparent 1px);
+    linear-gradient(to right, rgba(154, 166, 184, 0.08) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(154, 166, 184, 0.08) 1px, transparent 1px);
   background-size: 72px 72px;
   background-position: center top;
 }
 
 .sec--paper.sec--grid {
   background-image:
-    linear-gradient(to right, rgba(11, 31, 22, 0.06) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(11, 31, 22, 0.06) 1px, transparent 1px);
+    linear-gradient(to right, rgba(16, 20, 28, 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(16, 20, 28, 0.06) 1px, transparent 1px);
 }
 
 /* ---------- Type primitives ---------- */
@@ -347,13 +484,13 @@ p {
 
 .btn--primary {
   --btn-bg: var(--desk);
-  --btn-fg: #04120b;
+  --btn-fg: var(--on-desk);
   --btn-line: var(--desk);
 }
 
 .btn--primary:hover {
-  --btn-bg: #5de39b;
-  --btn-line: #5de39b;
+  --btn-bg: var(--desk-hover);
+  --btn-line: var(--desk-hover);
 }
 
 .btn--ghost:hover {

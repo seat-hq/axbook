@@ -1,18 +1,18 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "Axbook — Copy desk, not sniper bot. Leader wallet and desk vault, two separate piles.";
+export const alt = "Axbook — Follow the book. Hold the shares. Leader wallet and desk vault, two separate piles.";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-const GREEN = "#1c3b2e";
-const CREAM = "#fcf6ea";
-const GOLD = "#bb9757";
-const DIM = "#b9c4b8";
-const DESK = "#35d07f";
-const ALEX = "#d8b36e";
-const LINE = "#3a5a4b";
+const INK = "#10141c";
+const PAPER = "#eef2f8";
+const COBALT = "#5b8cff";
+const DIM = "#9aa6b8";
+const DESK = "#5b8cff";
+const ALEX = "#7ec8e0";
+const LINE = "#2a3344";
 
-const mark = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" fill="none" stroke="${GOLD}" stroke-width="3.2"/><rect x="29.2" y="24.2" width="41.6" height="6.9" rx="1.6" fill="${CREAM}"/><rect x="27.2" y="33.3" width="45.6" height="43.6" rx="7.3" fill="${CREAM}"/></svg>`;
+const mark = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" fill="none" stroke="${COBALT}" stroke-width="3.2"/><g fill="${PAPER}"><polygon points="18,44 46,34 46,66 18,76"/><polygon points="54,34 82,44 82,76 54,66"/></g></svg>`;
 const markSrc = `data:image/svg+xml;base64,${Buffer.from(mark).toString("base64")}`;
 
 export default function OpengraphImage() {
@@ -26,8 +26,8 @@ export default function OpengraphImage() {
           flexDirection: "column",
           justifyContent: "space-between",
           padding: "60px 72px",
-          background: GREEN,
-          color: CREAM,
+          background: INK,
+          color: PAPER,
           fontFamily: "sans-serif",
         }}
       >
@@ -38,8 +38,8 @@ export default function OpengraphImage() {
         </div>
 
         <div style={{ display: "flex", flexDirection: "column" }}>
-          <div style={{ fontSize: 100, lineHeight: 1, letterSpacing: -3 }}>Copy desk,</div>
-          <div style={{ fontSize: 100, lineHeight: 1.08, letterSpacing: -3, color: GOLD }}>not sniper bot.</div>
+          <div style={{ fontSize: 88, lineHeight: 1, letterSpacing: -2 }}>Follow the book.</div>
+          <div style={{ fontSize: 88, lineHeight: 1.08, letterSpacing: -2, color: COBALT }}>Hold the shares.</div>
         </div>
 
         <div style={{ display: "flex", alignItems: "center", gap: 28 }}>

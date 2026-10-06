@@ -6,7 +6,7 @@
 @media (min-width: 980px) {
   .grid {
     grid-template-columns: 1fr 1.1fr;
-    gap: 5rem;
+    gap: 2.25rem;
   }
 
   .left {
@@ -22,7 +22,7 @@
 }
 
 .chain {
-  margin: 3rem 0 0;
+  margin: 1.6rem 0 0;
   display: grid;
   gap: 0;
   max-width: 360px;

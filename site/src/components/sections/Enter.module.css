@@ -1,6 +1,6 @@
 .enter {
   background:
-    radial-gradient(70% 70% at 50% 100%, rgba(53, 208, 127, 0.16), transparent 70%),
+    radial-gradient(70% 70% at 50% 100%, rgba(91, 140, 255, 0.16), transparent 70%),
     var(--void);
   overflow: hidden;
 }

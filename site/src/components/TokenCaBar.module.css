@@ -4,11 +4,11 @@
   z-index: 48;
   border-bottom: 1px solid color-mix(in srgb, var(--desk) 55%, var(--line));
   background:
-    linear-gradient(90deg, rgba(53, 208, 127, 0.22) 0%, rgba(15, 42, 30, 0.94) 38%, rgba(7, 20, 14, 0.98) 100%),
+    linear-gradient(90deg, rgba(91, 140, 255, 0.22) 0%, rgba(28, 35, 51, 0.94) 38%, rgba(16, 20, 28, 0.98) 100%),
     var(--panel);
   box-shadow:
     0 10px 40px rgba(0, 0, 0, 0.35),
-    0 0 0 1px rgba(53, 208, 127, 0.08) inset;
+    0 0 0 1px rgba(91, 140, 255, 0.08) inset;
 }
 
 .inner {
@@ -39,7 +39,7 @@
   height: 7px;
   border-radius: 50%;
   background: var(--desk);
-  box-shadow: 0 0 0 0 rgba(53, 208, 127, 0.55);
+  box-shadow: 0 0 0 0 rgba(91, 140, 255, 0.55);
   animation: pulse 2.4s ease-out infinite;
 }
 
@@ -51,13 +51,13 @@
 
 @keyframes pulse {
   0% {
-    box-shadow: 0 0 0 0 rgba(53, 208, 127, 0.55);
+    box-shadow: 0 0 0 0 rgba(91, 140, 255, 0.55);
   }
   70% {
-    box-shadow: 0 0 0 8px rgba(53, 208, 127, 0);
+    box-shadow: 0 0 0 8px rgba(91, 140, 255, 0);
   }
   100% {
-    box-shadow: 0 0 0 0 rgba(53, 208, 127, 0);
+    box-shadow: 0 0 0 0 rgba(91, 140, 255, 0);
   }
 }
 
@@ -69,7 +69,7 @@
   color: var(--alex);
   padding: 0.2rem 0.45rem;
   border: 1px solid color-mix(in srgb, var(--alex) 45%, transparent);
-  background: rgba(216, 179, 110, 0.08);
+  background: rgba(126, 200, 224, 0.08);
 }
 
 .addr {
@@ -81,7 +81,7 @@
   color: var(--ink);
   padding: 0.35rem 0.55rem;
   border: 1px solid var(--line-2);
-  background: rgba(5, 15, 10, 0.45);
+  background: rgba(7, 9, 14, 0.45);
 }
 
 .addrLong {
@@ -151,7 +151,14 @@
 .copy:focus-visible,
 .explorer:focus-visible {
   outline: 2px solid var(--focus);
-  outline-offset: 2px;
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .copy:focus-visible,
+  .explorer:focus-visible {
+    animation: focus-ring 520ms var(--ease-out);
+  }
 }
 
 @media (max-width: 640px) {

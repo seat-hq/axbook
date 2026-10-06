@@ -21,7 +21,7 @@ export function PrimitiveTrack({ steps, children }: { steps: readonly PrimitiveS
         scrollTrigger: {
           trigger: ref.current,
           start: "top top+=90",
-          end: `+=${n * 42}%`,
+          end: `+=${n * 20}%`,
           pin: true,
           scrub: 0.5,
           onUpdate: (self) => setActive(Math.min(n - 1, Math.floor(self.progress * n * 0.999))),

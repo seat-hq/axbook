@@ -11,7 +11,7 @@
 }
 
 .pipes {
-  margin-top: 4rem;
+  margin-top: 2rem;
   display: grid;
   gap: 2rem;
 }
@@ -19,7 +19,7 @@
 @media (min-width: 860px) {
   .pipes {
     grid-template-columns: 1fr 1fr;
-    gap: 4rem;
+    gap: 2rem;
   }
 }
 
@@ -103,7 +103,7 @@
 }
 
 .tableWrap {
-  margin-top: 4.5rem;
+  margin-top: 2rem;
   overflow-x: auto;
 }
 

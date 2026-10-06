@@ -50,7 +50,7 @@
 }
 
 .fig {
-  margin: 3.5rem 0 0;
+  margin: 1.75rem 0 0;
 }
 
 .svg {
@@ -111,14 +111,14 @@
 
 /* SVG */
 .laneSignal {
-  fill: rgba(216, 179, 110, 0.035);
-  stroke: rgba(216, 179, 110, 0.25);
+  fill: rgba(126, 200, 224, 0.035);
+  stroke: rgba(126, 200, 224, 0.25);
   stroke-dasharray: 4 6;
 }
 
 .laneCapital {
-  fill: rgba(53, 208, 127, 0.035);
-  stroke: rgba(53, 208, 127, 0.25);
+  fill: rgba(91, 140, 255, 0.035);
+  stroke: rgba(91, 140, 255, 0.25);
 }
 
 .laneLabel {
@@ -168,7 +168,7 @@
 
 .node[data-kind="desk"] rect {
   stroke: var(--desk);
-  fill: #0b2419;
+  fill: #1c2333;
 }
 
 .node[data-kind="you"] rect {

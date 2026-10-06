@@ -1,13 +1,13 @@
 .section {
   position: relative;
   background: var(--bg);
-  padding-top: clamp(5rem, 3rem + 8vw, 10rem);
+  padding-top: clamp(2.6rem, 1.4rem + 3.6vw, 4.75rem);
 }
 
 .head {
   display: grid;
   gap: 1.5rem;
-  padding-bottom: clamp(2rem, 1rem + 3vw, 4rem);
+  padding-bottom: clamp(1rem, 0.6rem + 1.2vw, 1.75rem);
 }
 
 @media (min-width: 980px) {
@@ -35,9 +35,13 @@
   padding-top: calc(var(--nav-h) + 14px);
   padding-bottom: 14px;
   background:
-    radial-gradient(50% 60% at 85% 50%, rgba(53, 208, 127, 0.07), transparent 70%),
-    radial-gradient(40% 50% at 10% 50%, rgba(216, 179, 110, 0.05), transparent 70%),
+    radial-gradient(50% 60% at 85% 50%, rgba(91, 140, 255, 0.07), transparent 70%),
+    radial-gradient(40% 50% at 10% 50%, rgba(126, 200, 224, 0.05), transparent 70%),
     var(--bg);
+}
+
+:global(body.has-token-bar) .pin {
+  padding-top: calc(var(--nav-h) + var(--token-bar-h) + 10px);
 }
 
 .pinInner {
@@ -841,11 +845,11 @@
 
 .ticketShares {
   background: var(--desk);
-  color: #04120b;
+  color: var(--on-desk);
 }
 
 .ticketShares .cKicker {
-  color: rgba(4, 18, 11, 0.65);
+  color: color-mix(in srgb, var(--on-desk) 65%, transparent);
 }
 
 .ticketAmt {
@@ -1380,7 +1384,7 @@
   padding: 0.35rem 0.8rem;
   border-radius: 6px;
   background: var(--desk);
-  color: #04120b;
+  color: var(--on-desk);
   font-weight: 600;
   letter-spacing: 0.1em;
 }

@@ -1,38 +1,40 @@
 :root {
   --token-bar-h: 3.25rem;
 
-  /* Surfaces: a deep green ledger, with cream paper for quiet sections. */
-  --void: #050f0a;
-  --bg: #07140e;
-  --bg-2: #0b1f16;
-  --panel: #0f2a1e;
-  --panel-2: #12351f;
-  --line: #1c3b2c;
-  --line-2: #2a5540;
-  --paper: #fcf6ea;
-  --paper-2: #f1e8d4;
-  --paper-ink: #13291f;
-  --paper-dim: #4f5f53;
-  --paper-line: #d9ccb0;
+  /* Surfaces: an ink ledger, with cool paper for quiet sections. */
+  --void: #07090e;
+  --bg: #10141c;
+  --bg-2: #161b28;
+  --panel: #1c2333;
+  --panel-2: #232b3d;
+  --line: #2a3344;
+  --line-2: #3d4a62;
+  --paper: #eef2f8;
+  --paper-2: #e2e8f2;
+  --paper-ink: #10141c;
+  --paper-dim: #5c677a;
+  --paper-line: #cfd7e4;
 
-  /* Brand. Forest green, cream and gold from the Axbook mark. */
-  --brand-green: #1c3b2e;
-  --brand-cream: #fcf6ea;
-  --brand-gold: #bb9757;
+  /* Brand. Ink, paper, and cobalt from the Axbook mark. */
+  --brand-ink: #10141c;
+  --brand-paper: #eef2f8;
+  --brand-cobalt: #5b8cff;
 
-  /* Ink. */
-  --ink: #eaf5ee;
-  --ink-dim: #9bb8a6;
-  --ink-faint: #5f7d6b;
+  /* Type on the dark ledger. */
+  --ink: #e8eef8;
+  --ink-dim: #9aa6b8;
+  --ink-faint: #6d7a8c;
 
-  /* Semantics. Desk things are green. Alex things are gold. Losses are coral. */
-  --desk: #35d07f;
-  --desk-soft: rgba(53, 208, 127, 0.14);
-  --alex: #d8b36e;
-  --alex-soft: rgba(216, 179, 110, 0.14);
+  /* Desk is cobalt. Alex is ice, so the two flows stay distinct. Losses stay coral. */
+  --desk: #5b8cff;
+  --desk-soft: rgba(91, 140, 255, 0.16);
+  --desk-hover: #8eabff;
+  --on-desk: #10141c;
+  --alex: #7ec8e0;
+  --alex-soft: rgba(126, 200, 224, 0.16);
   --loss: #e3715a;
   --loss-soft: rgba(227, 113, 90, 0.14);
-  --focus: #9ff0c4;
+  --focus: #8eabff;
 
   /* Type. */
   --font-display: var(--font-fraunces), "Iowan Old Style", Georgia, serif;
@@ -45,9 +47,9 @@
   --step-1: clamp(1.15rem, 1.08rem + 0.35vw, 1.35rem);
   --step-2: clamp(1.4rem, 1.25rem + 0.8vw, 1.95rem);
   --step-3: clamp(1.85rem, 1.5rem + 1.7vw, 3rem);
-  --step-4: clamp(2.4rem, 1.8rem + 3vw, 4.6rem);
-  --step-5: clamp(3rem, 2rem + 5.4vw, 7.6rem);
-  --step-6: clamp(3.4rem, 1.9rem + 8vw, 11rem);
+  --step-4: clamp(2.05rem, 1.55rem + 2.1vw, 3.45rem);
+  --step-5: clamp(2.45rem, 1.7rem + 3.2vw, 5.1rem);
+  --step-6: clamp(2.8rem, 1.7rem + 4.4vw, 6.6rem);
 
   /* Space and layout. */
   --gutter: clamp(1.1rem, 0.6rem + 2.4vw, 2.75rem);

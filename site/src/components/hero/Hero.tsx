@@ -22,11 +22,11 @@ export function Hero() {
         <div className={styles.copy}>
           <h1 id="hero-title" className={`display ${styles.title}`}>
             <span className={styles.line}>
-              <span style={{ "--d": 0 } as React.CSSProperties}>Copy desk,</span>
+              <span style={{ "--d": 0 } as React.CSSProperties}>Follow the book.</span>
             </span>
             <span className={styles.line}>
               <span style={{ "--d": 1 } as React.CSSProperties}>
-                <em>not</em> sniper bot.
+                Hold the <em>shares</em>.
               </span>
             </span>
           </h1>

@@ -1,5 +1,6 @@
-import { DeskBlotter } from "@/components/DeskBlotter";
+import "./ai-office.css";
+import AiOffice from "@/components/AiOffice";
 
 export default function Page() {
-  return <DeskBlotter />;
+  return <AiOffice />;
 }

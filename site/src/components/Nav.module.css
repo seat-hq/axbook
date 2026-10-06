@@ -139,9 +139,9 @@
   border-radius: 999px;
   border: 1px solid var(--desk);
   background: var(--desk);
-  color: #04120b;
+  color: var(--on-desk);
   text-decoration: none;
-  box-shadow: 0 0 18px rgba(53, 208, 127, 0.45);
+  box-shadow: 0 0 18px rgba(91, 140, 255, 0.45);
   transition:
     background var(--dur-2) var(--ease-out),
     border-color var(--dur-2) var(--ease-out),
@@ -150,10 +150,10 @@
 
 .product:hover,
 .product:focus-visible {
-  background: #5de39b;
-  border-color: #5de39b;
-  color: #04120b;
-  box-shadow: 0 0 26px rgba(53, 208, 127, 0.65);
+  background: #8eabff;
+  border-color: #8eabff;
+  color: var(--on-desk);
+  box-shadow: 0 0 26px rgba(91, 140, 255, 0.65);
 }
 
 .product[aria-disabled="true"] {
@@ -230,7 +230,7 @@
   inset: 0;
   z-index: 49;
   background: var(--void);
-  background-image: radial-gradient(120% 80% at 90% 0%, rgba(53, 208, 127, 0.1), transparent 60%);
+  background-image: radial-gradient(120% 80% at 90% 0%, rgba(91, 140, 255, 0.1), transparent 60%);
   overflow-y: auto;
   padding-top: calc(var(--nav-h) + 3vh);
 }

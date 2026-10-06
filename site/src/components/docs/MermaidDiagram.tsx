@@ -7,7 +7,7 @@ type MermaidApi = (typeof import("mermaid"))["default"];
 
 let mermaidPromise: Promise<MermaidApi> | null = null;
 
-/** Lazy-load mermaid once, themed to match the site's dark ledger palette. */
+/** Lazy-load mermaid once, themed to match the site's ink ledger palette. */
 function loadMermaid() {
   mermaidPromise ??= import("mermaid").then((mod) => {
     const mermaid = mod.default;
@@ -16,19 +16,19 @@ function loadMermaid() {
       securityLevel: "strict",
       theme: "base",
       themeVariables: {
-        background: "#07140e",
-        primaryColor: "#0f2a1e",
-        primaryBorderColor: "#2a5540",
-        primaryTextColor: "#eaf5ee",
-        secondaryColor: "#0b1f16",
-        tertiaryColor: "#0b1f16",
-        lineColor: "#35d07f",
-        textColor: "#eaf5ee",
-        mainBkg: "#0f2a1e",
-        nodeBorder: "#2a5540",
-        clusterBkg: "#0b1f16",
-        clusterBorder: "#1c3b2c",
-        edgeLabelBackground: "#07140e",
+        background: "#10141c",
+        primaryColor: "#1c2333",
+        primaryBorderColor: "#3d4a62",
+        primaryTextColor: "#e8eef8",
+        secondaryColor: "#161b28",
+        tertiaryColor: "#161b28",
+        lineColor: "#5b8cff",
+        textColor: "#e8eef8",
+        mainBkg: "#1c2333",
+        nodeBorder: "#3d4a62",
+        clusterBkg: "#161b28",
+        clusterBorder: "#2a3344",
+        edgeLabelBackground: "#10141c",
         fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace",
         fontSize: "14px",
       },

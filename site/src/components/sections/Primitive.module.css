@@ -1,6 +1,6 @@
 .sec {
   background:
-    radial-gradient(70% 60% at 50% 110%, rgba(53, 208, 127, 0.1), transparent 70%),
+    radial-gradient(70% 60% at 50% 110%, rgba(91, 140, 255, 0.1), transparent 70%),
     var(--void);
   overflow: hidden;
 }
@@ -11,7 +11,7 @@
 }
 
 .versus {
-  margin-top: 4rem;
+  margin-top: 2rem;
   display: grid;
   gap: 1.5rem;
   align-items: stretch;
@@ -76,7 +76,7 @@
 /* ---------- Track ---------- */
 
 .track {
-  margin-top: 5rem;
+  margin-top: 2.25rem;
   position: relative;
 }
 
